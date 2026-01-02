@@ -40,15 +40,6 @@ export default function ChatPage() {
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const messagesContainerRef = useRef<HTMLDivElement>(null);
 
-  useEffect(() => {
-    if (matchId) {
-      loadMessages();
-      // Poll for new messages every 2 seconds
-      const interval = setInterval(loadMessages, 2000);
-      return () => clearInterval(interval);
-    }
-  }, [matchId]);
-
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   };
