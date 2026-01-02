@@ -38,3 +38,4 @@ For testing, you can use a simple colored square:
 3. Test PWA installation on mobile device
 4. Icons will appear in app launcher
 
+

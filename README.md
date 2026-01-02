@@ -30,14 +30,14 @@ A full-featured Tinder-style dating application built as a Progressive Web App (
 ### Prerequisites
 
 - Node.js 20+ and npm
-- MongoDB Atlas account (or local MongoDB)
+- ✅ MongoDB Atlas already configured in Vercel
 - Vercel account (for deployment)
 
 ### Installation
 
 1. Clone the repository:
 ```bash
-git clone <your-repo-url>
+git clone https://github.com/VAIIYA/VYNDER.git
 cd VYNDER
 ```
 
@@ -46,15 +46,18 @@ cd VYNDER
 npm install
 ```
 
-3. Set up environment variables:
+3. Set up environment variables for local development:
 ```bash
-cp .env.example .env.local
+# Create .env.local file
+touch .env.local
 ```
 
-Edit `.env.local` and add your:
-- `MONGODB_URI`: Your MongoDB Atlas connection string
+Edit `.env.local` and add:
+- `MONGODB_URI`: Copy from Vercel dashboard (already configured ✅)
 - `NEXTAUTH_SECRET`: Generate with `openssl rand -base64 32`
-- `NEXTAUTH_URL`: Your app URL (http://localhost:3000 for local dev)
+- `NEXTAUTH_URL`: `http://localhost:3000` for local dev
+
+See `ENV_VARIABLES.md` for detailed instructions.
 
 4. Run the development server:
 ```bash
@@ -62,6 +65,14 @@ npm run dev
 ```
 
 5. Open [http://localhost:3000](http://localhost:3000) in your browser.
+
+### Vercel Deployment
+
+✅ **MongoDB is already configured in Vercel!**
+
+See `VERCEL_SETUP.md` for complete deployment instructions. You just need to add:
+- `NEXTAUTH_URL` (your Vercel URL)
+- `NEXTAUTH_SECRET` (generate a secret)
 
 ## Project Structure
 
@@ -148,4 +159,5 @@ MIT
 ## Support
 
 For issues and questions, please open an issue on GitHub.
+
 

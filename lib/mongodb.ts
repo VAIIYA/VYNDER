@@ -29,6 +29,8 @@ async function connectDB(): Promise<typeof mongoose> {
   if (!cached.promise) {
     const opts = {
       bufferCommands: false,
+      // Optional: specify database name if not in connection string
+      // dbName: 'vynder',
     };
 
     cached.promise = mongoose.connect(MONGODB_URI, opts).then((mongoose) => {
@@ -47,4 +49,5 @@ async function connectDB(): Promise<typeof mongoose> {
 }
 
 export default connectDB;
+
 
