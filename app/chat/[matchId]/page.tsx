@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState, useRef, useCallback } from "react";
 import { useSession } from "next-auth/react";
 import { useRouter, useParams } from "next/navigation";
 import Image from "next/image";
@@ -49,15 +49,13 @@ export default function ChatPage() {
     }
   }, [matchId]);
 
-  useEffect(() => {
-    scrollToBottom();
-  }, [messages]);
-
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   };
 
-  const loadMessages = async () => {
+  const loadMessages = useCallback(async () => {
+    if (!matchId) return;
+    
     try {
       const response = await fetch(`/api/messages/${matchId}`);
       const data = await response.json();
@@ -78,7 +76,20 @@ export default function ChatPage() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [matchId]);
+
+  useEffect(() => {
+    if (matchId) {
+      loadMessages();
+      // Poll for new messages every 2 seconds
+      const interval = setInterval(loadMessages, 2000);
+      return () => clearInterval(interval);
+    }
+  }, [matchId, loadMessages]);
+
+  useEffect(() => {
+    scrollToBottom();
+  }, [messages]);
 
   const sendMessage = async (e: React.FormEvent) => {
     e.preventDefault();
