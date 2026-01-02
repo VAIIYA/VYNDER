@@ -5,6 +5,7 @@ import connectDB from "@/lib/mongodb";
 import User from "@/models/User";
 import Like from "@/models/Like";
 import Pass from "@/models/Pass";
+import Image from "@/models/Image";
 
 export async function GET(request: NextRequest) {
   try {
@@ -72,9 +73,12 @@ export async function GET(request: NextRequest) {
       query.gender = { $in: interestedIn };
     }
 
-    // Get one random user to show
+    // Get one random user to show with enhanced profile data
     const users = await User.find(query)
-      .select("username age bio photos location gender")
+      .select(
+        "username age bio photos location city country gender interests jobTitle company school height education drinking smoking exercise kids pets languages coordinates lastActive"
+      )
+      .populate("interests", "name category icon")
       .limit(1)
       .sort({ createdAt: -1 });
 
@@ -82,7 +86,39 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ user: null, message: "No more profiles" });
     }
 
-    return NextResponse.json({ user: users[0] });
+    const user = users[0];
+    
+    // Get user's images from Image model
+    const images = await Image.find({ user: user._id })
+      .sort({ order: 1 })
+      .lean();
+
+    // Use images from Image model if available, otherwise fall back to photos array
+    const userPhotos = images.length > 0 
+      ? images.map((img) => img.url)
+      : (user.photos || []);
+
+    // Calculate interest match score if current user has interests
+    let interestMatchScore = 0;
+    if (currentUser.interests && currentUser.interests.length > 0 && user.interests) {
+      const currentUserInterestIds = currentUser.interests.map((id: any) => id.toString());
+      const userInterestIds = user.interests.map((int: any) => 
+        typeof int === 'object' ? int._id.toString() : int.toString()
+      );
+      const commonInterests = currentUserInterestIds.filter((id: string) => 
+        userInterestIds.includes(id)
+      );
+      interestMatchScore = (commonInterests.length / Math.max(currentUserInterestIds.length, userInterestIds.length)) * 100;
+    }
+
+    return NextResponse.json({ 
+      user: {
+        ...user.toObject(),
+        photos: userPhotos,
+        images, // Include full image objects
+        interestMatchScore: Math.round(interestMatchScore),
+      }
+    });
   } catch (error) {
     console.error("Discover error:", error);
     return NextResponse.json(
