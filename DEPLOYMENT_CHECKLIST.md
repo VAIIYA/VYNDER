@@ -170,3 +170,4 @@ curl https://your-app.vercel.app/api/profile
 
 **Status**: Ready for deployment after adding remaining environment variables!
 
+

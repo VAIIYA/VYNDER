@@ -47,3 +47,4 @@ const Interest: Model<IInterest> =
 
 export default Interest;
 
+
