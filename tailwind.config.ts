@@ -10,11 +10,11 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        // Solana-inspired colors
+        // Solana-inspired colors (keeping for compatibility)
         solana: {
-          green: "#00FFA3", // Surge Green
-          blue: "#03E1FF", // Ocean Blue
-          purple: "#DC1FFF", // Purple Dino
+          green: "#00FFA3",
+          blue: "#03E1FF",
+          purple: "#DC1FFF",
           black: "#000000",
         },
         primary: {
@@ -23,23 +23,31 @@ const config: Config = {
           200: "#e9d5ff",
           300: "#d8b4fe",
           400: "#c084fc",
-          500: "#DC1FFF", // Purple Dino
+          500: "#DC1FFF",
           600: "#a855f7",
           700: "#9333ea",
           800: "#7e22ce",
           900: "#6b21a8",
         },
         accent: {
-          green: "#00FFA3", // Surge Green
-          blue: "#03E1FF", // Ocean Blue
+          green: "#00FFA3",
+          blue: "#03E1FF",
         },
+        // Badoo & Bumble Hybrid Palette
+        brand: {
+          red: "#C8001A",
+          lavender: "#E9D8FF",
+          "near-black": "#121212",
+          yellow: "#FFDB5B",
+          "yellow-light": "#FFF386",
+          black: "#202020",
+        },
+      },
+      fontFamily: {
+        serif: ["Beausite Classic", "Playfair Display", "serif"],
       },
     },
   },
   plugins: [],
 };
 export default config;
-
-
-
-
