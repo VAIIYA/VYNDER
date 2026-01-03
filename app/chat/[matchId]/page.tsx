@@ -111,10 +111,10 @@ export default function ChatPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-100 dark:bg-gray-900">
+      <div className="min-h-screen flex items-center justify-center bg-black">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-600 mx-auto"></div>
-          <p className="mt-4 text-gray-600 dark:text-gray-400">Loading...</p>
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-solana-purple mx-auto"></div>
+          <p className="mt-4 text-gray-400">Loading...</p>
         </div>
       </div>
     );
@@ -125,12 +125,12 @@ export default function ChatPage() {
     : messages.find(m => m.sender._id !== session?.user?.id)?.sender;
 
   return (
-    <div className="flex flex-col h-screen bg-gray-100 dark:bg-gray-900 pb-20">
+    <div className="flex flex-col h-screen bg-black pb-20">
       {/* Header */}
-      <div className="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 px-4 py-4">
+      <div className="bg-gradient-to-r from-gray-900/90 to-black/90 backdrop-blur-xl border-b border-gray-800 px-4 py-4">
         {otherUser && (
           <div className="flex items-center gap-3">
-            <div className="relative w-10 h-10 rounded-full overflow-hidden">
+            <div className="relative w-10 h-10 rounded-full overflow-hidden border-2 border-solana-purple/50">
               {otherUser.photos && otherUser.photos.length > 0 ? (
                 <Image
                   src={otherUser.photos[0]}
@@ -139,14 +139,14 @@ export default function ChatPage() {
                   className="object-cover"
                 />
               ) : (
-                <div className="w-full h-full bg-gradient-to-br from-primary-400 to-primary-600 flex items-center justify-center">
+                <div className="w-full h-full bg-gradient-to-br from-solana-purple to-solana-blue flex items-center justify-center">
                   <span className="text-white font-bold">
                     {otherUser.username[0]?.toUpperCase()}
                   </span>
                 </div>
               )}
             </div>
-            <h2 className="font-semibold text-gray-900 dark:text-white">
+            <h2 className="font-semibold text-white">
               {otherUser.username}
             </h2>
           </div>
@@ -156,7 +156,7 @@ export default function ChatPage() {
       {/* Messages */}
       <div
         ref={messagesContainerRef}
-        className="flex-1 overflow-y-auto px-4 py-4 space-y-4 hide-scrollbar"
+        className="flex-1 overflow-y-auto px-4 py-4 space-y-4 hide-scrollbar bg-black"
       >
         {messages.map((message) => {
           const isOwn = message.sender._id === session?.user?.id;
@@ -168,14 +168,14 @@ export default function ChatPage() {
               <div
                 className={`max-w-xs lg:max-w-md px-4 py-2 rounded-2xl ${
                   isOwn
-                    ? "bg-primary-600 text-white"
-                    : "bg-white dark:bg-gray-800 text-gray-900 dark:text-white"
+                    ? "bg-gradient-to-r from-solana-purple to-solana-blue text-white shadow-lg shadow-solana-purple/30"
+                    : "bg-gray-800/80 backdrop-blur-xl text-white border border-gray-700"
                 }`}
               >
                 <p className="text-sm">{message.text}</p>
                 <p
                   className={`text-xs mt-1 ${
-                    isOwn ? "text-primary-100" : "text-gray-400"
+                    isOwn ? "text-white/70" : "text-gray-400"
                   }`}
                 >
                   {new Date(message.createdAt).toLocaleTimeString([], {
@@ -193,7 +193,7 @@ export default function ChatPage() {
       {/* Input */}
       <form
         onSubmit={sendMessage}
-        className="bg-white dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700 px-4 py-4"
+        className="bg-gradient-to-r from-gray-900/90 to-black/90 backdrop-blur-xl border-t border-gray-800 px-4 py-4"
       >
         <div className="flex gap-2">
           <input
@@ -201,12 +201,12 @@ export default function ChatPage() {
             value={messageText}
             onChange={(e) => setMessageText(e.target.value)}
             placeholder="Type a message..."
-            className="flex-1 px-4 py-2 rounded-full border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-900 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+            className="flex-1 px-4 py-2 rounded-full border border-gray-700 bg-gray-800/50 text-white placeholder-gray-500 focus:ring-2 focus:ring-solana-purple focus:border-solana-purple transition-all"
           />
           <button
             type="submit"
             disabled={!messageText.trim() || sending}
-            className="bg-primary-600 hover:bg-primary-700 text-white rounded-full px-6 py-2 font-semibold disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+            className="bg-gradient-to-r from-solana-purple to-solana-blue hover:from-solana-purple/90 hover:to-solana-blue/90 text-white rounded-full px-6 py-2 font-semibold disabled:opacity-50 disabled:cursor-not-allowed transition-all shadow-lg hover:shadow-solana-purple/50"
           >
             Send
           </button>

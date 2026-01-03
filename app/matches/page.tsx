@@ -66,28 +66,29 @@ export default function MatchesPage() {
 
   if (status === "loading" || loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-100 dark:bg-gray-900">
+      <div className="min-h-screen flex items-center justify-center bg-black">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-600 mx-auto"></div>
-          <p className="mt-4 text-gray-600 dark:text-gray-400">Loading...</p>
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-solana-purple mx-auto"></div>
+          <p className="mt-4 text-gray-400">Loading...</p>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gray-100 dark:bg-gray-900 pb-20">
+    <div className="min-h-screen bg-black pb-20">
       <div className="container mx-auto px-4 py-8">
-        <h1 className="text-2xl font-bold mb-6 text-gray-900 dark:text-white">
+        <h1 className="text-3xl font-bold mb-8 bg-gradient-to-r from-solana-purple via-solana-blue to-solana-green bg-clip-text text-transparent">
           Your Matches
         </h1>
 
         {matches.length === 0 ? (
           <div className="text-center py-12">
-            <p className="text-gray-500 dark:text-gray-400 text-lg">
+            <div className="mb-4 text-6xl">💔</div>
+            <p className="text-gray-300 text-lg mb-2">
               No matches yet
             </p>
-            <p className="text-gray-400 dark:text-gray-500 text-sm mt-2">
+            <p className="text-gray-500 text-sm">
               Start swiping to find your match!
             </p>
           </div>
@@ -103,7 +104,7 @@ export default function MatchesPage() {
                 <Link
                   key={match._id}
                   href={`/chat/${match._id}`}
-                  className="block bg-white dark:bg-gray-800 rounded-xl p-4 shadow-sm hover:shadow-md transition-shadow"
+                  className="block bg-gradient-to-r from-gray-800/80 to-gray-900/80 backdrop-blur-xl rounded-2xl p-4 border border-gray-700/50 hover:border-solana-purple/50 transition-all hover:shadow-lg hover:shadow-solana-purple/20"
                 >
                   <div className="flex items-center gap-4">
                     <div className="relative w-16 h-16 rounded-full overflow-hidden flex-shrink-0">
@@ -122,29 +123,29 @@ export default function MatchesPage() {
                         </div>
                       )}
                       {match.unreadCount && match.unreadCount > 0 && (
-                        <div className="absolute top-0 right-0 bg-primary-600 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
+                        <div className="absolute top-0 right-0 bg-gradient-to-r from-solana-green to-solana-blue text-black text-xs rounded-full w-5 h-5 flex items-center justify-center font-bold shadow-lg">
                           {match.unreadCount}
                         </div>
                       )}
                     </div>
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center justify-between">
-                        <h3 className="font-semibold text-gray-900 dark:text-white truncate">
+                        <h3 className="font-semibold text-white truncate">
                           {otherUser.username}
                           {otherUser.age && (
-                            <span className="text-gray-500 dark:text-gray-400 font-normal ml-1">
+                            <span className="text-gray-400 font-normal ml-1">
                               {otherUser.age}
                             </span>
                           )}
                         </h3>
                         {match.lastMessageAt && (
-                          <span className="text-xs text-gray-400 dark:text-gray-500">
+                          <span className="text-xs text-gray-500">
                             {new Date(match.lastMessageAt).toLocaleDateString()}
                           </span>
                         )}
                       </div>
                       {match.lastMessage && (
-                        <p className="text-sm text-gray-600 dark:text-gray-400 truncate mt-1">
+                        <p className="text-sm text-gray-400 truncate mt-1">
                           {match.lastMessage.text}
                         </p>
                       )}
