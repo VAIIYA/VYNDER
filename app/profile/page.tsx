@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, Fragment } from "react";
+import { useEffect, useState } from "react";
 import { useSession, signOut } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import Navigation from "@/components/Navigation";
@@ -268,8 +268,7 @@ export default function ProfilePage() {
   }
 
   return (
-    <Fragment>
-      <div className="min-h-screen bg-gradient-to-br from-black via-gray-900 to-black pb-20">
+    <div className="min-h-screen bg-gradient-to-br from-black via-gray-900 to-black pb-20">
       <div className="container mx-auto px-4 py-8">
         {/* Header with gradient */}
         <div className="mb-8">
