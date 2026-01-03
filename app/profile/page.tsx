@@ -670,37 +670,37 @@ export default function ProfilePage() {
           </div>
         </div>
 
-          {/* Action Buttons */}
-          {editing && (
-            <div className="flex gap-4 mt-8">
-              <button
-                onClick={handleSave}
-                className="flex-1 bg-gradient-to-r from-solana-purple to-solana-blue text-white font-semibold py-3 rounded-xl hover:shadow-lg hover:shadow-solana-purple/50 transition-all"
-              >
-                Save Changes
-              </button>
-              <button
-                onClick={() => {
-                  setEditing(false);
-                  loadProfile();
-                }}
-                className="flex-1 bg-gray-800/50 border border-gray-700 text-gray-300 font-semibold py-3 rounded-xl hover:bg-gray-800 hover:border-gray-600 transition-all"
-              >
-                Cancel
-              </button>
-            </div>
-          )}
-
-          {/* Sign Out */}
-          <div className="mt-8 pt-6 border-t border-gray-700">
+        {/* Action Buttons */}
+        {editing && (
+          <div className="flex gap-4 mt-8">
             <button
-              onClick={() => signOut({ callbackUrl: "/auth/signin" })}
-              className="w-full bg-gradient-to-r from-gray-800 to-gray-900 hover:from-gray-700 hover:to-gray-800 text-white font-semibold py-3 rounded-xl transition-all shadow-lg hover:shadow-solana-purple/20 border border-gray-700"
+              onClick={handleSave}
+              className="flex-1 bg-gradient-to-r from-solana-purple to-solana-blue text-white font-semibold py-3 rounded-xl hover:shadow-lg hover:shadow-solana-purple/50 transition-all"
             >
-              Sign Out
+              Save Changes
+            </button>
+            <button
+              onClick={() => {
+                setEditing(false);
+                loadProfile();
+              }}
+              className="flex-1 bg-gray-800/50 border border-gray-700 text-gray-300 font-semibold py-3 rounded-xl hover:bg-gray-800 hover:border-gray-600 transition-all"
+            >
+              Cancel
             </button>
           </div>
+        )}
+
+        {/* Sign Out */}
+        <div className="mt-8 pt-6 border-t border-gray-700">
+          <button
+            onClick={() => signOut({ callbackUrl: "/auth/signin" })}
+            className="w-full bg-gradient-to-r from-gray-800 to-gray-900 hover:from-gray-700 hover:to-gray-800 text-white font-semibold py-3 rounded-xl transition-all shadow-lg hover:shadow-solana-purple/20 border border-gray-700"
+          >
+            Sign Out
+          </button>
         </div>
+      </div>
       </div>
       <Navigation />
     </div>
