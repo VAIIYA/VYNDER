@@ -670,7 +670,7 @@ export default function ProfilePage() {
           </div>
         </div>
 
-        {/* Action Buttons */}
+        {/* Action Buttons Section */}
         {editing && (
           <div className="flex gap-4 mt-8">
             <button
