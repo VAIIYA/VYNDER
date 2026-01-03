@@ -567,14 +567,12 @@ export default function ProfilePage() {
                             className="px-4 py-3 bg-gradient-to-r from-solana-blue to-solana-green text-black rounded-xl font-semibold disabled:opacity-50 disabled:cursor-not-allowed transition-all hover:shadow-lg hover:shadow-solana-blue/50 flex items-center gap-2"
                           >
                             {locationStatus === "getting" ? (
-                              <>
+                              <span className="flex items-center gap-2">
                                 <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-black"></div>
                                 Getting...
-                              </>
+                              </span>
                             ) : (
-                              <>
-                                📍 GPS
-                              </>
+                              <span>📍 GPS</span>
                             )}
                           </button>
                         </div>
