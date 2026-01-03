@@ -251,46 +251,6 @@ export default async function LandingPage() {
           </div>
         </div>
       </footer>
-
-      <style jsx global>{`
-        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;800;900&display=swap');
-        
-        .font-serif {
-          font-family: 'Playfair Display', serif;
-        }
-        
-        @keyframes bounce-slow {
-          0%, 100% { transform: translateY(0); }
-          50% { transform: translateY(-12px); }
-        }
-        .animate-bounce-slow {
-          animation: bounce-slow 4s infinite ease-in-out;
-        }
-        
-        .animate-fade-in {
-          animation: fadeIn 1s ease-out;
-        }
-        
-        @keyframes fadeIn {
-          from { opacity: 0; transform: translateY(10px); }
-          to { opacity: 1; transform: translateY(0); }
-        }
-        
-        /* Custom scrollbar */
-        ::-webkit-scrollbar {
-          width: 8px;
-        }
-        ::-webkit-scrollbar-track {
-          background: #fff;
-        }
-        ::-webkit-scrollbar-thumb {
-          background: #eee;
-          border-radius: 4px;
-        }
-        ::-webkit-scrollbar-thumb:hover {
-          background: #FFDB5B;
-        }
-      `}</style>
     </div>
   );
 }
