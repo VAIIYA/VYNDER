@@ -1,10 +1,10 @@
 import mongoose from "mongoose";
 
-if (!process.env.MONGODB_URI) {
-  throw new Error("Please add your MONGODB_URI to .env.local");
-}
+const MONGODB_URI: string = process.env.MONGODB_URI || "";
 
-const MONGODB_URI: string = process.env.MONGODB_URI;
+if (!MONGODB_URI) {
+  console.error("MONGODB_URI is not set. Please add it to your environment variables.");
+}
 
 interface MongooseCache {
   conn: typeof mongoose | null;
@@ -22,6 +22,10 @@ if (!global.mongoose) {
 }
 
 async function connectDB(): Promise<typeof mongoose> {
+  if (!MONGODB_URI) {
+    throw new Error("MONGODB_URI is not set. Please add it to your environment variables.");
+  }
+
   if (cached.conn) {
     return cached.conn;
   }
@@ -35,6 +39,10 @@ async function connectDB(): Promise<typeof mongoose> {
 
     cached.promise = mongoose.connect(MONGODB_URI, opts).then((mongoose) => {
       return mongoose;
+    }).catch((error) => {
+      cached.promise = null;
+      console.error("MongoDB connection error:", error);
+      throw error;
     });
   }
 
@@ -42,6 +50,7 @@ async function connectDB(): Promise<typeof mongoose> {
     cached.conn = await cached.promise;
   } catch (e) {
     cached.promise = null;
+    console.error("MongoDB connection failed:", e);
     throw e;
   }
 
