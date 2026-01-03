@@ -26,31 +26,52 @@ async function connectDB(): Promise<typeof mongoose> {
     throw new Error("MONGODB_URI is not set. Please add it to your environment variables.");
   }
 
+  // Return existing connection if available
   if (cached.conn) {
-    return cached.conn;
+    // Check if connection is still alive
+    if (mongoose.connection.readyState === 1) {
+      return cached.conn;
+    } else {
+      // Connection is dead, reset cache
+      cached.conn = null;
+      cached.promise = null;
+    }
   }
 
   if (!cached.promise) {
     const opts = {
       bufferCommands: false,
-      // Optional: specify database name if not in connection string
-      // dbName: 'vynder',
+      maxPoolSize: 10, // Maintain up to 10 socket connections
+      serverSelectionTimeoutMS: 5000, // Keep trying to send operations for 5 seconds
+      socketTimeoutMS: 45000, // Close sockets after 45 seconds of inactivity
+      family: 4, // Use IPv4, skip trying IPv6
     };
 
-    cached.promise = mongoose.connect(MONGODB_URI, opts).then((mongoose) => {
-      return mongoose;
-    }).catch((error) => {
-      cached.promise = null;
-      console.error("MongoDB connection error:", error);
-      throw error;
-    });
+    cached.promise = mongoose.connect(MONGODB_URI, opts)
+      .then((mongoose) => {
+        console.log("✅ MongoDB connected successfully");
+        return mongoose;
+      })
+      .catch((error) => {
+        cached.promise = null;
+        console.error("❌ MongoDB connection error:", error.message);
+        // Provide helpful error message
+        if (error.message.includes("authentication failed")) {
+          console.error("Check your MongoDB username and password");
+        } else if (error.message.includes("ENOTFOUND") || error.message.includes("getaddrinfo")) {
+          console.error("Check your MongoDB connection string and network access");
+        } else if (error.message.includes("timeout")) {
+          console.error("MongoDB connection timeout - check network access in MongoDB Atlas");
+        }
+        throw error;
+      });
   }
 
   try {
     cached.conn = await cached.promise;
-  } catch (e) {
+  } catch (e: any) {
     cached.promise = null;
-    console.error("MongoDB connection failed:", e);
+    console.error("❌ MongoDB connection failed:", e?.message || e);
     throw e;
   }
 
