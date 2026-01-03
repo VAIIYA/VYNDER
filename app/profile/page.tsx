@@ -256,7 +256,7 @@ export default function ProfilePage() {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gray-100 dark:bg-gray-900">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-600 mx-auto"></div>
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-solana-purple mx-auto"></div>
           <p className="mt-4 text-gray-600 dark:text-gray-400">Loading...</p>
         </div>
       </div>
@@ -352,7 +352,7 @@ export default function ProfilePage() {
                           photos: formData.photos.filter((_, i) => i !== index),
                         });
                       }}
-                      className="absolute top-2 right-2 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center hover:bg-red-600 transition-colors"
+                      className="absolute top-2 right-2 bg-solana-purple/80 hover:bg-solana-purple text-white rounded-full w-6 h-6 flex items-center justify-center transition-colors shadow-lg"
                     >
                       ×
                     </button>
@@ -696,7 +696,7 @@ export default function ProfilePage() {
           <div className="mt-8 pt-6 border-t border-gray-700">
             <button
               onClick={() => signOut({ callbackUrl: "/auth/signin" })}
-              className="w-full bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white font-semibold py-3 rounded-xl transition-all shadow-lg hover:shadow-red-500/50"
+              className="w-full bg-gradient-to-r from-gray-800 to-gray-900 hover:from-gray-700 hover:to-gray-800 text-white font-semibold py-3 rounded-xl transition-all shadow-lg hover:shadow-solana-purple/20 border border-gray-700"
             >
               Sign Out
             </button>

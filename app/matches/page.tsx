@@ -117,7 +117,7 @@ export default function MatchesPage() {
                           unoptimized={otherUser.photos[0]?.startsWith("/api/images/")}
                         />
                       ) : (
-                        <div className="w-full h-full bg-gradient-to-br from-primary-400 to-primary-600 flex items-center justify-center">
+                        <div className="w-full h-full bg-gradient-to-br from-solana-purple to-solana-blue flex items-center justify-center">
                           <span className="text-white text-xl font-bold">
                             {otherUser.username[0]?.toUpperCase()}
                           </span>
