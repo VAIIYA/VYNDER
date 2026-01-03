@@ -704,7 +704,6 @@ export default function ProfilePage() {
       </div>
       <Navigation />
     </div>
-    </Fragment>
   );
 }
 
