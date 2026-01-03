@@ -19,8 +19,12 @@ const profileUpdateSchema = z.object({
     latitude: z.number().min(-90).max(90),
     longitude: z.number().min(-180).max(180),
   }).optional(),
+  // User-defined tags
+  tags: z.array(z.string()).max(20).optional(),
   // Interests/Tags
   interests: z.array(z.string()).optional(), // Array of Interest IDs
+  // User-defined tags (comma-separated hashtags)
+  tags: z.array(z.string()).max(20).optional(), // Array of user-defined tags
   // Enhanced profile fields
   jobTitle: z.string().max(100).optional(),
   company: z.string().max(100).optional(),

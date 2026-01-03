@@ -16,6 +16,13 @@ interface UserProfile {
   gender?: string;
   interestedIn?: string[];
   location?: string;
+  city?: string;
+  country?: string;
+  coordinates?: {
+    latitude: number;
+    longitude: number;
+  };
+  tags?: string[];
   photos: string[];
   profileCompletionPercentage: number;
 }
@@ -33,8 +40,12 @@ export default function ProfilePage() {
     gender: "",
     interestedIn: [] as string[],
     location: "",
+    city: "",
+    country: "",
+    tags: "" as string, // Comma-separated tags string
     photos: [] as string[],
   });
+  const [locationStatus, setLocationStatus] = useState<"idle" | "getting" | "success" | "error">("idle");
 
   useEffect(() => {
     if (status === "unauthenticated") {
@@ -62,6 +73,9 @@ export default function ProfilePage() {
           gender: data.user.gender || "",
           interestedIn: data.user.interestedIn || [],
           location: data.user.location || "",
+          city: data.user.city || "",
+          country: data.user.country || "",
+          tags: (data.user.tags || []).join(", "), // Convert array to comma-separated string
           photos: data.user.photos || [],
         });
       } else {
@@ -74,14 +88,73 @@ export default function ProfilePage() {
     }
   };
 
+  const handleGetLocation = () => {
+    if (!navigator.geolocation) {
+      toast.error("Geolocation is not supported by your browser");
+      return;
+    }
+
+    setLocationStatus("getting");
+    navigator.geolocation.getCurrentPosition(
+      async (position) => {
+        try {
+          const { latitude, longitude } = position.coords;
+          
+          // Reverse geocode to get city/country (using a free API)
+          const geoResponse = await fetch(
+            `https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${latitude}&longitude=${longitude}&localityLanguage=en`
+          );
+          const geoData = await geoResponse.json();
+
+          // Update form data with coordinates and location
+          setFormData((prev) => ({
+            ...prev,
+            coordinates: { latitude, longitude },
+            city: geoData.city || geoData.locality || "",
+            country: geoData.countryName || "",
+            location: `${geoData.city || geoData.locality || ""}, ${geoData.countryName || ""}`.trim(),
+          }));
+
+          setLocationStatus("success");
+          toast.success("Location captured successfully!");
+        } catch (error) {
+          console.error("Geocoding error:", error);
+          setLocationStatus("error");
+          toast.error("Failed to get location details");
+        }
+      },
+      (error) => {
+        console.error("Geolocation error:", error);
+        setLocationStatus("error");
+        toast.error("Failed to get your location. Please allow location access.");
+      },
+      {
+        enableHighAccuracy: true,
+        timeout: 10000,
+        maximumAge: 0,
+      }
+    );
+  };
+
   const handleSave = async () => {
     try {
+      // Parse tags from comma-separated string
+      const tagsArray = formData.tags
+        .split(",")
+        .map((tag) => tag.trim().replace(/^#+/, ""))
+        .filter((tag) => tag.length > 0)
+        .map((tag) => `#${tag.toLowerCase()}`)
+        .slice(0, 20); // Max 20 tags
+
       const response = await fetch("/api/profile", {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           ...formData,
           age: formData.age ? parseInt(formData.age) : undefined,
+          tags: tagsArray,
+          // Include coordinates if available
+          coordinates: formData.coordinates || undefined,
         }),
       });
 
@@ -347,19 +420,113 @@ export default function ProfilePage() {
                 Location
               </label>
               {editing ? (
-                <input
-                  type="text"
-                  value={formData.location}
-                  onChange={(e) =>
-                    setFormData({ ...formData, location: e.target.value })
-                  }
-                  placeholder="City, State"
-                  className="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-900 text-gray-900 dark:text-white"
-                />
+                <div className="space-y-2">
+                  <div className="flex gap-2">
+                    <input
+                      type="text"
+                      value={formData.location}
+                      onChange={(e) =>
+                        setFormData({ ...formData, location: e.target.value })
+                      }
+                      placeholder="City, State"
+                      className="flex-1 px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-900 text-gray-900 dark:text-white"
+                    />
+                    <button
+                      type="button"
+                      onClick={handleGetLocation}
+                      disabled={locationStatus === "getting"}
+                      className="px-4 py-2 bg-primary-600 hover:bg-primary-700 text-white rounded-lg font-semibold disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex items-center gap-2"
+                    >
+                      {locationStatus === "getting" ? (
+                        <>
+                          <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
+                          Getting...
+                        </>
+                      ) : (
+                        <>
+                          📍 Get GPS Location
+                        </>
+                      )}
+                    </button>
+                  </div>
+                  {formData.city && formData.country && (
+                    <p className="text-xs text-gray-500 dark:text-gray-400">
+                      {formData.city}, {formData.country}
+                    </p>
+                  )}
+                  {profile.coordinates && (
+                    <p className="text-xs text-gray-500 dark:text-gray-400">
+                      Coordinates: {profile.coordinates.latitude.toFixed(4)}, {profile.coordinates.longitude.toFixed(4)}
+                    </p>
+                  )}
+                </div>
               ) : (
-                <p className="text-gray-900 dark:text-white">
-                  {profile.location || "Not set"}
-                </p>
+                <div>
+                  <p className="text-gray-900 dark:text-white">
+                    {profile.location || profile.city || "Not set"}
+                  </p>
+                  {profile.coordinates && (
+                    <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                      GPS: {profile.coordinates.latitude.toFixed(4)}, {profile.coordinates.longitude.toFixed(4)}
+                    </p>
+                  )}
+                </div>
+              )}
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                Tags / Interests (comma-separated)
+              </label>
+              {editing ? (
+                <div>
+                  <input
+                    type="text"
+                    value={formData.tags}
+                    onChange={(e) =>
+                      setFormData({ ...formData, tags: e.target.value })
+                    }
+                    placeholder="#movies, #travel, #fitness, #cooking"
+                    className="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-900 text-gray-900 dark:text-white"
+                  />
+                  <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                    Enter tags separated by commas. Use hashtags like #movies, #travel, etc. (Max 20 tags)
+                  </p>
+                  {formData.tags && (
+                    <div className="mt-2 flex flex-wrap gap-2">
+                      {formData.tags
+                        .split(",")
+                        .map((tag) => tag.trim())
+                        .filter((tag) => tag.length > 0)
+                        .slice(0, 20)
+                        .map((tag, index) => (
+                          <span
+                            key={index}
+                            className="px-2 py-1 bg-primary-100 dark:bg-primary-900 text-primary-800 dark:text-primary-200 rounded-full text-xs"
+                          >
+                            {tag.startsWith("#") ? tag : `#${tag}`}
+                          </span>
+                        ))}
+                    </div>
+                  )}
+                </div>
+              ) : (
+                <div>
+                  {profile.tags && profile.tags.length > 0 ? (
+                    <div className="flex flex-wrap gap-2">
+                      {profile.tags.map((tag, index) => (
+                        <span
+                          key={index}
+                          className="px-3 py-1 bg-primary-100 dark:bg-primary-900 text-primary-800 dark:text-primary-200 rounded-full text-sm font-medium"
+                        >
+                          {tag}
+                        </span>
+                      ))}
+                    </div>
+                  ) : (
+                    <p className="text-gray-500 dark:text-gray-400">No tags yet</p>
+                  )}
+                </div>
               )}
             </div>
           </div>

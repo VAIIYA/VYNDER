@@ -12,6 +12,10 @@ interface SwipeCardProps {
     bio?: string;
     photos: string[];
     location?: string;
+    tags?: string[];
+    distanceFormatted?: string;
+    commonTags?: string[];
+    tagMatchScore?: number;
   };
   onSwipeLeft: () => void;
   onSwipeRight: () => void;
@@ -130,11 +134,50 @@ export default function SwipeCard({ user, onSwipeLeft, onSwipeRight }: SwipeCard
             <h2 className="text-3xl font-bold">{user.username}</h2>
             {user.age && <span className="text-xl">{user.age}</span>}
           </div>
-          {user.location && (
-            <p className="text-sm text-gray-200 mb-2">📍 {user.location}</p>
+          <div className="flex items-center gap-3 mb-2 flex-wrap">
+            {user.location && (
+              <p className="text-sm text-gray-200">📍 {user.location}</p>
+            )}
+            {user.distanceFormatted && (
+              <p className="text-sm text-gray-200">📏 {user.distanceFormatted}</p>
+            )}
+            {user.tagMatchScore && user.tagMatchScore > 0 && (
+              <p className="text-sm text-yellow-300 font-semibold">
+                🎯 {user.tagMatchScore}% match
+              </p>
+            )}
+          </div>
+          {user.commonTags && user.commonTags.length > 0 && (
+            <div className="flex flex-wrap gap-1 mb-2">
+              {user.commonTags.slice(0, 3).map((tag, index) => (
+                <span
+                  key={index}
+                  className="px-2 py-0.5 bg-white/20 backdrop-blur-sm rounded-full text-xs font-medium"
+                >
+                  {tag}
+                </span>
+              ))}
+            </div>
           )}
           {user.bio && (
-            <p className="text-sm line-clamp-2">{user.bio}</p>
+            <p className="text-sm line-clamp-2 mb-2">{user.bio}</p>
+          )}
+          {user.tags && user.tags.length > 0 && (
+            <div className="flex flex-wrap gap-1 mt-2">
+              {user.tags.slice(0, 5).map((tag, index) => (
+                <span
+                  key={index}
+                  className="px-2 py-0.5 bg-white/10 backdrop-blur-sm rounded-full text-xs"
+                >
+                  {tag}
+                </span>
+              ))}
+              {user.tags.length > 5 && (
+                <span className="px-2 py-0.5 bg-white/10 backdrop-blur-sm rounded-full text-xs">
+                  +{user.tags.length - 5}
+                </span>
+              )}
+            </div>
           )}
         </div>
       </div>

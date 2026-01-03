@@ -16,7 +16,9 @@ export interface IUser extends Document {
     longitude: number;
   };
   // Interests/Tags (like Tinder)
-  interests: mongoose.Types.ObjectId[]; // References to Interest model
+  interests: mongoose.Types.ObjectId[]; // References to Interest model (predefined)
+  // User-defined tags (hashtags, comma-separated)
+  tags: string[]; // User-defined tags like #movies, #travel, etc.
   // Photos stored separately in Image model
   photos: string[]; // Legacy - kept for backward compatibility, will be replaced by Image model
   // Enhanced profile fields
@@ -116,6 +118,17 @@ const UserSchema = new Schema<IUser>(
         ref: "Interest",
       },
     ],
+    // User-defined tags (hashtags, comma-separated)
+    tags: {
+      type: [String],
+      default: [],
+      validate: {
+        validator: function (tags: string[]) {
+          return tags.length <= 20; // Max 20 tags
+        },
+        message: "Maximum 20 tags allowed",
+      },
+    },
     // Legacy photos array (for backward compatibility)
     photos: {
       type: [String],
@@ -253,6 +266,7 @@ UserSchema.index({ location: 1 });
 UserSchema.index({ city: 1 });
 UserSchema.index({ gender: 1, interestedIn: 1 });
 UserSchema.index({ interests: 1 }); // For interest-based matching
+UserSchema.index({ tags: 1 }); // For tag-based matching
 UserSchema.index({ coordinates: "2dsphere" }); // For geolocation queries
 UserSchema.index({ lastActive: -1 });
 UserSchema.index({ createdAt: -1 });

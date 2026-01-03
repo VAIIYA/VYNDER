@@ -6,6 +6,12 @@ import User from "@/models/User";
 import Like from "@/models/Like";
 import Pass from "@/models/Pass";
 import Image from "@/models/Image";
+import {
+  calculateDistance,
+  formatDistance,
+  calculateTagMatchScore,
+  findCommonTags,
+} from "@/lib/geolocation";
 
 export async function GET(request: NextRequest) {
   try {
@@ -73,24 +79,25 @@ export async function GET(request: NextRequest) {
       query.gender = { $in: interestedIn };
     }
 
-    // Get one random user to show with enhanced profile data
+    // Get users to show with enhanced profile data
+    // Prioritize users with shared tags and nearby location
     let users;
     try {
       users = await User.find(query)
         .select(
-          "username age bio photos location city country gender interests jobTitle company school height education drinking smoking exercise kids pets languages coordinates lastActive"
+          "username age bio photos location city country gender interests tags jobTitle company school height education drinking smoking exercise kids pets languages coordinates lastActive"
         )
         .populate("interests", "name category icon")
-        .limit(1)
+        .limit(10) // Get more candidates to sort by match quality
         .sort({ createdAt: -1 });
     } catch (populateError) {
       // If populate fails, try without populate
       console.warn("Populate interests failed, fetching without:", populateError);
       users = await User.find(query)
         .select(
-          "username age bio photos location city country gender interests jobTitle company school height education drinking smoking exercise kids pets languages coordinates lastActive"
+          "username age bio photos location city country gender interests tags jobTitle company school height education drinking smoking exercise kids pets languages coordinates lastActive"
         )
-        .limit(1)
+        .limit(10)
         .sort({ createdAt: -1 });
     }
 
@@ -98,8 +105,67 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ user: null, message: "No more profiles" });
     }
 
-    const user = users[0];
-    
+    // Score and sort users by match quality (tags + distance)
+    const scoredUsers = users.map((user) => {
+      let score = 0;
+      let distance: number | null = null;
+      let distanceFormatted = "";
+      let tagMatchScore = 0;
+      let commonTags: string[] = [];
+
+      // Calculate tag match score
+      if (currentUser.tags && currentUser.tags.length > 0 && user.tags && user.tags.length > 0) {
+        commonTags = findCommonTags(
+          currentUser.tags || [],
+          user.tags || []
+        );
+        tagMatchScore = calculateTagMatchScore(
+          currentUser.tags || [],
+          user.tags || []
+        );
+        score += tagMatchScore * 2; // Weight tags heavily
+      }
+
+      // Calculate distance if both users have coordinates
+      if (
+        currentUser.coordinates?.latitude &&
+        currentUser.coordinates?.longitude &&
+        user.coordinates?.latitude &&
+        user.coordinates?.longitude
+      ) {
+        distance = calculateDistance(
+          {
+            latitude: currentUser.coordinates.latitude,
+            longitude: currentUser.coordinates.longitude,
+          },
+          {
+            latitude: user.coordinates.latitude,
+            longitude: user.coordinates.longitude,
+          }
+        );
+        distanceFormatted = formatDistance(distance);
+        // Prefer closer users (inverse distance scoring)
+        if (distance < 5) score += 50; // Very close
+        else if (distance < 25) score += 30; // Close
+        else if (distance < 50) score += 15; // Medium distance
+        else if (distance < 100) score += 5; // Far
+      }
+
+      return {
+        user,
+        score,
+        distance,
+        distanceFormatted,
+        tagMatchScore,
+        commonTags,
+      };
+    });
+
+    // Sort by score (highest first) and pick the best match
+    scoredUsers.sort((a, b) => b.score - a.score);
+    const bestMatch = scoredUsers[0];
+    const user = bestMatch.user;
+
     // Get user's images from Image model (handle if collection doesn't exist)
     let images: any[] = [];
     try {
@@ -144,6 +210,10 @@ export async function GET(request: NextRequest) {
         photos: userPhotos,
         images, // Include full image objects
         interestMatchScore: Math.round(interestMatchScore),
+        tagMatchScore: bestMatch.tagMatchScore,
+        commonTags: bestMatch.commonTags,
+        distance: bestMatch.distance,
+        distanceFormatted: bestMatch.distanceFormatted,
       }
     });
   } catch (error) {
