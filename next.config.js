@@ -7,7 +7,12 @@ const nextConfig = {
         protocol: 'https',
         hostname: '**',
       },
+      {
+        protocol: 'http',
+        hostname: 'localhost',
+      },
     ],
+    unoptimized: false,
   },
   // PWA configuration will be added via next-pwa
 };

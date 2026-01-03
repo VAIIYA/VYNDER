@@ -23,8 +23,6 @@ const profileUpdateSchema = z.object({
   tags: z.array(z.string()).max(20).optional(),
   // Interests/Tags
   interests: z.array(z.string()).optional(), // Array of Interest IDs
-  // User-defined tags (comma-separated hashtags)
-  tags: z.array(z.string()).max(20).optional(), // Array of user-defined tags
   // Enhanced profile fields
   jobTitle: z.string().max(100).optional(),
   company: z.string().max(100).optional(),
@@ -154,6 +152,24 @@ export async function PUT(request: NextRequest) {
 
     if (!user) {
       return NextResponse.json({ error: "User not found" }, { status: 404 });
+    }
+
+    // Recalculate profile completion percentage (since pre-save hook doesn't run with findByIdAndUpdate)
+    const completionPercentage = user.calculateProfileCompletion();
+    user.profileCompletionPercentage = completionPercentage;
+    user.profileCompleted = completionPercentage >= 80;
+    
+    // Save to persist the calculated percentage
+    await user.save();
+    
+    // Reload user to get updated data
+    try {
+      user = await User.findById(session.user.id)
+        .select("-password")
+        .populate("interests", "name category icon");
+    } catch (populateError) {
+      user = await User.findById(session.user.id)
+        .select("-password");
     }
 
     // Get updated images (handle if Image collection doesn't exist yet)

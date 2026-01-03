@@ -7,6 +7,7 @@ import Link from "next/link";
 import Image from "next/image";
 import Navigation from "@/components/Navigation";
 import toast from "react-hot-toast";
+import { format, isToday, isYesterday } from "date-fns";
 
 interface Match {
   _id: string;
@@ -41,8 +42,8 @@ export default function MatchesPage() {
   useEffect(() => {
     if (status === "authenticated") {
       loadMatches();
-      // Poll for new matches every 10 seconds
-      const interval = setInterval(loadMatches, 10000);
+      // Poll for new matches every 5 seconds (more frequent for better UX)
+      const interval = setInterval(loadMatches, 5000);
       return () => clearInterval(interval);
     }
   }, [status]);
@@ -114,9 +115,10 @@ export default function MatchesPage() {
                           alt={otherUser.username}
                           fill
                           className="object-cover"
+                          unoptimized={otherUser.photos[0]?.startsWith("/api/images/")}
                         />
                       ) : (
-                        <div className="w-full h-full bg-gradient-to-br from-primary-400 to-primary-600 flex items-center justify-center">
+                        <div className="w-full h-full bg-gradient-to-br from-solana-purple to-solana-blue flex items-center justify-center">
                           <span className="text-white text-xl font-bold">
                             {otherUser.username[0]?.toUpperCase()}
                           </span>
@@ -140,7 +142,16 @@ export default function MatchesPage() {
                         </h3>
                         {match.lastMessageAt && (
                           <span className="text-xs text-gray-500">
-                            {new Date(match.lastMessageAt).toLocaleDateString()}
+                            {(() => {
+                              const date = new Date(match.lastMessageAt);
+                              if (isToday(date)) {
+                                return format(date, "h:mm a");
+                              } else if (isYesterday(date)) {
+                                return "Yesterday";
+                              } else {
+                                return format(date, "MMM d");
+                              }
+                            })()}
                           </span>
                         )}
                       </div>
