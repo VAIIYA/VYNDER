@@ -267,8 +267,9 @@ export default function ProfilePage() {
     return null;
   }
 
+  // Main profile content
   return (
-    <div className="min-h-screen bg-gradient-to-br from-black via-gray-900 to-black pb-20" key="profile-main">
+    <div className="min-h-screen bg-gradient-to-br from-black via-gray-900 to-black pb-20">
       <div className="container mx-auto px-4 py-8">
         {/* Header with gradient */}
         <div className="mb-8">
