@@ -44,6 +44,7 @@ export default function ProfilePage() {
     country: "",
     tags: "" as string, // Comma-separated tags string
     photos: [] as string[],
+    coordinates: undefined as { latitude: number; longitude: number } | undefined,
   });
   const [locationStatus, setLocationStatus] = useState<"idle" | "getting" | "success" | "error">("idle");
 
@@ -77,6 +78,7 @@ export default function ProfilePage() {
           country: data.user.country || "",
           tags: (data.user.tags || []).join(", "), // Convert array to comma-separated string
           photos: data.user.photos || [],
+          coordinates: data.user.coordinates || undefined,
         });
       } else {
         toast.error(data.error || "Failed to load profile");
@@ -162,6 +164,20 @@ export default function ProfilePage() {
 
       if (response.ok) {
         setProfile(data.user);
+        // Update formData with the returned user data to reflect any server-side changes
+        setFormData({
+          username: data.user.username || "",
+          bio: data.user.bio || "",
+          age: data.user.age?.toString() || "",
+          gender: data.user.gender || "",
+          interestedIn: data.user.interestedIn || [],
+          location: data.user.location || "",
+          city: data.user.city || "",
+          country: data.user.country || "",
+          tags: (data.user.tags || []).join(", "),
+          photos: data.user.photos || [],
+          coordinates: data.user.coordinates || undefined,
+        });
         setEditing(false);
         toast.success("Profile updated!");
       } else {
@@ -176,16 +192,64 @@ export default function ProfilePage() {
     const files = e.target.files;
     if (!files || files.length === 0) return;
 
-    // In a real app, you'd upload to a service like Cloudinary, AWS S3, etc.
-    // For now, we'll just show a message
-    toast.error("Photo upload not implemented. Use image URLs for now.");
-    
-    // Example: You would do something like:
-    // const formData = new FormData();
-    // formData.append('photo', files[0]);
-    // const response = await fetch('/api/upload', { method: 'POST', body: formData });
-    // const data = await response.json();
-    // setFormData({ ...formData, photos: [...formData.photos, data.url] });
+    const file = files[0];
+
+    // Validate file type
+    if (!file.type.startsWith("image/")) {
+      toast.error("Please select an image file");
+      return;
+    }
+
+    // Validate file size (max 5MB)
+    const maxSize = 5 * 1024 * 1024; // 5MB
+    if (file.size > maxSize) {
+      toast.error("Image size must be less than 5MB");
+      return;
+    }
+
+    // Check if we're at the limit
+    if (formData.photos.length >= 6) {
+      toast.error("Maximum 6 photos allowed");
+      return;
+    }
+
+    try {
+      // Show loading toast
+      const loadingToast = toast.loading("Uploading image...");
+
+      // Create FormData
+      const uploadFormData = new FormData();
+      uploadFormData.append("file", file);
+
+      // Upload to MongoDB
+      const response = await fetch("/api/upload", {
+        method: "POST",
+        body: uploadFormData,
+      });
+
+      const data = await response.json();
+
+      if (response.ok && data.fileId) {
+        // Add the MongoDB file ID to photos array
+        // The image will be served from /api/images/[fileId]
+        const imageUrl = `/api/images/${data.fileId}`;
+        setFormData({
+          ...formData,
+          photos: [...formData.photos, imageUrl],
+        });
+        toast.dismiss(loadingToast);
+        toast.success("Image uploaded successfully!");
+      } else {
+        toast.dismiss(loadingToast);
+        toast.error(data.error || "Failed to upload image");
+      }
+    } catch (error) {
+      toast.error("An error occurred while uploading");
+      console.error("Upload error:", error);
+    }
+
+    // Reset input
+    e.target.value = "";
   };
 
   if (status === "loading" || loading) {
@@ -263,16 +327,31 @@ export default function ProfilePage() {
                     alt={`Photo ${index + 1}`}
                     fill
                     className="object-cover"
+                    unoptimized={photo.startsWith("/api/images/")}
                   />
                   {editing && (
                     <button
-                      onClick={() => {
+                      onClick={async () => {
+                        const photoToRemove = photo;
+                        // If it's a MongoDB image (starts with /api/images/), delete it
+                        if (photoToRemove.startsWith("/api/images/")) {
+                          const fileId = photoToRemove.split("/api/images/")[1];
+                          try {
+                            await fetch(`/api/images/${fileId}`, {
+                              method: "DELETE",
+                            });
+                          } catch (error) {
+                            console.error("Failed to delete image:", error);
+                            // Continue with removal from UI even if deletion fails
+                          }
+                        }
+                        // Remove from form data
                         setFormData({
                           ...formData,
                           photos: formData.photos.filter((_, i) => i !== index),
                         });
                       }}
-                      className="absolute top-2 right-2 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center"
+                      className="absolute top-2 right-2 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center hover:bg-red-600 transition-colors"
                     >
                       ×
                     </button>

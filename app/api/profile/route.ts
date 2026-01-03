@@ -156,6 +156,24 @@ export async function PUT(request: NextRequest) {
       return NextResponse.json({ error: "User not found" }, { status: 404 });
     }
 
+    // Recalculate profile completion percentage (since pre-save hook doesn't run with findByIdAndUpdate)
+    const completionPercentage = user.calculateProfileCompletion();
+    user.profileCompletionPercentage = completionPercentage;
+    user.profileCompleted = completionPercentage >= 80;
+    
+    // Save to persist the calculated percentage
+    await user.save();
+    
+    // Reload user to get updated data
+    try {
+      user = await User.findById(session.user.id)
+        .select("-password")
+        .populate("interests", "name category icon");
+    } catch (populateError) {
+      user = await User.findById(session.user.id)
+        .select("-password");
+    }
+
     // Get updated images (handle if Image collection doesn't exist yet)
     let images: any[] = [];
     try {

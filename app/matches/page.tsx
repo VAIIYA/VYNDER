@@ -114,6 +114,7 @@ export default function MatchesPage() {
                           alt={otherUser.username}
                           fill
                           className="object-cover"
+                          unoptimized={otherUser.photos[0]?.startsWith("/api/images/")}
                         />
                       ) : (
                         <div className="w-full h-full bg-gradient-to-br from-primary-400 to-primary-600 flex items-center justify-center">
