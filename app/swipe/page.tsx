@@ -115,19 +115,19 @@ export default function SwipePage() {
 
   if (status === "loading" || loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-100 dark:bg-gray-900">
+      <div className="min-h-screen flex items-center justify-center bg-black">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-600 mx-auto"></div>
-          <p className="mt-4 text-gray-600 dark:text-gray-400">Loading...</p>
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-solana-purple mx-auto"></div>
+          <p className="mt-4 text-gray-400">Loading...</p>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gray-100 dark:bg-gray-900 pb-20">
+    <div className="min-h-screen bg-black pb-20">
       <div className="container mx-auto px-4 py-8">
-        <h1 className="text-2xl font-bold text-center mb-8 text-gray-900 dark:text-white">
+        <h1 className="text-3xl font-bold text-center mb-8 bg-gradient-to-r from-solana-purple via-solana-blue to-solana-green bg-clip-text text-transparent">
           Discover
         </h1>
 
@@ -141,9 +141,10 @@ export default function SwipePage() {
                 onSwipeRight={handleSwipeRight}
               />
             ) : (
-              <div className="text-center text-gray-500 dark:text-gray-400">
-                <p className="text-xl">No more profiles to show</p>
-                <p className="text-sm mt-2">Check back later for new matches!</p>
+              <div className="text-center text-gray-400">
+                <div className="mb-4 text-6xl">🎯</div>
+                <p className="text-xl text-white mb-2">No more profiles to show</p>
+                <p className="text-sm text-gray-400">Check back later for new matches!</p>
               </div>
             )}
           </AnimatePresence>

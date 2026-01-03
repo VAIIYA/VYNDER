@@ -142,7 +142,7 @@ export default function SwipeCard({ user, onSwipeLeft, onSwipeRight }: SwipeCard
               <p className="text-sm text-gray-200">📏 {user.distanceFormatted}</p>
             )}
             {user.tagMatchScore && user.tagMatchScore > 0 && (
-              <p className="text-sm text-yellow-300 font-semibold">
+              <p className="text-sm bg-gradient-to-r from-solana-green to-solana-blue bg-clip-text text-transparent font-bold">
                 🎯 {user.tagMatchScore}% match
               </p>
             )}
@@ -152,7 +152,7 @@ export default function SwipeCard({ user, onSwipeLeft, onSwipeRight }: SwipeCard
               {user.commonTags.slice(0, 3).map((tag, index) => (
                 <span
                   key={index}
-                  className="px-2 py-0.5 bg-white/20 backdrop-blur-sm rounded-full text-xs font-medium"
+                  className="px-2 py-0.5 bg-gradient-to-r from-solana-purple/30 to-solana-blue/30 backdrop-blur-sm rounded-full text-xs font-medium border border-solana-purple/50"
                 >
                   {tag}
                 </span>
@@ -160,20 +160,20 @@ export default function SwipeCard({ user, onSwipeLeft, onSwipeRight }: SwipeCard
             </div>
           )}
           {user.bio && (
-            <p className="text-sm line-clamp-2 mb-2">{user.bio}</p>
+            <p className="text-sm line-clamp-2 mb-2 text-gray-200">{user.bio}</p>
           )}
           {user.tags && user.tags.length > 0 && (
             <div className="flex flex-wrap gap-1 mt-2">
               {user.tags.slice(0, 5).map((tag, index) => (
                 <span
                   key={index}
-                  className="px-2 py-0.5 bg-white/10 backdrop-blur-sm rounded-full text-xs"
+                  className="px-2 py-0.5 bg-white/10 backdrop-blur-sm rounded-full text-xs border border-white/20"
                 >
                   {tag}
                 </span>
               ))}
               {user.tags.length > 5 && (
-                <span className="px-2 py-0.5 bg-white/10 backdrop-blur-sm rounded-full text-xs">
+                <span className="px-2 py-0.5 bg-white/10 backdrop-blur-sm rounded-full text-xs border border-white/20">
                   +{user.tags.length - 5}
                 </span>
               )}
@@ -186,13 +186,13 @@ export default function SwipeCard({ user, onSwipeLeft, onSwipeRight }: SwipeCard
       <div className="absolute bottom-20 left-1/2 -translate-x-1/2 flex gap-4 sm:hidden">
         <button
           onClick={() => handleSwipe("left")}
-          className="bg-white dark:bg-gray-800 text-red-500 rounded-full p-4 shadow-lg hover:scale-110 transition-transform"
+          className="bg-gray-900/90 backdrop-blur-xl text-red-400 rounded-full p-4 shadow-lg hover:scale-110 transition-transform border border-gray-700 hover:border-red-500"
         >
           ✕
         </button>
         <button
           onClick={() => handleSwipe("right")}
-          className="bg-white dark:bg-gray-800 text-green-500 rounded-full p-4 shadow-lg hover:scale-110 transition-transform"
+          className="bg-gradient-to-r from-solana-green to-solana-blue text-black rounded-full p-4 shadow-lg hover:scale-110 transition-transform hover:shadow-solana-green/50"
         >
           ♥
         </button>

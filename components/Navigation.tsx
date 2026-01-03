@@ -16,7 +16,7 @@ export default function Navigation() {
   const pathname = usePathname();
 
   return (
-    <nav className="fixed bottom-0 left-0 right-0 bg-white dark:bg-gray-900 border-t border-gray-200 dark:border-gray-800 z-50 safe-area-bottom">
+    <nav className="fixed bottom-0 left-0 right-0 bg-black/80 backdrop-blur-xl border-t border-gray-800 z-50 safe-area-bottom">
       <div className="flex justify-around items-center h-16 px-2">
         {navItems.map((item) => {
           const isActive = pathname === item.href || pathname?.startsWith(item.href + "/");
@@ -26,14 +26,17 @@ export default function Navigation() {
             <Link
               key={item.href}
               href={item.href}
-              className={`flex flex-col items-center justify-center flex-1 h-full transition-colors ${
+              className={`flex flex-col items-center justify-center flex-1 h-full transition-all relative ${
                 isActive
-                  ? "text-primary-600 dark:text-primary-400"
-                  : "text-gray-500 dark:text-gray-400"
+                  ? "text-solana-purple"
+                  : "text-gray-500"
               }`}
             >
-              <Icon className="w-6 h-6" />
-              <span className="text-xs mt-1 hidden sm:block">{item.label}</span>
+              {isActive && (
+                <div className="absolute top-0 left-1/2 -translate-x-1/2 w-12 h-1 bg-gradient-to-r from-solana-purple to-solana-blue rounded-b-full"></div>
+              )}
+              <Icon className={`w-6 h-6 transition-transform ${isActive ? "scale-110" : ""}`} />
+              <span className="text-xs mt-1 hidden sm:block font-medium">{item.label}</span>
             </Link>
           );
         })}
