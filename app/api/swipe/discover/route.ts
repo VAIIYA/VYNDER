@@ -74,13 +74,25 @@ export async function GET(request: NextRequest) {
     }
 
     // Get one random user to show with enhanced profile data
-    const users = await User.find(query)
-      .select(
-        "username age bio photos location city country gender interests jobTitle company school height education drinking smoking exercise kids pets languages coordinates lastActive"
-      )
-      .populate("interests", "name category icon")
-      .limit(1)
-      .sort({ createdAt: -1 });
+    let users;
+    try {
+      users = await User.find(query)
+        .select(
+          "username age bio photos location city country gender interests jobTitle company school height education drinking smoking exercise kids pets languages coordinates lastActive"
+        )
+        .populate("interests", "name category icon")
+        .limit(1)
+        .sort({ createdAt: -1 });
+    } catch (populateError) {
+      // If populate fails, try without populate
+      console.warn("Populate interests failed, fetching without:", populateError);
+      users = await User.find(query)
+        .select(
+          "username age bio photos location city country gender interests jobTitle company school height education drinking smoking exercise kids pets languages coordinates lastActive"
+        )
+        .limit(1)
+        .sort({ createdAt: -1 });
+    }
 
     if (users.length === 0) {
       return NextResponse.json({ user: null, message: "No more profiles" });
@@ -88,10 +100,16 @@ export async function GET(request: NextRequest) {
 
     const user = users[0];
     
-    // Get user's images from Image model
-    const images = await Image.find({ user: user._id })
-      .sort({ order: 1 })
-      .lean();
+    // Get user's images from Image model (handle if collection doesn't exist)
+    let images: any[] = [];
+    try {
+      images = await Image.find({ user: user._id })
+        .sort({ order: 1 })
+        .lean();
+    } catch (imageError) {
+      console.warn("Image collection not found, using legacy photos:", imageError);
+      images = [];
+    }
 
     // Use images from Image model if available, otherwise fall back to photos array
     const userPhotos = images.length > 0 
@@ -100,15 +118,24 @@ export async function GET(request: NextRequest) {
 
     // Calculate interest match score if current user has interests
     let interestMatchScore = 0;
-    if (currentUser.interests && currentUser.interests.length > 0 && user.interests) {
-      const currentUserInterestIds = currentUser.interests.map((id: any) => id.toString());
-      const userInterestIds = user.interests.map((int: any) => 
-        typeof int === 'object' ? int._id.toString() : int.toString()
-      );
-      const commonInterests = currentUserInterestIds.filter((id: string) => 
-        userInterestIds.includes(id)
-      );
-      interestMatchScore = (commonInterests.length / Math.max(currentUserInterestIds.length, userInterestIds.length)) * 100;
+    try {
+      if (currentUser.interests && currentUser.interests.length > 0 && user.interests) {
+        const currentUserInterestIds = currentUser.interests.map((id: any) => 
+          id?.toString ? id.toString() : String(id)
+        );
+        const userInterestIds = (Array.isArray(user.interests) ? user.interests : []).map((int: any) => 
+          typeof int === 'object' && int?._id ? int._id.toString() : String(int)
+        );
+        const commonInterests = currentUserInterestIds.filter((id: string) => 
+          userInterestIds.includes(id)
+        );
+        if (currentUserInterestIds.length > 0 || userInterestIds.length > 0) {
+          interestMatchScore = (commonInterests.length / Math.max(currentUserInterestIds.length, userInterestIds.length, 1)) * 100;
+        }
+      }
+    } catch (interestError) {
+      console.warn("Error calculating interest match score:", interestError);
+      interestMatchScore = 0;
     }
 
     return NextResponse.json({ 

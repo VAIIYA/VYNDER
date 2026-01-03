@@ -45,19 +45,36 @@ export async function GET(request: NextRequest) {
     }
 
     await connectDB();
-    const user = await User.findById(session.user.id)
-      .select("-password")
-      .populate("interests", "name category icon")
-      .lean();
+    
+    let user;
+    try {
+      user = await User.findById(session.user.id)
+        .select("-password")
+        .populate("interests", "name category icon")
+        .lean();
+    } catch (populateError) {
+      // If populate fails (e.g., interests collection doesn't exist), try without populate
+      console.warn("Populate interests failed, fetching without:", populateError);
+      user = await User.findById(session.user.id)
+        .select("-password")
+        .lean();
+    }
 
     if (!user) {
       return NextResponse.json({ error: "User not found" }, { status: 404 });
     }
 
-    // Get user's images
-    const images = await Image.find({ user: session.user.id })
-      .sort({ order: 1 })
-      .lean();
+    // Get user's images (handle if Image collection doesn't exist yet)
+    let images: any[] = [];
+    try {
+      images = await Image.find({ user: session.user.id })
+        .sort({ order: 1 })
+        .lean();
+    } catch (imageError) {
+      // Image collection might not exist yet, use legacy photos array
+      console.warn("Image collection not found, using legacy photos:", imageError);
+      images = [];
+    }
 
     return NextResponse.json({ 
       user: {
@@ -111,22 +128,40 @@ export async function PUT(request: NextRequest) {
     // Update lastActive
     updateData.lastActive = new Date();
 
-    const user = await User.findByIdAndUpdate(
-      session.user.id,
-      { $set: updateData },
-      { new: true, runValidators: true }
-    )
-      .select("-password")
-      .populate("interests", "name category icon");
+    let user;
+    try {
+      user = await User.findByIdAndUpdate(
+        session.user.id,
+        { $set: updateData },
+        { new: true, runValidators: true }
+      )
+        .select("-password")
+        .populate("interests", "name category icon");
+    } catch (populateError) {
+      // If populate fails, try without populate
+      console.warn("Populate interests failed, updating without:", populateError);
+      user = await User.findByIdAndUpdate(
+        session.user.id,
+        { $set: updateData },
+        { new: true, runValidators: true }
+      )
+        .select("-password");
+    }
 
     if (!user) {
       return NextResponse.json({ error: "User not found" }, { status: 404 });
     }
 
-    // Get updated images
-    const images = await Image.find({ user: session.user.id })
-      .sort({ order: 1 })
-      .lean();
+    // Get updated images (handle if Image collection doesn't exist yet)
+    let images: any[] = [];
+    try {
+      images = await Image.find({ user: session.user.id })
+        .sort({ order: 1 })
+        .lean();
+    } catch (imageError) {
+      console.warn("Image collection not found:", imageError);
+      images = [];
+    }
 
     return NextResponse.json({ 
       user: {

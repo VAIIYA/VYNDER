@@ -7,9 +7,20 @@ export async function GET(request: NextRequest) {
   try {
     await connectDB();
 
-    const interests = await Interest.find({ isActive: true })
-      .sort({ category: 1, name: 1 })
-      .lean();
+    let interests: any[] = [];
+    try {
+      interests = await Interest.find({ isActive: true })
+        .sort({ category: 1, name: 1 })
+        .lean();
+    } catch (dbError: any) {
+      // If collection doesn't exist or other DB error, return empty array
+      console.warn("Interests collection may not exist yet:", dbError?.message);
+      return NextResponse.json({
+        interests: {},
+        all: [],
+        message: "Interests collection not initialized. Run seed script to populate.",
+      });
+    }
 
     // Group by category
     const grouped = interests.reduce((acc: any, interest) => {
@@ -28,7 +39,7 @@ export async function GET(request: NextRequest) {
   } catch (error) {
     console.error("Interests fetch error:", error);
     return NextResponse.json(
-      { error: "Internal server error" },
+      { error: "Internal server error", interests: {}, all: [] },
       { status: 500 }
     );
   }
