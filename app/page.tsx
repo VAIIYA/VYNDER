@@ -3,6 +3,7 @@ import Image from "next/image";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { redirect } from "next/navigation";
+import Flame from "@/components/Flame";
 
 export default async function LandingPage() {
   const session = await getServerSession(authOptions);
@@ -17,9 +18,7 @@ export default async function LandingPage() {
       <div className="fixed top-8 w-full z-50 px-6 flex justify-center pointer-events-none">
         <nav className="bg-white/70 backdrop-blur-2xl border border-white/40 px-6 py-3 rounded-full shadow-[0_8px_32px_rgba(0,0,0,0.1)] flex justify-between items-center w-full max-w-4xl pointer-events-auto transition-all hover:shadow-[0_12px_48px_rgba(0,0,0,0.15)]">
           <div className="flex items-center gap-2">
-            <div className="w-9 h-9 bg-brand-red rounded-lg flex items-center justify-center shadow-lg transform rotate-3">
-              <span className="text-white font-bold text-xl">V</span>
-            </div>
+            <Flame className="w-9 h-9 text-brand-red" />
             <span className="text-xl font-black tracking-tighter text-brand-red hidden sm:block">VYNDER</span>
           </div>
 
@@ -186,9 +185,7 @@ export default async function LandingPage() {
           <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-12 mb-20">
             <div className="col-span-2 md:col-span-4 lg:col-span-1">
               <div className="flex items-center gap-2 mb-8">
-                <div className="w-10 h-10 bg-brand-red rounded-xl flex items-center justify-center shadow-lg">
-                  <span className="text-white font-bold text-2xl">V</span>
-                </div>
+                <Flame className="w-10 h-10 text-brand-red" />
                 <span className="text-2xl font-black tracking-tighter text-brand-red">VYNDER</span>
               </div>
               <p className="text-gray-500 font-medium mb-8">

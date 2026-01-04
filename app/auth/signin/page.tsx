@@ -4,6 +4,7 @@ import { useState } from "react";
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import Flame from "@/components/Flame";
 import toast from "react-hot-toast";
 
 export default function SignInPage() {
@@ -47,9 +48,7 @@ export default function SignInPage() {
         <div className="bg-white rounded-[40px] shadow-2xl p-10 border border-white/50 backdrop-blur-sm">
           <div className="flex justify-center mb-8">
             <Link href="/" className="flex items-center gap-2">
-              <div className="w-10 h-10 bg-brand-red rounded-xl flex items-center justify-center shadow-lg transform rotate-3">
-                <span className="text-white font-bold text-2xl">V</span>
-              </div>
+              <Flame className="w-10 h-10 text-brand-red" />
               <span className="text-2xl font-black tracking-tighter text-brand-red">VYNDER</span>
             </Link>
           </div>

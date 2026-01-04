@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import SwipeCard from "@/components/SwipeCard";
 import Navigation from "@/components/Navigation";
+import Flame from "@/components/Flame";
 import toast from "react-hot-toast";
 import { AnimatePresence } from "framer-motion";
 
@@ -131,9 +132,7 @@ export default function SwipePage() {
       <div className="absolute top-0 left-0 right-0 z-10 px-4 pt-4 pb-2">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <div className="w-8 h-8 bg-gradient-to-r from-red-500 to-red-600 rounded-lg flex items-center justify-center">
-              <span className="text-white font-bold text-lg">V</span>
-            </div>
+            <Flame className="w-8 h-8 text-red-500" />
             <span className="text-white font-bold text-xl">vynder</span>
           </div>
           <div className="flex items-center gap-3">
