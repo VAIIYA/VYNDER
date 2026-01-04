@@ -153,7 +153,7 @@ export default async function LandingPage() {
         </div>
       </section>
 
-      {/* Safety Section: Badoo/Bumble Hybrid */}
+      {/* Solana Features Section */}
       <section className="py-32 bg-white relative">
         <div className="max-w-7xl mx-auto px-6 text-center">
           <h2 className="text-4xl lg:text-6xl font-serif font-bold mb-8 tracking-tight">
