@@ -142,23 +142,40 @@ export async function PUT(request: NextRequest) {
     // Update lastActive
     updateData.lastActive = new Date();
 
+    // Update user by wallet address (PRIMARY IDENTIFIER)
     let user;
     try {
-      user = await User.findByIdAndUpdate(
-        session.user.id,
+      user = await User.findOneAndUpdate(
+        { walletAddress: session.user.walletAddress },
         { $set: updateData },
         { new: true, runValidators: true }
       )
         .populate("interests", "name category icon");
+      
+      // Fallback to _id if walletAddress lookup fails
+      if (!user) {
+        user = await User.findByIdAndUpdate(
+          session.user.id,
+          { $set: updateData },
+          { new: true, runValidators: true }
+        )
+          .populate("interests", "name category icon");
+      }
     } catch (populateError) {
       // If populate fails, try without populate
       console.warn("Populate interests failed, updating without:", populateError);
-      user = await User.findByIdAndUpdate(
-        session.user.id,
+      user = await User.findOneAndUpdate(
+        { walletAddress: session.user.walletAddress },
         { $set: updateData },
         { new: true, runValidators: true }
-      )
-;
+      );
+      if (!user) {
+        user = await User.findByIdAndUpdate(
+          session.user.id,
+          { $set: updateData },
+          { new: true, runValidators: true }
+        );
+      }
     }
 
     if (!user) {
