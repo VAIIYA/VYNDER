@@ -1,6 +1,7 @@
 import { Connection, PublicKey } from "@solana/web3.js";
 import bs58 from "bs58";
 import { verify } from "@noble/ed25519";
+import nacl from "tweetnacl";
 
 // Initialize Solana connection
 const connection = new Connection(
@@ -70,6 +71,7 @@ export async function verifyWalletSignature(
 /**
  * Verify signature using Ed25519
  * Solana wallets sign the raw message bytes directly
+ * @noble/ed25519 verify signature: verify(signature, message, publicKey)
  */
 async function verifySignature(
   message: Uint8Array,
@@ -80,13 +82,27 @@ async function verifySignature(
     // Convert public key to bytes
     const publicKeyBytes = publicKey.toBytes();
     
-    // Solana wallets sign the message directly (no prefix needed for wallet adapter)
-    // Verify signature using Ed25519
-    const isValid = await verify(signature, message, publicKeyBytes);
+    // Try @noble/ed25519 first
+    let isValid = await verify(signature, message, publicKeyBytes);
+    
+    if (!isValid) {
+      // Try nacl (used by Solana internally) as alternative
+      console.log("Trying nacl verification as fallback");
+      isValid = nacl.sign.detached.verify(message, signature, publicKeyBytes);
+    }
+    
     return isValid;
   } catch (error) {
     console.error("Signature verification error:", error);
-    return false;
+    // Try using nacl (used by Solana) for verification as fallback
+    try {
+      const isValid = nacl.sign.detached.verify(message, signature, publicKeyBytes);
+      console.log("Nacl verification result:", isValid);
+      return isValid;
+    } catch (naclError) {
+      console.error("Nacl verification also failed:", naclError);
+      return false;
+    }
   }
 }
 
