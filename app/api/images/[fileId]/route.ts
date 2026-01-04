@@ -59,8 +59,11 @@ export async function GET(
       downloadStream.on("error", reject);
     });
 
+    // Convert Buffer to Uint8Array for NextResponse
+    const uint8Array = new Uint8Array(buffer);
+
     // Return image with proper headers
-    return new NextResponse(buffer, {
+    return new NextResponse(uint8Array, {
       headers: {
         "Content-Type": file.contentType || "image/jpeg",
         "Content-Length": file.length.toString(),
