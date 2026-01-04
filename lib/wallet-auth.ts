@@ -2,7 +2,7 @@ import { NextAuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import connectDB from "./mongodb";
 import User from "@/models/User";
-import { verifyWalletSignature, generateAuthMessage, isValidSolanaAddress } from "./solana-auth";
+import { verifyWalletSignature, isValidSolanaAddress } from "./solana-auth";
 
 export const walletAuthOptions: NextAuthOptions = {
   providers: [
@@ -98,7 +98,4 @@ export const walletAuthOptions: NextAuthOptions = {
   secret: process.env.NEXTAUTH_SECRET || "fallback-secret-for-development",
   debug: process.env.NODE_ENV === "development",
 };
-
-// Export auth message generator for client-side use
-export { generateAuthMessage };
 

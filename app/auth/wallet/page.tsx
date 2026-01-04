@@ -8,7 +8,7 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import Flame from "@/components/Flame";
 import toast from "react-hot-toast";
-import { generateAuthMessage } from "@/lib/wallet-auth";
+import { generateAuthMessage } from "@/lib/solana-auth";
 import bs58 from "bs58";
 
 export default function WalletAuthPage() {
