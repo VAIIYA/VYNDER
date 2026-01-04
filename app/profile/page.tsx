@@ -9,8 +9,8 @@ import Image from "next/image";
 
 interface UserProfile {
   _id: string;
+  walletAddress: string; // Primary identifier - Solana wallet address
   username: string;
-  email: string;
   bio?: string;
   age?: number;
   gender?: string;
