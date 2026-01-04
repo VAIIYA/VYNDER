@@ -41,7 +41,7 @@ export const walletAuthOptions: NextAuthOptions = {
 
           await connectDB();
 
-          // Find or create user
+          // Find or create user by wallet address (walletAddress is the primary identifier)
           let user = await User.findOne({ walletAddress: credentials.walletAddress });
 
           if (!user) {

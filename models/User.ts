@@ -1,7 +1,7 @@
 import mongoose, { Schema, Document, Model } from "mongoose";
 
 export interface IUser extends Document {
-  walletAddress: string; // Solana wallet address (primary identifier)
+  walletAddress: string; // Solana wallet address (PRIMARY IDENTIFIER - replaces email)
   username: string;
   bio?: string;
   age?: number;
