@@ -1,11 +1,5 @@
 import mongoose from "mongoose";
 
-const MONGODB_URI: string = process.env.MONGODB_URI || "";
-
-if (!MONGODB_URI) {
-  console.error("MONGODB_URI is not set. Please add it to your environment variables.");
-}
-
 interface MongooseCache {
   conn: typeof mongoose | null;
   promise: Promise<typeof mongoose> | null;
@@ -22,6 +16,9 @@ if (!global.mongoose) {
 }
 
 async function connectDB(): Promise<typeof mongoose> {
+  // Only access process.env on the server side when function is called
+  const MONGODB_URI: string = process.env.MONGODB_URI || "";
+
   if (!MONGODB_URI) {
     throw new Error("MONGODB_URI is not set. Please add it to your environment variables.");
   }
