@@ -17,6 +17,9 @@ export const metadata: Metadata = {
     statusBarStyle: "default",
     title: "VYNDER",
   },
+  other: {
+    "mobile-web-app-capable": "yes",
+  },
   viewport: {
     width: "device-width",
     initialScale: 1,

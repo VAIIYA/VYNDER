@@ -37,7 +37,14 @@ export default function WalletAuthPage() {
 
       // Request signature from wallet
       const signature = await signMessage(messageBytes);
+      
+      // The signature from wallet adapter is already a Uint8Array
+      // Encode it to base58 for transmission
       const signatureBase58 = bs58.encode(signature);
+
+      console.log("Signing message:", authMessage.message);
+      console.log("Signature length:", signature.length);
+      console.log("Public key:", publicKey.toString());
 
       // Authenticate with NextAuth
       const result = await signIn("credentials", {
@@ -48,7 +55,8 @@ export default function WalletAuthPage() {
       });
 
       if (result?.error) {
-        toast.error(result.error);
+        console.error("Sign in error:", result.error);
+        toast.error(result.error === "Invalid signature" ? "Signature verification failed. Please try again." : result.error);
       } else {
         toast.success("Connected successfully!");
         router.push("/swipe");
@@ -56,10 +64,10 @@ export default function WalletAuthPage() {
       }
     } catch (error: any) {
       console.error("Wallet auth error:", error);
-      if (error.message?.includes("User rejected")) {
+      if (error.message?.includes("User rejected") || error.message?.includes("rejected")) {
         toast.error("Signature request cancelled");
       } else {
-        toast.error("Authentication failed");
+        toast.error(error.message || "Authentication failed");
       }
     } finally {
       setLoading(false);

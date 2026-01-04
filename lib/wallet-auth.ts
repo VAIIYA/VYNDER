@@ -25,13 +25,17 @@ export const walletAuthOptions: NextAuthOptions = {
           }
 
           // Verify signature
+          console.log("Verifying signature for wallet:", credentials.walletAddress);
           const isValid = await verifyWalletSignature(
             credentials.message,
             credentials.signature,
             credentials.walletAddress
           );
 
+          console.log("Signature verification result:", isValid);
+
           if (!isValid) {
+            console.error("Signature verification failed");
             throw new Error("Invalid signature");
           }
 

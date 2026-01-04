@@ -60,6 +60,7 @@ export async function verifyWalletSignature(
 
 /**
  * Verify signature using Ed25519
+ * Solana wallets sign the raw message bytes directly
  */
 async function verifySignature(
   message: Uint8Array,
@@ -70,6 +71,7 @@ async function verifySignature(
     // Convert public key to bytes
     const publicKeyBytes = publicKey.toBytes();
     
+    // Solana wallets sign the message directly (no prefix needed for wallet adapter)
     // Verify signature using Ed25519
     const isValid = await verify(signature, message, publicKeyBytes);
     return isValid;
