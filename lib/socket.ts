@@ -1,7 +1,5 @@
 import { Server as SocketIOServer } from "socket.io";
 import { Server as HTTPServer } from "http";
-import { NextApiRequest, NextApiResponse } from "next";
-import { Server as SocketServer } from "socket.io";
 
 let io: SocketIOServer | null = null;
 
@@ -79,21 +77,7 @@ export function getSocketIO(): SocketIOServer | null {
   return io;
 }
 
-// For Next.js API routes
-export default function handler(
-  req: NextApiRequest,
-  res: NextApiResponse
-) {
-  if (res.socket?.server?.io) {
-    console.log("Socket is already running");
-  } else {
-    console.log("Socket is initializing");
-    const httpServer = res.socket?.server;
-    if (httpServer) {
-      io = initSocketIO(httpServer);
-      res.socket.server.io = io;
-    }
-  }
-  res.end();
-}
+// Note: Socket.io server initialization is handled separately
+// For Next.js App Router, use client-side connections via useSocket hook
+// This file provides utility functions for socket management
 
