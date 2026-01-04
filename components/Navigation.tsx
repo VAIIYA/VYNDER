@@ -2,13 +2,14 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { HomeIcon, HeartIcon, ChatBubbleLeftRightIcon, UserIcon } from "@heroicons/react/24/outline";
-import { HomeIcon as HomeIconSolid, HeartIcon as HeartIconSolid, ChatBubbleLeftRightIcon as ChatBubbleLeftRightIconSolid, UserIcon as UserIconSolid } from "@heroicons/react/24/solid";
+import { HomeIcon, HeartIcon, ChatBubbleLeftRightIcon, UserIcon, MapIcon, StarIcon } from "@heroicons/react/24/outline";
+import { HomeIcon as HomeIconSolid, HeartIcon as HeartIconSolid, ChatBubbleLeftRightIcon as ChatBubbleLeftRightIconSolid, UserIcon as UserIconSolid, MapIcon as MapIconSolid, StarIcon as StarIconSolid } from "@heroicons/react/24/solid";
 
 const navItems = [
-  { href: "/swipe", icon: HomeIcon, iconSolid: HomeIconSolid, label: "Discover" },
-  { href: "/matches", icon: HeartIcon, iconSolid: HeartIconSolid, label: "Matches" },
-  { href: "/chat", icon: ChatBubbleLeftRightIcon, iconSolid: ChatBubbleLeftRightIconSolid, label: "Messages" },
+  { href: "/swipe", icon: HomeIcon, iconSolid: HomeIconSolid, label: "Home" },
+  { href: "/explore", icon: MapIcon, iconSolid: MapIconSolid, label: "Explore" },
+  { href: "/likes", icon: StarIcon, iconSolid: StarIconSolid, label: "Likes" },
+  { href: "/chat", icon: ChatBubbleLeftRightIcon, iconSolid: ChatBubbleLeftRightIconSolid, label: "Chat" },
   { href: "/profile", icon: UserIcon, iconSolid: UserIconSolid, label: "Profile" },
 ];
 
