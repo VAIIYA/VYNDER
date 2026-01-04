@@ -50,7 +50,7 @@ export default function ProfilePage() {
 
   useEffect(() => {
     if (status === "unauthenticated") {
-      router.push("/auth/signin");
+      router.push("/auth/wallet");
     }
   }, [status, router]);
 
@@ -692,7 +692,7 @@ export default function ProfilePage() {
         {/* Sign Out */}
         <div className="mt-8 pt-6 border-t border-gray-700">
           <button
-            onClick={() => signOut({ callbackUrl: "/auth/signin" })}
+            onClick={() => signOut({ callbackUrl: "/auth/wallet" })}
             className="w-full bg-gradient-to-r from-gray-800 to-gray-900 hover:from-gray-700 hover:to-gray-800 text-white font-semibold py-3 rounded-xl transition-all shadow-lg hover:shadow-solana-purple/20 border border-gray-700"
           >
             Sign Out

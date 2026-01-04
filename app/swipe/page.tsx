@@ -28,7 +28,7 @@ export default function SwipePage() {
 
   useEffect(() => {
     if (status === "unauthenticated") {
-      router.push("/auth/signin");
+      router.push("/auth/wallet");
     }
   }, [status, router]);
 

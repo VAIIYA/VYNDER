@@ -32,7 +32,7 @@ export default function LikesPage() {
 
   useEffect(() => {
     if (status === "unauthenticated") {
-      router.push("/auth/signin");
+      router.push("/auth/wallet");
     }
   }, [status, router]);
 

@@ -11,7 +11,7 @@ export default function ChatListPage() {
 
   useEffect(() => {
     if (status === "unauthenticated") {
-      router.push("/auth/signin");
+      router.push("/auth/wallet");
     } else if (status === "authenticated") {
       router.push("/matches");
     }
@@ -23,6 +23,7 @@ export default function ChatListPage() {
     </div>
   );
 }
+
 
 
 

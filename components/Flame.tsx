@@ -28,3 +28,4 @@ export default function Flame({ className = "w-8 h-8" }: FlameProps) {
   );
 }
 
+

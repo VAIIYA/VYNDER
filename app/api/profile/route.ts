@@ -51,14 +51,12 @@ export async function GET(request: NextRequest) {
     let user;
     try {
       user = await User.findById(session.user.id)
-        .select("-password")
         .populate("interests", "name category icon")
         .lean();
     } catch (populateError) {
       // If populate fails (e.g., interests collection doesn't exist), try without populate
       console.warn("Populate interests failed, fetching without:", populateError);
       user = await User.findById(session.user.id)
-        .select("-password")
         .lean();
     }
 
@@ -137,7 +135,6 @@ export async function PUT(request: NextRequest) {
         { $set: updateData },
         { new: true, runValidators: true }
       )
-        .select("-password")
         .populate("interests", "name category icon");
     } catch (populateError) {
       // If populate fails, try without populate
@@ -147,7 +144,7 @@ export async function PUT(request: NextRequest) {
         { $set: updateData },
         { new: true, runValidators: true }
       )
-        .select("-password");
+;
     }
 
     if (!user) {
@@ -165,11 +162,10 @@ export async function PUT(request: NextRequest) {
     // Reload user to get updated data
     try {
       user = await User.findById(session.user.id)
-        .select("-password")
         .populate("interests", "name category icon");
     } catch (populateError) {
       user = await User.findById(session.user.id)
-        .select("-password");
+;
     }
 
     // Get updated images (handle if Image collection doesn't exist yet)

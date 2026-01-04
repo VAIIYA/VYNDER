@@ -24,17 +24,17 @@ export default async function LandingPage() {
             <span className="text-xl font-black tracking-tighter text-brand-red hidden sm:block">VYNDER</span>
           </div>
 
-          <div className="flex items-center gap-4 lg:gap-6">
-            <Link href="/auth/signin" className="font-bold text-sm lg:text-base hover:text-brand-red transition-colors px-2">
-              Sign In
-            </Link>
-            <Link
-              href="/auth/signup"
-              className="bg-brand-black text-white px-6 py-2.5 rounded-full font-bold hover:bg-brand-red transition-all shadow-md active:scale-95 text-sm lg:text-base"
-            >
-              Join
-            </Link>
-          </div>
+              <div className="flex items-center gap-4 lg:gap-6">
+                <Link href="/auth/wallet" className="font-bold text-sm lg:text-base hover:text-brand-red transition-colors px-2">
+                  Connect Wallet
+                </Link>
+                <Link
+                  href="/auth/wallet"
+                  className="bg-brand-black text-white px-6 py-2.5 rounded-full font-bold hover:bg-brand-red transition-all shadow-md active:scale-95 text-sm lg:text-base"
+                >
+                  Join
+                </Link>
+              </div>
         </nav>
       </div>
 
@@ -59,7 +59,7 @@ export default async function LandingPage() {
 
             <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
               <Link
-                href="/auth/signup"
+                href="/auth/wallet"
                 className="bg-brand-black text-white text-lg lg:text-xl px-12 py-5 rounded-full font-bold hover:bg-brand-yellow hover:text-brand-black transition-all shadow-2xl hover:shadow-brand-yellow/30 text-center active:scale-95 group"
               >
                 Get Started <span className="inline-block transition-transform group-hover:translate-x-1">→</span>

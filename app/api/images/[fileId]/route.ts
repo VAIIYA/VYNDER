@@ -2,8 +2,11 @@ import { NextRequest, NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import connectDB from "@/lib/mongodb";
-import { GridFSBucket, ObjectId } from "mongodb";
 import mongoose from "mongoose";
+
+// Use GridFSBucket from mongoose's bundled mongodb
+const GridFSBucket = mongoose.mongo.GridFSBucket;
+const ObjectId = mongoose.Types.ObjectId;
 
 export async function GET(
   request: NextRequest,
@@ -21,11 +24,11 @@ export async function GET(
     }
 
     // Validate ObjectId
-    if (!ObjectId.isValid(params.fileId)) {
+    if (!mongoose.Types.ObjectId.isValid(params.fileId)) {
       return NextResponse.json({ error: "Invalid file ID" }, { status: 400 });
     }
 
-    const fileId = new ObjectId(params.fileId);
+    const fileId = new mongoose.Types.ObjectId(params.fileId);
 
     // Create GridFS bucket
     const bucket = new GridFSBucket(db, { bucketName: "photos" });
@@ -94,11 +97,11 @@ export async function DELETE(
     }
 
     // Validate ObjectId
-    if (!ObjectId.isValid(params.fileId)) {
+    if (!mongoose.Types.ObjectId.isValid(params.fileId)) {
       return NextResponse.json({ error: "Invalid file ID" }, { status: 400 });
     }
 
-    const fileId = new ObjectId(params.fileId);
+    const fileId = new mongoose.Types.ObjectId(params.fileId);
 
     // Create GridFS bucket
     const bucket = new GridFSBucket(db, { bucketName: "photos" });

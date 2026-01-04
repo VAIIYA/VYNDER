@@ -1,8 +1,7 @@
 import mongoose, { Schema, Document, Model } from "mongoose";
 
 export interface IUser extends Document {
-  email: string;
-  password?: string;
+  walletAddress: string; // Solana wallet address (primary identifier)
   username: string;
   bio?: string;
   age?: number;
@@ -49,17 +48,18 @@ export interface IUser extends Document {
 
 const UserSchema = new Schema<IUser>(
   {
-    email: {
+    walletAddress: {
       type: String,
       required: true,
       unique: true,
-      lowercase: true,
       trim: true,
-    },
-    password: {
-      type: String,
-      required: function (this: IUser) {
-        return !this.email.includes("@gmail.com") || !this.email.includes("@google");
+      index: true,
+      validate: {
+        validator: function (v: string) {
+          // Basic Solana address validation (base58, 32-44 chars)
+          return /^[1-9A-HJ-NP-Za-km-z]{32,44}$/.test(v);
+        },
+        message: "Invalid Solana wallet address",
       },
     },
     username: {
@@ -261,7 +261,7 @@ UserSchema.pre("save", function (next) {
 });
 
 // Indexes for performance
-UserSchema.index({ email: 1 });
+UserSchema.index({ walletAddress: 1 }); // Primary index for wallet lookup
 UserSchema.index({ location: 1 });
 UserSchema.index({ city: 1 });
 UserSchema.index({ gender: 1, interestedIn: 1 });
