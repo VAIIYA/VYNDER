@@ -5,6 +5,8 @@ import { authOptions } from "@/lib/auth";
 import { redirect } from "next/navigation";
 import Flame from "@/components/Flame";
 
+// Landing page component
+
 export default async function LandingPage() {
   const session = await getServerSession(authOptions);
 
