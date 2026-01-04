@@ -156,8 +156,8 @@ export default async function LandingPage() {
       {/* Solana Features Section */}
       <section className="py-32 bg-white relative">
         <div className="max-w-7xl mx-auto px-6 text-center">
-          <h2 className="text-4xl lg:text-6xl font-serif font-bold mb-8 tracking-tight">
-            Safety first, second, and always.
+          <h2 className="text-4xl lg:text-6xl font-serif font-bold mb-8 tracking-tight bg-gradient-to-r from-[#9945FF] to-[#14F195] bg-clip-text text-transparent">
+            Web3 Dating. No App Store Required.
           </h2>
           <p className="text-xl text-gray-500 mb-20 max-w-2xl mx-auto">
             Your safety is our #1 priority. We’ve built a safer way to meet new people.
