@@ -21,7 +21,7 @@ export interface WalletAuthMessage {
 export function generateAuthMessage(walletAddress: string): WalletAuthMessage {
   const timestamp = Date.now();
   const message = `VYNDER Authentication\n\nWallet: ${walletAddress}\nTimestamp: ${timestamp}\n\nSign this message to authenticate with VYNDER.`;
-  
+
   return {
     message,
     timestamp,
@@ -41,17 +41,17 @@ export async function verifyWalletSignature(
   try {
     // Verify the public key is valid
     const pubKey = new PublicKey(publicKey);
-    
+
     // Decode the signature from base58
     const signatureBytes = bs58.decode(signature);
-    
+
     // Create message bytes from the original message string
     const messageBytes = new TextEncoder().encode(message);
-    
+
     // Verify signature using Ed25519
     // The wallet adapter signs the raw message bytes
     const isValid = await verifySignature(messageBytes, signatureBytes, pubKey);
-    
+
     if (!isValid) {
       console.error("Signature verification failed");
       console.error("Message:", message);
@@ -60,7 +60,7 @@ export async function verifyWalletSignature(
       console.error("Signature length:", signatureBytes.length);
       console.error("Message length:", messageBytes.length);
     }
-    
+
     return isValid;
   } catch (error) {
     console.error("Signature verification error:", error);
@@ -78,19 +78,19 @@ async function verifySignature(
   signature: Uint8Array,
   publicKey: PublicKey
 ): Promise<boolean> {
+  // Convert public key to bytes
+  const publicKeyBytes = publicKey.toBytes();
+
   try {
-    // Convert public key to bytes
-    const publicKeyBytes = publicKey.toBytes();
-    
     // Try @noble/ed25519 first
     let isValid = await verify(signature, message, publicKeyBytes);
-    
+
     if (!isValid) {
       // Try nacl (used by Solana internally) as alternative
       console.log("Trying nacl verification as fallback");
       isValid = nacl.sign.detached.verify(message, signature, publicKeyBytes);
     }
-    
+
     return isValid;
   } catch (error) {
     console.error("Signature verification error:", error);
