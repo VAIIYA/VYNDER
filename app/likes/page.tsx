@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import Navigation from "@/components/Navigation";
@@ -36,16 +36,7 @@ export default function LikesPage() {
     }
   }, [status, router]);
 
-  useEffect(() => {
-    if (status === "authenticated") {
-      loadLikes();
-      // Poll for new likes every 10 seconds
-      const interval = setInterval(loadLikes, 10000);
-      return () => clearInterval(interval);
-    }
-  }, [status, filter]);
-
-  const loadLikes = async () => {
+  const loadLikes = useCallback(async () => {
     try {
       const response = await fetch(`/api/likes?filter=${filter}`);
       const data = await response.json();
@@ -61,7 +52,16 @@ export default function LikesPage() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [filter]);
+
+  useEffect(() => {
+    if (status === "authenticated") {
+      loadLikes();
+      // Poll for new likes every 10 seconds
+      const interval = setInterval(loadLikes, 10000);
+      return () => clearInterval(interval);
+    }
+  }, [status, loadLikes]);
 
   if (status === "loading" || loading) {
     return (

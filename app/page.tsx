@@ -98,7 +98,7 @@ export default async function LandingPage() {
               {/* Floating Bumble-style interactive tag */}
               <div className="absolute -top-8 -right-8 bg-brand-yellow p-6 rounded-3xl shadow-2xl text-brand-black transform rotate-12 hover:rotate-0 transition-all cursor-default scale-90 lg:scale-100">
                 <p className="font-black text-xs uppercase tracking-widest mb-1">Status</p>
-                <p className="font-bold text-xl">Let's Coffee! ☕</p>
+                <p className="font-bold text-xl">Let&apos;s Coffee! ☕</p>
               </div>
             </div>
           </div>
@@ -126,7 +126,7 @@ export default async function LandingPage() {
 
           <div>
             <h2 className="text-5xl lg:text-7xl font-serif font-bold mb-8 leading-tight">
-              We've changed <br /> the rules.
+              We&apos;ve changed <br /> the rules.
             </h2>
             <p className="text-xl lg:text-2xl opacity-90 mb-10 leading-relaxed font-medium">
               We empower you to make the first move. Kindness is at our core, ensuring every connection starts with respect and equality.
