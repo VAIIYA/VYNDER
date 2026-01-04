@@ -1,7 +1,16 @@
 import mongoose, { Schema, Document, Model } from "mongoose";
 
+/**
+ * User Model - Wallet-Based Authentication
+ * 
+ * PRIMARY IDENTIFIER: walletAddress (Solana wallet address)
+ * - This is the unique identifier for all users
+ * - All user lookups should prioritize walletAddress
+ * - MongoDB _id is derived from wallet during authentication
+ * - Everything in the profile system is linked to walletAddress
+ */
 export interface IUser extends Document {
-  walletAddress: string; // Solana wallet address (PRIMARY IDENTIFIER - replaces email)
+  walletAddress: string; // PRIMARY IDENTIFIER - Solana wallet address (unique, indexed)
   username: string;
   bio?: string;
   age?: number;
@@ -48,12 +57,15 @@ export interface IUser extends Document {
 
 const UserSchema = new Schema<IUser>(
   {
+    // PRIMARY IDENTIFIER: walletAddress
+    // This is the main key for all user operations
+    // All profiles, matches, likes, messages are linked to this unique wallet address
     walletAddress: {
       type: String,
       required: true,
-      unique: true,
+      unique: true, // Enforces uniqueness at database level
       trim: true,
-      index: true,
+      index: true, // Indexed for fast lookups
       validate: {
         validator: function (v: string) {
           // Basic Solana address validation (base58, 32-44 chars)
@@ -261,7 +273,7 @@ UserSchema.pre("save", function (next) {
 });
 
 // Indexes for performance
-UserSchema.index({ walletAddress: 1 }); // Primary index for wallet lookup
+UserSchema.index({ walletAddress: 1 }); // PRIMARY INDEX - walletAddress is the main identifier
 UserSchema.index({ location: 1 });
 UserSchema.index({ city: 1 });
 UserSchema.index({ gender: 1, interestedIn: 1 });
