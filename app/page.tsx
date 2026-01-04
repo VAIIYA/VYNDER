@@ -38,35 +38,33 @@ export default async function LandingPage() {
         </nav>
       </div>
 
-      {/* Hero Section: Hybrid Badoo/Bumble */}
+      {/* Hero Section: Solana-Powered */}
       <header className="relative pt-48 pb-24 lg:pt-64 lg:pb-40 overflow-hidden">
-        {/* Warm Background Gradient inspired by Bumble */}
-        <div className="absolute top-0 right-0 w-full h-full bg-gradient-to-br from-brand-lavender via-white to-brand-yellow-light/30 -z-20" />
-        <div className="absolute -top-24 -right-24 w-96 h-96 bg-brand-yellow/20 rounded-full blur-[100px] -z-10" />
+        {/* Solana Background Gradient */}
+        <div className="absolute top-0 right-0 w-full h-full bg-gradient-to-br from-[#9945FF]/10 via-white to-[#14F195]/10 -z-20" />
+        <div className="absolute -top-24 -right-24 w-96 h-96 bg-[#9945FF]/20 rounded-full blur-[100px] -z-10" />
+        <div className="absolute -bottom-24 -left-24 w-96 h-96 bg-[#14F195]/20 rounded-full blur-[100px] -z-10" />
 
         <div className="max-w-7xl mx-auto px-6 grid lg:grid-cols-2 gap-16 items-center">
           <div className="z-10 text-center lg:text-left">
-            <div className="inline-flex items-center gap-2 bg-brand-yellow/30 px-4 py-1.5 rounded-full text-brand-black text-sm font-bold mb-6 animate-fade-in">
-              <span className="animate-pulse">🐝</span>
-              <span>100% Verified Connections</span>
+            <div className="inline-flex items-center gap-2 bg-gradient-to-r from-[#9945FF]/20 to-[#14F195]/20 px-4 py-1.5 rounded-full text-[#9945FF] text-sm font-bold mb-6 animate-fade-in border border-[#9945FF]/30">
+              <span className="animate-pulse">⚡</span>
+              <span>Powered by Solana Blockchain</span>
             </div>
-            <h1 className="text-6xl lg:text-[92px] font-serif font-bold text-brand-red mb-8 leading-[0.9] tracking-tight">
-              Love on <br className="hidden lg:block" /> your terms.
+            <h1 className="text-6xl lg:text-[92px] font-serif font-bold bg-gradient-to-r from-[#9945FF] to-[#14F195] bg-clip-text text-transparent mb-8 leading-[0.9] tracking-tight">
+              Dating on <br className="hidden lg:block" /> the Blockchain.
             </h1>
             <p className="text-xl lg:text-2xl text-gray-700 mb-12 max-w-xl mx-auto lg:mx-0 font-medium leading-[1.4]">
-              Vynder is where kindness and confidence meet. Find people who are ready to build something real.
+              The first web3 PWA dating app built on Solana. No app stores needed. Your wallet, your identity, your connections. Experience the future of dating.
             </p>
 
             <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
               <Link
                 href="/auth/wallet"
-                className="bg-brand-black text-white text-lg lg:text-xl px-12 py-5 rounded-full font-bold hover:bg-brand-yellow hover:text-brand-black transition-all shadow-2xl hover:shadow-brand-yellow/30 text-center active:scale-95 group"
+                className="bg-gradient-to-r from-[#9945FF] to-[#14F195] text-white text-lg lg:text-xl px-12 py-5 rounded-full font-bold hover:from-[#9945FF]/90 hover:to-[#14F195]/90 transition-all shadow-2xl hover:shadow-[#9945FF]/30 text-center active:scale-95 group"
               >
-                Get Started <span className="inline-block transition-transform group-hover:translate-x-1">→</span>
+                Connect Wallet <span className="inline-block transition-transform group-hover:translate-x-1">→</span>
               </Link>
-              <button className="flex items-center justify-center gap-3 bg-white/50 backdrop-blur-md border border-white/60 text-brand-black text-lg lg:text-xl px-12 py-5 rounded-full font-bold hover:bg-white transition-all shadow-lg active:scale-95">
-                <span>Try Demo</span>
-              </button>
             </div>
           </div>
 
@@ -97,57 +95,59 @@ export default async function LandingPage() {
                 </div>
               </div>
 
-              {/* Floating Bumble-style interactive tag */}
-              <div className="absolute -top-8 -right-8 bg-brand-yellow p-6 rounded-3xl shadow-2xl text-brand-black transform rotate-12 hover:rotate-0 transition-all cursor-default scale-90 lg:scale-100">
-                <p className="font-black text-xs uppercase tracking-widest mb-1">Status</p>
-                <p className="font-bold text-xl">Let&apos;s Coffee! ☕</p>
+              {/* Floating Solana-style interactive tag */}
+              <div className="absolute -top-8 -right-8 bg-gradient-to-r from-[#9945FF] to-[#14F195] p-6 rounded-3xl shadow-2xl text-white transform rotate-12 hover:rotate-0 transition-all cursor-default scale-90 lg:scale-100">
+                <p className="font-black text-xs uppercase tracking-widest mb-1">Web3</p>
+                <p className="font-bold text-xl">Blockchain First ⚡</p>
               </div>
             </div>
           </div>
         </div>
       </header>
 
-      {/* Bumble-Inspired Yellow Section: The Warmth of Vynder */}
-      <section className="py-24 bg-brand-yellow px-6 text-brand-black overflow-hidden relative">
-        <div className="absolute -left-20 top-0 text-[200px] font-black opacity-[0.03] select-none pointer-events-none">
-          VYNDER
+      {/* Solana-Powered Section */}
+      <section className="py-24 bg-gradient-to-br from-[#9945FF] via-[#9945FF]/80 to-[#14F195] px-6 text-white overflow-hidden relative">
+        <div className="absolute -left-20 top-0 text-[200px] font-black opacity-[0.05] select-none pointer-events-none">
+          SOLANA
         </div>
 
         <div className="max-w-7xl mx-auto grid lg:grid-cols-2 gap-16 items-center">
           <div className="relative h-[400px] lg:h-[600px] flex items-center justify-center">
-            <div className="absolute inset-0 bg-white/20 rounded-[80px] rotate-3 blur-2xl" />
-            <div className="relative w-full h-full bg-white rounded-[60px] p-4 shadow-2xl overflow-hidden border-8 border-brand-yellow-light/50">
-              <Image src="/images/hero_illustration.png" alt="Happy Community" fill className="object-cover" />
+            <div className="absolute inset-0 bg-white/10 rounded-[80px] rotate-3 blur-2xl" />
+            <div className="relative w-full h-full bg-white/10 backdrop-blur-md rounded-[60px] p-4 shadow-2xl overflow-hidden border-8 border-white/20">
+              <Image src="/images/hero_illustration.png" alt="Solana Community" fill className="object-cover opacity-90" />
             </div>
             {/* Dynamic Stats Bubbles */}
-            <div className="absolute top-10 -right-10 bg-brand-black text-brand-yellow px-6 py-4 rounded-3xl shadow-2xl transform -rotate-3 animate-bounce-slow">
-              <p className="font-black text-2xl">4.9/5</p>
-              <p className="text-xs font-bold uppercase">Top Rated App</p>
+            <div className="absolute top-10 -right-10 bg-white/20 backdrop-blur-md text-white px-6 py-4 rounded-3xl shadow-2xl transform -rotate-3 animate-bounce-slow border border-white/30">
+              <p className="font-black text-2xl">⚡</p>
+              <p className="text-xs font-bold uppercase">Web3 Native</p>
             </div>
           </div>
 
           <div>
             <h2 className="text-5xl lg:text-7xl font-serif font-bold mb-8 leading-tight">
-              We&apos;ve changed <br /> the rules.
+              Built on <br /> Solana.
             </h2>
             <p className="text-xl lg:text-2xl opacity-90 mb-10 leading-relaxed font-medium">
-              We empower you to make the first move. Kindness is at our core, ensuring every connection starts with respect and equality.
+              Experience the future of dating. No app stores. No middlemen. Just your Solana wallet connecting you to real people. Fast, secure, and truly decentralized.
             </p>
             <div className="grid grid-cols-2 gap-6 mb-12">
-              <div className="bg-white/20 p-6 rounded-[32px] border border-white/30">
-                <span className="text-4xl block mb-4">👑</span>
-                <p className="font-bold">Ladies First</p>
+              <div className="bg-white/20 backdrop-blur-md p-6 rounded-[32px] border border-white/30">
+                <span className="text-4xl block mb-4">⚡</span>
+                <p className="font-bold">Lightning Fast</p>
+                <p className="text-sm opacity-80 mt-2">Solana speed</p>
               </div>
-              <div className="bg-white/20 p-6 rounded-[32px] border border-white/30">
-                <span className="text-4xl block mb-4">🛡️</span>
-                <p className="font-bold">Zero Harassment</p>
+              <div className="bg-white/20 backdrop-blur-md p-6 rounded-[32px] border border-white/30">
+                <span className="text-4xl block mb-4">🔐</span>
+                <p className="font-bold">Your Wallet</p>
+                <p className="text-sm opacity-80 mt-2">Your identity</p>
               </div>
             </div>
             <Link
-              href="/auth/signup"
-              className="inline-block bg-brand-black text-white px-12 py-5 rounded-full font-bold hover:bg-white hover:text-brand-black transition-all shadow-xl active:scale-95"
+              href="/auth/wallet"
+              className="inline-block bg-white text-[#9945FF] px-12 py-5 rounded-full font-bold hover:bg-white/90 transition-all shadow-xl active:scale-95"
             >
-              Learn More
+              Connect Your Wallet
             </Link>
           </div>
         </div>
@@ -165,15 +165,15 @@ export default async function LandingPage() {
 
           <div className="grid md:grid-cols-3 gap-12">
             {[
-              { icon: "🛡️", title: "Video Chat", desc: "Get to know your matches safely before meeting in person." },
+              { icon: "⚡", title: "Blockchain First", desc: "Built on Solana. Your wallet is your identity. No app stores needed." },
               { icon: "🔒", title: "Private Mode", desc: "You control who sees your profile and when you are visible." },
-              { icon: "💬", title: "Bumble Safety", desc: "Dedicated support team and smart filters to keep you safe." }
+              { icon: "💬", title: "Solana Safety", desc: "Decentralized verification and smart filters powered by blockchain." }
             ].map((feature, idx) => (
-              <div key={idx} className="group p-10 rounded-[48px] bg-brand-lavender/10 hover:bg-brand-lavender/20 transition-all border border-transparent hover:border-brand-lavender/30 cursor-default">
-                <div className="w-20 h-20 bg-white rounded-3xl flex items-center justify-center text-4xl shadow-lg mb-8 mx-auto group-hover:scale-110 transition-transform duration-500">
+              <div key={idx} className="group p-10 rounded-[48px] bg-gradient-to-br from-[#9945FF]/10 to-[#14F195]/10 hover:from-[#9945FF]/20 hover:to-[#14F195]/20 transition-all border border-transparent hover:border-[#9945FF]/30 cursor-default">
+                <div className="w-20 h-20 bg-gradient-to-br from-[#9945FF] to-[#14F195] rounded-3xl flex items-center justify-center text-4xl shadow-lg mb-8 mx-auto group-hover:scale-110 transition-transform duration-500">
                   {feature.icon}
                 </div>
-                <h3 className="text-2xl font-bold mb-4">{feature.title}</h3>
+                <h3 className="text-2xl font-bold mb-4 bg-gradient-to-r from-[#9945FF] to-[#14F195] bg-clip-text text-transparent">{feature.title}</h3>
                 <p className="text-gray-500 font-medium leading-relaxed">{feature.desc}</p>
               </div>
             ))}
@@ -229,14 +229,12 @@ export default async function LandingPage() {
             </div>
 
             <div className="col-span-2 lg:col-span-1">
-              <h4 className="font-bold text-sm lg:text-base uppercase tracking-widest mb-8 text-gray-400">Download</h4>
+              <h4 className="font-bold text-sm lg:text-base uppercase tracking-widest mb-8 text-gray-400">Install PWA</h4>
               <div className="space-y-3">
-                <div className="w-full h-12 bg-black rounded-xl flex items-center justify-center text-white font-bold gap-2 cursor-pointer hover:bg-brand-red transition-colors">
-                  <span>App Store</span>
+                <div className="w-full h-12 bg-gradient-to-r from-[#9945FF] to-[#14F195] rounded-xl flex items-center justify-center text-white font-bold gap-2 cursor-pointer hover:from-[#9945FF]/90 hover:to-[#14F195]/90 transition-all shadow-lg">
+                  <span>⚡ Install Now</span>
                 </div>
-                <div className="w-full h-12 bg-black rounded-xl flex items-center justify-center text-white font-bold gap-2 cursor-pointer hover:bg-brand-red transition-colors">
-                  <span>Google Play</span>
-                </div>
+                <p className="text-xs text-gray-400 text-center mt-2">No app store needed</p>
               </div>
             </div>
           </div>
