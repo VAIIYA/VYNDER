@@ -30,6 +30,7 @@ export function generateAuthMessage(walletAddress: string): WalletAuthMessage {
 
 /**
  * Verify a wallet signature
+ * Solana wallets sign messages directly, and we verify using Ed25519
  */
 export async function verifyWalletSignature(
   message: string,
@@ -40,16 +41,24 @@ export async function verifyWalletSignature(
     // Verify the public key is valid
     const pubKey = new PublicKey(publicKey);
     
-    // Decode the signature
+    // Decode the signature from base58
     const signatureBytes = bs58.decode(signature);
     
-    // Create message bytes
+    // Create message bytes from the original message string
     const messageBytes = new TextEncoder().encode(message);
     
-    // Verify signature using Solana's verification
-    // Note: This is a simplified version. In production, you'd want to use
-    // a more robust verification method that handles the message format properly
+    // Verify signature using Ed25519
+    // The wallet adapter signs the raw message bytes
     const isValid = await verifySignature(messageBytes, signatureBytes, pubKey);
+    
+    if (!isValid) {
+      console.error("Signature verification failed");
+      console.error("Message:", message);
+      console.error("Public key:", publicKey);
+      console.error("Signature (base58):", signature);
+      console.error("Signature length:", signatureBytes.length);
+      console.error("Message length:", messageBytes.length);
+    }
     
     return isValid;
   } catch (error) {
