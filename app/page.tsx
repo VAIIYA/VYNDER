@@ -160,7 +160,7 @@ export default async function LandingPage() {
             Web3 Dating. No App Store Required.
           </h2>
           <p className="text-xl text-gray-500 mb-20 max-w-2xl mx-auto">
-            Your safety is our #1 priority. We’ve built a safer way to meet new people.
+            The first Progressive Web App dating platform built on Solana. Install directly from your browser. Your wallet, your data, your connections.
           </p>
 
           <div className="grid md:grid-cols-3 gap-12">
