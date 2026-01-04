@@ -4,6 +4,7 @@ import { authOptions } from "@/lib/auth";
 import connectDB from "@/lib/mongodb";
 import User from "@/models/User";
 import Image from "@/models/Image";
+import { getUserByWalletAddress, getUserById } from "@/lib/user-utils";
 import { z } from "zod";
 
 const profileUpdateSchema = z.object({
@@ -42,22 +43,33 @@ const profileUpdateSchema = z.object({
 export async function GET(request: NextRequest) {
   try {
     const session = await getServerSession(authOptions);
-    if (!session?.user?.id) {
+    if (!session?.user?.id || !session?.user?.walletAddress) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
     await connectDB();
     
+    // Get user by wallet address (PRIMARY IDENTIFIER)
+    // Fallback to _id for backward compatibility
     let user;
     try {
-      user = await User.findById(session.user.id)
+      user = await User.findOne({ walletAddress: session.user.walletAddress })
         .populate("interests", "name category icon")
         .lean();
+      
+      // Fallback to _id if walletAddress lookup fails
+      if (!user) {
+        user = await User.findById(session.user.id)
+          .populate("interests", "name category icon")
+          .lean();
+      }
     } catch (populateError) {
       // If populate fails (e.g., interests collection doesn't exist), try without populate
       console.warn("Populate interests failed, fetching without:", populateError);
-      user = await User.findById(session.user.id)
-        .lean();
+      user = await User.findOne({ walletAddress: session.user.walletAddress }).lean();
+      if (!user) {
+        user = await User.findById(session.user.id).lean();
+      }
     }
 
     if (!user) {
@@ -65,9 +77,10 @@ export async function GET(request: NextRequest) {
     }
 
     // Get user's images (handle if Image collection doesn't exist yet)
+    // Images are linked by MongoDB _id (which is derived from wallet)
     let images: any[] = [];
     try {
-      images = await Image.find({ user: session.user.id })
+      images = await Image.find({ user: user?._id || session.user.id })
         .sort({ order: 1 })
         .lean();
     } catch (imageError) {
@@ -104,10 +117,11 @@ export async function PUT(request: NextRequest) {
     await connectDB();
 
     // Check username uniqueness if being updated
+    // Exclude current user by wallet address (PRIMARY IDENTIFIER)
     if (validatedData.username) {
       const existingUser = await User.findOne({
         username: validatedData.username,
-        _id: { $ne: session.user.id },
+        walletAddress: { $ne: session.user.walletAddress },
       });
       if (existingUser) {
         return NextResponse.json(
@@ -151,7 +165,7 @@ export async function PUT(request: NextRequest) {
       return NextResponse.json({ error: "User not found" }, { status: 404 });
     }
 
-    // Recalculate profile completion percentage (since pre-save hook doesn't run with findByIdAndUpdate)
+    // Recalculate profile completion percentage (since pre-save hook doesn't run with findOneAndUpdate)
     const completionPercentage = user.calculateProfileCompletion();
     user.profileCompletionPercentage = completionPercentage;
     user.profileCompleted = completionPercentage >= 80;
@@ -159,12 +173,19 @@ export async function PUT(request: NextRequest) {
     // Save to persist the calculated percentage
     await user.save();
     
-    // Reload user to get updated data
+    // Reload user by wallet address (PRIMARY IDENTIFIER) to get updated data
     try {
-      user = await User.findById(session.user.id)
+      user = await User.findOne({ walletAddress: session.user.walletAddress })
         .populate("interests", "name category icon");
+      if (!user) {
+        user = await User.findById(session.user.id)
+          .populate("interests", "name category icon");
+      }
     } catch (populateError) {
-      user = await User.findById(session.user.id);
+      user = await User.findOne({ walletAddress: session.user.walletAddress });
+      if (!user) {
+        user = await User.findById(session.user.id);
+      }
     }
 
     if (!user) {
@@ -172,9 +193,10 @@ export async function PUT(request: NextRequest) {
     }
 
     // Get updated images (handle if Image collection doesn't exist yet)
+    // Images are linked by MongoDB _id (which is derived from wallet)
     let images: any[] = [];
     try {
-      images = await Image.find({ user: session.user.id })
+      images = await Image.find({ user: user?._id || session.user.id })
         .sort({ order: 1 })
         .lean();
     } catch (imageError) {
