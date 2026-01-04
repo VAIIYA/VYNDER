@@ -164,8 +164,11 @@ export async function PUT(request: NextRequest) {
       user = await User.findById(session.user.id)
         .populate("interests", "name category icon");
     } catch (populateError) {
-      user = await User.findById(session.user.id)
-;
+      user = await User.findById(session.user.id);
+    }
+
+    if (!user) {
+      return NextResponse.json({ error: "User not found" }, { status: 404 });
     }
 
     // Get updated images (handle if Image collection doesn't exist yet)
