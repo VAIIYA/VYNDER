@@ -36,14 +36,20 @@ export async function GET(request: NextRequest) {
 
       // Calculate distance if both users have coordinates
       if (
-        currentUser?.coordinates?.coordinates &&
-        fromUser?.coordinates?.coordinates
+        currentUser?.coordinates?.latitude &&
+        currentUser?.coordinates?.longitude &&
+        fromUser?.coordinates?.latitude &&
+        fromUser?.coordinates?.longitude
       ) {
         distance = calculateDistance(
-          currentUser.coordinates.coordinates[1], // lat
-          currentUser.coordinates.coordinates[0], // lon
-          fromUser.coordinates.coordinates[1], // lat
-          fromUser.coordinates.coordinates[0] // lon
+          {
+            latitude: currentUser.coordinates.latitude,
+            longitude: currentUser.coordinates.longitude,
+          },
+          {
+            latitude: fromUser.coordinates.latitude,
+            longitude: fromUser.coordinates.longitude,
+          }
         );
       }
 
