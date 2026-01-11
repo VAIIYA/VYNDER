@@ -36,3 +36,4 @@ export default function WalletConnectionGuard() {
   return null; // This component doesn't render anything
 }
 
+

@@ -20,21 +20,21 @@ export default async function LandingPage() {
       <div className="fixed top-8 w-full z-50 px-6 flex justify-center pointer-events-none">
         <nav className="bg-white/70 backdrop-blur-2xl border border-white/40 px-6 py-3 rounded-full shadow-[0_8px_32px_rgba(0,0,0,0.1)] flex justify-between items-center w-full max-w-4xl pointer-events-auto transition-all hover:shadow-[0_12px_48px_rgba(0,0,0,0.15)]">
           <div className="flex items-center gap-2">
-            <Flame className="w-9 h-9 text-brand-red" />
-            <span className="text-xl font-black tracking-tighter text-brand-red hidden sm:block">VYNDER</span>
+            <Flame className="w-9 h-9 text-[#9945FF]" />
+            <span className="text-xl font-black tracking-tighter bg-gradient-to-r from-[#9945FF] to-[#14F195] bg-clip-text text-transparent hidden sm:block">VYNDER</span>
           </div>
 
-              <div className="flex items-center gap-4 lg:gap-6">
-                <Link href="/auth/wallet" className="font-bold text-sm lg:text-base hover:text-brand-red transition-colors px-2">
-                  Connect Wallet
-                </Link>
-                <Link
-                  href="/auth/wallet"
-                  className="bg-brand-black text-white px-6 py-2.5 rounded-full font-bold hover:bg-brand-red transition-all shadow-md active:scale-95 text-sm lg:text-base"
-                >
-                  Join
-                </Link>
-              </div>
+          <div className="flex items-center gap-4 lg:gap-6">
+            <Link href="/auth/wallet" className="font-bold text-sm lg:text-base hover:text-brand-red transition-colors px-2">
+              Connect Wallet
+            </Link>
+            <Link
+              href="/auth/wallet"
+              className="bg-brand-black text-white px-6 py-2.5 rounded-full font-bold hover:bg-brand-red transition-all shadow-md active:scale-95 text-sm lg:text-base"
+            >
+              Join
+            </Link>
+          </div>
         </nav>
       </div>
 
@@ -187,8 +187,8 @@ export default async function LandingPage() {
           <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-12 mb-20">
             <div className="col-span-2 md:col-span-4 lg:col-span-1">
               <div className="flex items-center gap-2 mb-8">
-                <Flame className="w-10 h-10 text-brand-red" />
-                <span className="text-2xl font-black tracking-tighter text-brand-red">VYNDER</span>
+                <Flame className="w-10 h-10 text-[#9945FF]" />
+                <span className="text-2xl font-black tracking-tighter bg-gradient-to-r from-[#9945FF] to-[#14F195] bg-clip-text text-transparent">VYNDER</span>
               </div>
               <p className="text-gray-500 font-medium mb-8">
                 Bringing people closer since 2026.

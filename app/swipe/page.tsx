@@ -132,7 +132,7 @@ export default function SwipePage() {
       <div className="absolute top-0 left-0 right-0 z-10 px-4 pt-4 pb-2">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <Flame className="w-8 h-8 text-red-500" />
+            <Flame className="w-8 h-8 text-[#9945FF]" />
             <span className="text-white font-bold text-xl">vynder</span>
           </div>
           <div className="flex items-center gap-3">

@@ -37,7 +37,7 @@ export default function WalletAuthPage() {
 
       // Request signature from wallet
       const signature = await signMessage(messageBytes);
-      
+
       // The signature from wallet adapter is already a Uint8Array
       // Encode it to base58 for transmission
       const signatureBase58 = bs58.encode(signature);
@@ -89,8 +89,8 @@ export default function WalletAuthPage() {
         <div className="bg-white rounded-[40px] shadow-2xl p-10 border border-white/50 backdrop-blur-sm">
           <div className="flex justify-center mb-8">
             <Link href="/" className="flex items-center gap-2">
-              <Flame className="w-10 h-10 text-brand-red transform rotate-3" />
-              <span className="text-2xl font-black tracking-tighter text-brand-red">VYNDER</span>
+              <Flame className="w-10 h-10 text-[#9945FF] transform rotate-3" />
+              <span className="text-2xl font-black tracking-tighter bg-gradient-to-r from-[#9945FF] to-[#14F195] bg-clip-text text-transparent">VYNDER</span>
             </Link>
           </div>
 
