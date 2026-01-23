@@ -15,22 +15,22 @@ export default async function LandingPage() {
   }
 
   return (
-    <div className="min-h-screen bg-white text-brand-black font-sans selection:bg-brand-yellow selection:text-brand-black">
-      {/* Floating Pill Navigation */}
-      <div className="fixed top-8 w-full z-50 px-6 flex justify-center pointer-events-none">
-        <nav className="bg-white/70 backdrop-blur-2xl border border-white/40 px-6 py-3 rounded-full shadow-[0_8px_32px_rgba(0,0,0,0.1)] flex justify-between items-center w-full max-w-4xl pointer-events-auto transition-all hover:shadow-[0_12px_48px_rgba(0,0,0,0.15)]">
+    <div className="min-h-screen bg-background-primary text-text-primary font-sans">
+      {/* Mobile-first floating navigation */}
+      <div className="fixed top-4 w-full z-50 px-4 safe-top flex justify-center pointer-events-none">
+        <nav className="glass px-4 py-3 rounded-2xl flex justify-between items-center w-full max-w-md pointer-events-auto">
           <div className="flex items-center gap-2">
-            <Flame className="w-9 h-9 text-[#9945FF]" />
-            <span className="text-xl font-black tracking-tighter bg-gradient-to-r from-[#9945FF] to-[#14F195] bg-clip-text text-transparent hidden sm:block">VYNDER</span>
+            <Flame className="w-8 h-8 text-metamask-orange" />
+            <span className="text-mobile-lg font-black tracking-tighter text-gradient">VYNDER</span>
           </div>
 
-          <div className="flex items-center gap-4 lg:gap-6">
-            <Link href="/auth/wallet" className="font-bold text-sm lg:text-base hover:text-brand-red transition-colors px-2">
-              Connect Wallet
+          <div className="flex items-center gap-2">
+            <Link href="/auth/wallet" className="font-bold text-mobile-sm hover:text-metamask-blue transition-colors px-3 py-2 rounded-xl hover:bg-white/10">
+              Connect
             </Link>
             <Link
               href="/auth/wallet"
-              className="bg-brand-black text-white px-6 py-2.5 rounded-full font-bold hover:bg-brand-red transition-all shadow-md active:scale-95 text-sm lg:text-base"
+              className="bg-metamask-orange text-white px-4 py-2 rounded-xl font-bold hover:bg-metamask-orange/90 transition-all active:scale-95 text-mobile-sm btn-touch"
             >
               Join
             </Link>
@@ -38,67 +38,67 @@ export default async function LandingPage() {
         </nav>
       </div>
 
-      {/* Hero Section: Solana-Powered */}
-      <header className="relative pt-48 pb-24 lg:pt-64 lg:pb-40 overflow-hidden">
-        {/* Solana Background Gradient */}
-        <div className="absolute top-0 right-0 w-full h-full bg-gradient-to-br from-[#9945FF]/10 via-white to-[#14F195]/10 -z-20" />
-        <div className="absolute -top-24 -right-24 w-96 h-96 bg-[#9945FF]/20 rounded-full blur-[100px] -z-10" />
-        <div className="absolute -bottom-24 -left-24 w-96 h-96 bg-[#14F195]/20 rounded-full blur-[100px] -z-10" />
+      {/* Hero Section: Mobile-first Web3 Dating */}
+      <header className="relative pt-32 pb-16 px-4 overflow-hidden safe-top">
+        {/* Background gradients */}
+        <div className="absolute top-0 right-0 w-full h-full bg-gradient-to-br from-metamask-purple/10 via-background-primary to-metamask-green/10 -z-20" />
+        <div className="absolute -top-24 -right-24 w-64 h-64 bg-metamask-purple/20 rounded-full blur-[80px] -z-10" />
+        <div className="absolute -bottom-24 -left-24 w-64 h-64 bg-metamask-green/20 rounded-full blur-[80px] -z-10" />
 
-        <div className="max-w-7xl mx-auto px-6 grid lg:grid-cols-2 gap-16 items-center">
-          <div className="z-10 text-center lg:text-left">
-            <div className="inline-flex items-center gap-2 bg-gradient-to-r from-[#9945FF]/20 to-[#14F195]/20 px-4 py-1.5 rounded-full text-[#9945FF] text-sm font-bold mb-6 animate-fade-in border border-[#9945FF]/30">
+        <div className="max-w-4xl mx-auto">
+          <div className="z-10 text-center">
+            <div className="inline-flex items-center gap-2 glass px-4 py-2 rounded-full text-metamask-orange text-mobile-sm font-bold mb-6 animate-fade-in">
               <span className="animate-pulse">⚡</span>
-              <span>Powered by Solana Blockchain</span>
+              <span>Web3 Dating on Solana</span>
             </div>
-            <h1 className="text-6xl lg:text-[92px] font-serif font-bold bg-gradient-to-r from-[#9945FF] to-[#14F195] bg-clip-text text-transparent mb-8 leading-[0.9] tracking-tight">
-              Dating on <br className="hidden lg:block" /> the Blockchain.
+            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-gradient mb-6 leading-tight">
+              Dating on the Blockchain
             </h1>
-            <p className="text-xl lg:text-2xl text-gray-700 mb-12 max-w-xl mx-auto lg:mx-0 font-medium leading-[1.4]">
-              The first web3 PWA dating app built on Solana. No app stores needed. Your wallet, your identity, your connections. Experience the future of dating.
+            <p className="text-mobile-lg lg:text-xl text-text-secondary mb-8 max-w-2xl mx-auto leading-relaxed">
+              The first PWA dating app. No app stores needed. Your wallet, your identity, your connections.
             </p>
 
-            <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Link
                 href="/auth/wallet"
-                className="bg-gradient-to-r from-[#9945FF] to-[#14F195] text-white text-lg lg:text-xl px-12 py-5 rounded-full font-bold hover:from-[#9945FF]/90 hover:to-[#14F195]/90 transition-all shadow-2xl hover:shadow-[#9945FF]/30 text-center active:scale-95 group"
+                className="bg-gradient-to-r from-metamask-orange to-metamask-blue text-white text-mobile-lg px-8 py-4 rounded-2xl font-bold hover:shadow-lg transition-all text-center active:scale-95 btn-touch group"
               >
                 Connect Wallet <span className="inline-block transition-transform group-hover:translate-x-1">→</span>
               </Link>
             </div>
           </div>
 
-          <div className="relative">
-            {/* Stacked Card Design inspired by Bumble */}
-            <div className="relative w-full aspect-[4/5] max-w-[450px] lg:max-w-[550px] mx-auto">
-              {/* Decorative back card */}
-              <div className="absolute top-12 left-12 w-full h-full bg-brand-red/10 rounded-[50px] rotate-6 -z-10 border-2 border-brand-red/5" />
-              <div className="absolute top-6 left-6 w-full h-full bg-brand-yellow/20 rounded-[50px] -rotate-3 -z-5 border-2 border-brand-yellow/10" />
+          <div className="relative mt-12">
+            {/* Mobile-first card design */}
+            <div className="relative w-full aspect-[4/5] max-w-sm mx-auto">
+              {/* Decorative back cards */}
+              <div className="absolute top-6 left-6 w-full h-full bg-metamask-orange/10 rounded-3xl rotate-6 -z-10 border-2 border-metamask-orange/5" />
+              <div className="absolute top-3 left-3 w-full h-full bg-metamask-blue/20 rounded-3xl -rotate-3 -z-5 border-2 border-metamask-blue/10" />
 
-              <div className="relative w-full h-full rounded-[48px] overflow-hidden shadow-[0_32px_64px_rgba(0,0,0,0.15)] border-[8px] border-white group">
+              <div className="relative w-full h-full rounded-3xl overflow-hidden shadow-2xl border-4 border-background-primary group">
                 <Image
                   src="/images/meet_people_model.png"
                   alt="Featured match"
                   fill
                   className="object-cover group-hover:scale-105 transition-transform duration-1000"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent" />
 
-                {/* Interest Badges UI */}
-                <div className="absolute bottom-10 left-10 text-white">
-                  <div className="flex gap-2 mb-4">
-                    <span className="bg-white/20 backdrop-blur-md px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider">Outdoors</span>
-                    <span className="bg-white/20 backdrop-blur-md px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider">Music</span>
+                {/* Profile info */}
+                <div className="absolute bottom-6 left-6 right-6 text-white">
+                  <div className="flex gap-2 mb-3 flex-wrap">
+                    <span className="glass px-3 py-1 rounded-full text-mobile-xs font-bold uppercase tracking-wider">Outdoors</span>
+                    <span className="glass px-3 py-1 rounded-full text-mobile-xs font-bold uppercase tracking-wider">Music</span>
                   </div>
-                  <h3 className="text-3xl font-bold">Emma, 26</h3>
-                  <p className="text-white/80 font-medium">Ready to find something real ✨</p>
+                  <h3 className="text-mobile-xl font-bold">Emma, 26</h3>
+                  <p className="text-white/90 font-medium text-mobile-sm">Ready to find something real ✨</p>
                 </div>
               </div>
 
-              {/* Floating Solana-style interactive tag */}
-              <div className="absolute -top-8 -right-8 bg-gradient-to-r from-[#9945FF] to-[#14F195] p-6 rounded-3xl shadow-2xl text-white transform rotate-12 hover:rotate-0 transition-all cursor-default scale-90 lg:scale-100">
-                <p className="font-black text-xs uppercase tracking-widest mb-1">Web3</p>
-                <p className="font-bold text-xl">Blockchain First ⚡</p>
+              {/* Floating Web3 tag */}
+              <div className="absolute -top-4 -right-4 glass p-4 rounded-2xl text-text-primary transform rotate-12 hover:rotate-0 transition-all cursor-default">
+                <p className="font-black text-mobile-xs uppercase tracking-widest mb-1">Web3</p>
+                <p className="font-bold text-mobile-base">Blockchain First ⚡</p>
               </div>
             </div>
           </div>

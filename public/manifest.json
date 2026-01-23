@@ -1,33 +1,67 @@
 {
-  "name": "VYNDER - Find Your Match",
+  "name": "VYNDER - Web3 Dating",
   "short_name": "VYNDER",
-  "description": "A modern dating app to find your perfect match",
+  "description": "The first Web3 dating app. Find your perfect match with blockchain security and privacy.",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#ffffff",
-  "theme_color": "#ef4444",
+  "background_color": "#000000",
+  "theme_color": "#FF6B35",
   "orientation": "portrait-primary",
+  "scope": "/",
+  "lang": "en-US",
+  "dir": "ltr",
   "icons": [
     {
       "src": "/icon-192x192.png",
       "sizes": "192x192",
       "type": "image/png",
-      "purpose": "any maskable"
+      "purpose": "any"
+    },
+    {
+      "src": "/icon-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "maskable"
     },
     {
       "src": "/icon-512x512.png",
       "sizes": "512x512",
       "type": "image/png",
-      "purpose": "any maskable"
+      "purpose": "any"
+    },
+    {
+      "src": "/icon-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
     }
   ],
-  "categories": ["social", "dating"],
-  "screenshots": [],
+  "categories": ["social", "lifestyle", "entertainment"],
+  "screenshots": [
+    {
+      "src": "/images/screenshot-swipe.png",
+      "sizes": "1280x720",
+      "type": "image/png",
+      "label": "Swipe through profiles"
+    },
+    {
+      "src": "/images/screenshot-matches.png",
+      "sizes": "1280x720",
+      "type": "image/png",
+      "label": "View your matches"
+    },
+    {
+      "src": "/images/screenshot-chat.png",
+      "sizes": "1280x720",
+      "type": "image/png",
+      "label": "Chat with matches"
+    }
+  ],
   "shortcuts": [
     {
       "name": "Discover",
       "short_name": "Discover",
-      "description": "Browse profiles",
+      "description": "Browse and swipe profiles",
       "url": "/swipe",
       "icons": [{ "src": "/icon-192x192.png", "sizes": "192x192" }]
     },
@@ -37,8 +71,21 @@
       "description": "View your matches",
       "url": "/matches",
       "icons": [{ "src": "/icon-192x192.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "Chat",
+      "short_name": "Chat",
+      "description": "Message your matches",
+      "url": "/chat",
+      "icons": [{ "src": "/icon-192x192.png", "sizes": "192x192" }]
     }
-  ]
+  ],
+  "prefer_related_applications": false,
+  "related_applications": [],
+  "iarc_rating_id": "",
+  "edge_side_panel": {
+    "preferred_width": 400
+  }
 }
 
 

@@ -62,7 +62,7 @@ export default function SwipeCard({ user, onSwipeLeft, onSwipeRight }: SwipeCard
 
   return (
     <motion.div
-      className="swipe-card relative w-full max-w-md mx-auto h-[600px] rounded-2xl overflow-hidden shadow-2xl bg-white dark:bg-gray-800"
+      className="swipe-card relative w-full max-w-sm mx-auto h-[70vh] max-h-[600px] rounded-3xl overflow-hidden shadow-2xl bg-background-primary"
       style={{ x, rotate, opacity }}
       drag="x"
       dragConstraints={{ left: 0, right: 0 }}
@@ -88,7 +88,7 @@ export default function SwipeCard({ user, onSwipeLeft, onSwipeRight }: SwipeCard
                 unoptimized
               />
             ) : (
-              <div className="w-full h-full bg-gradient-to-br from-solana-purple to-solana-blue flex items-center justify-center">
+              <div className="w-full h-full bg-gradient-to-br from-metamask-orange to-metamask-blue flex items-center justify-center">
                 <span className="text-white text-4xl font-bold">{user.username[0]?.toUpperCase()}</span>
               </div>
             )}
@@ -96,13 +96,13 @@ export default function SwipeCard({ user, onSwipeLeft, onSwipeRight }: SwipeCard
               <>
                 <button
                   onClick={prevPhoto}
-                  className="absolute left-2 top-1/2 -translate-y-1/2 bg-black/50 text-white rounded-full p-2 hover:bg-black/70"
+                  className="absolute left-3 top-1/2 -translate-y-1/2 glass text-white rounded-full p-3 hover:bg-white/20 transition-all btn-touch"
                 >
                   ←
                 </button>
                 <button
                   onClick={nextPhoto}
-                  className="absolute right-2 top-1/2 -translate-y-1/2 bg-black/50 text-white rounded-full p-2 hover:bg-black/70"
+                  className="absolute right-3 top-1/2 -translate-y-1/2 glass text-white rounded-full p-3 hover:bg-white/20 transition-all btn-touch"
                 >
                   →
                 </button>
@@ -120,7 +120,7 @@ export default function SwipeCard({ user, onSwipeLeft, onSwipeRight }: SwipeCard
             )}
           </>
         ) : (
-          <div className="w-full h-full bg-gradient-to-br from-solana-purple to-solana-blue flex items-center justify-center">
+          <div className="w-full h-full bg-gradient-to-br from-metamask-orange to-metamask-blue flex items-center justify-center">
             <span className="text-white text-4xl font-bold">{user.username[0]?.toUpperCase()}</span>
           </div>
         )}

@@ -4,17 +4,18 @@ import "./globals.css";
 import { Providers } from "@/components/Providers";
 import { Toaster } from "react-hot-toast";
 import ServiceWorkerRegistration from "@/components/ServiceWorkerRegistration";
+import InstallPrompt from "@/components/InstallPrompt";
 
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "VYNDER - Find Your Match",
-  description: "A modern dating app to find your perfect match",
+  title: "VYNDER - Web3 Dating",
+  description: "A modern Web3 dating app to find your perfect match",
   manifest: "/manifest.json",
-  themeColor: "#ef4444",
+  themeColor: "#FF6B35",
   appleWebApp: {
     capable: true,
-    statusBarStyle: "default",
+    statusBarStyle: "black-translucent",
     title: "VYNDER",
   },
   other: {
@@ -44,6 +45,7 @@ export default function RootLayout({
           {children}
           <Toaster position="top-center" />
           <ServiceWorkerRegistration />
+          <InstallPrompt />
         </Providers>
       </body>
     </html>
