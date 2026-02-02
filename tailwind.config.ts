@@ -21,6 +21,9 @@ const config: Config = {
           "medium-gray": "#2A2A2A",
           "light-gray": "#404040",
         },
+        twitter: {
+          blue: "#1DA1F2",
+        },
         primary: {
           50: "#fff7ed",
           100: "#ffedd5",

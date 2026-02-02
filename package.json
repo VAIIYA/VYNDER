@@ -7,7 +7,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "seed:interests": "ts-node scripts/seed-interests.ts"
+    "seed:interests": "ts-node scripts/seed-interests.ts",
+    "seed:feed": "ts-node scripts/seed-feed.ts"
   },
   "dependencies": {
     "@heroicons/react": "^2.1.0",

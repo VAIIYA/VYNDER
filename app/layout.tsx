@@ -5,6 +5,7 @@ import { Providers } from "@/components/Providers";
 import { Toaster } from "react-hot-toast";
 import ServiceWorkerRegistration from "@/components/ServiceWorkerRegistration";
 import InstallPrompt from "@/components/InstallPrompt";
+import NotificationPrompt from "@/components/NotificationPrompt";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -45,10 +46,10 @@ export default function RootLayout({
           {children}
           <Toaster position="top-center" />
           <ServiceWorkerRegistration />
+          <NotificationPrompt />
           <InstallPrompt />
         </Providers>
       </body>
     </html>
   );
 }
-
