@@ -17,7 +17,7 @@ export default function Navigation() {
   const pathname = usePathname();
 
   return (
-    <nav className="fixed bottom-0 left-0 right-0 bg-background-primary/90 backdrop-blur-xl border-t border-metamask-dark-gray z-50 safe-area-bottom">
+    <nav className="fixed bottom-0 left-0 right-0 panel z-50 safe-area-bottom">
       <div className="flex justify-around items-center h-16 px-2">
         {navItems.map((item) => {
           const isActive = pathname === item.href || pathname?.startsWith(item.href + "/");
@@ -37,7 +37,7 @@ export default function Navigation() {
                 <div className="absolute top-0 left-1/2 -translate-x-1/2 w-12 h-1 bg-gradient-to-r from-metamask-orange to-metamask-blue rounded-b-full"></div>
               )}
               <Icon className={`w-6 h-6 transition-transform ${isActive ? "scale-110" : ""}`} />
-              <span className="text-xs mt-1 hidden sm:block font-medium">{item.label}</span>
+              <span className="text-[10px] mt-1 font-medium tracking-wide">{item.label}</span>
             </Link>
           );
         })}
@@ -45,7 +45,6 @@ export default function Navigation() {
     </nav>
   );
 }
-
 
 
 

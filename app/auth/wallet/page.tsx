@@ -8,7 +8,6 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import Flame from "@/components/Flame";
 import toast from "react-hot-toast";
-import { generateAuthMessage } from "@/lib/solana-auth";
 import bs58 from "bs58";
 
 export default function WalletAuthPage() {
@@ -31,9 +30,19 @@ export default function WalletAuthPage() {
     setLoading(true);
 
     try {
-      // Generate authentication message
-      const authMessage = generateAuthMessage(publicKey.toString());
-      const messageBytes = new TextEncoder().encode(authMessage.message);
+      const nonceResponse = await fetch("/api/auth/nonce", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ walletAddress: publicKey.toString() }),
+      });
+
+      const nonceData = await nonceResponse.json();
+
+      if (!nonceResponse.ok || !nonceData.message) {
+        throw new Error(nonceData.error || "Failed to issue auth nonce");
+      }
+
+      const messageBytes = new TextEncoder().encode(nonceData.message);
 
       // Request signature from wallet
       const signature = await signMessage(messageBytes);
@@ -42,7 +51,7 @@ export default function WalletAuthPage() {
       // Encode it to base58 for transmission
       const signatureBase58 = bs58.encode(signature);
 
-      console.log("Signing message:", authMessage.message);
+      console.log("Signing message:", nonceData.message);
       console.log("Signature length:", signature.length);
       console.log("Public key:", publicKey.toString());
 
@@ -50,7 +59,7 @@ export default function WalletAuthPage() {
       const result = await signIn("credentials", {
         walletAddress: publicKey.toString(),
         signature: signatureBase58,
-        message: authMessage.message,
+        message: nonceData.message,
         redirect: false,
       });
 
@@ -80,13 +89,13 @@ export default function WalletAuthPage() {
   }, [disconnect]);
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-brand-lavender px-4 relative overflow-hidden">
+    <div className="min-h-screen flex items-center justify-center app-shell px-4 relative overflow-hidden">
       {/* Decorative elements */}
-      <div className="absolute top-0 right-0 w-64 h-64 bg-brand-red/10 rounded-full blur-3xl -mr-32 -mt-32" />
-      <div className="absolute bottom-0 left-0 w-64 h-64 bg-brand-red/10 rounded-full blur-3xl -ml-32 -mb-32" />
+      <div className="absolute top-0 right-0 w-64 h-64 bg-metamask-purple/15 rounded-full blur-3xl -mr-32 -mt-32" />
+      <div className="absolute bottom-0 left-0 w-64 h-64 bg-metamask-blue/15 rounded-full blur-3xl -ml-32 -mb-32" />
 
       <div className="w-full max-w-md z-10">
-        <div className="bg-white rounded-[40px] shadow-2xl p-10 border border-white/50 backdrop-blur-sm">
+        <div className="panel rounded-[40px] shadow-2xl p-10">
           <div className="flex justify-center mb-8">
             <Link href="/" className="flex items-center gap-2">
               <Flame className="w-10 h-10 text-[#9945FF] transform rotate-3" />
@@ -94,10 +103,10 @@ export default function WalletAuthPage() {
             </Link>
           </div>
 
-          <h1 className="text-3xl font-serif font-bold text-center mb-2 text-brand-near-black">
+          <h1 className="text-3xl font-serif font-bold text-center mb-2 text-white">
             Connect Your Wallet
           </h1>
-          <p className="text-center text-gray-500 mb-10">
+          <p className="text-center text-gray-400 mb-10">
             Sign in with your Solana wallet to continue
           </p>
 
@@ -123,8 +132,8 @@ export default function WalletAuthPage() {
           ) : (
             <div className="space-y-6">
               <div className="bg-gradient-to-r from-solana-purple/10 to-solana-blue/10 rounded-2xl p-4 border border-solana-purple/20">
-                <p className="text-xs text-gray-500 mb-1">Connected Wallet</p>
-                <p className="text-sm font-mono text-brand-near-black break-all">
+                <p className="text-xs text-gray-400 mb-1">Connected Wallet</p>
+                <p className="text-sm font-mono text-white break-all">
                   {publicKey?.toString()}
                 </p>
               </div>
@@ -139,7 +148,7 @@ export default function WalletAuthPage() {
 
               <button
                 onClick={handleDisconnect}
-                className="w-full bg-gray-100 hover:bg-gray-200 text-brand-near-black font-bold py-3 rounded-2xl transition-all"
+                className="w-full bg-gray-900/60 hover:bg-gray-900 text-white font-bold py-3 rounded-2xl transition-all"
               >
                 Disconnect Wallet
               </button>
@@ -147,25 +156,24 @@ export default function WalletAuthPage() {
           )}
 
           <div className="mt-8 text-center">
-            <p className="text-sm text-gray-500 font-medium">
+            <p className="text-sm text-gray-400 font-medium">
               New to Solana?{" "}
               <a
                 href="https://phantom.app/"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-brand-red hover:underline font-bold transition-colors"
+                className="text-metamask-orange hover:underline font-bold transition-colors"
               >
                 Get a wallet
               </a>
             </p>
           </div>
 
-          <div className="mt-6 text-center text-gray-500 text-sm">
-            <Link href="/" className="hover:text-brand-red transition-colors">← Back to home</Link>
+          <div className="mt-6 text-center text-gray-400 text-sm">
+            <Link href="/" className="hover:text-metamask-orange transition-colors">← Back to home</Link>
           </div>
         </div>
       </div>
     </div>
   );
 }
-

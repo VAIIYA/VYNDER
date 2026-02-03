@@ -25,6 +25,10 @@ export default function SwipePage() {
   const [currentUser, setCurrentUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
   const [swiping, setSwiping] = useState(false);
+  const [profileGate, setProfileGate] = useState<{
+    requiredCompletion: number;
+    profileCompletionPercentage: number;
+  } | null>(null);
 
   useEffect(() => {
     if (status === "unauthenticated") {
@@ -47,12 +51,21 @@ export default function SwipePage() {
       if (response.ok) {
         if (data.user) {
           setCurrentUser(data.user);
+          setProfileGate(null);
         } else {
           setCurrentUser(null);
           toast.error("No more profiles to show");
         }
       } else {
-        toast.error(data.error || "Failed to load profiles");
+        if (response.status === 403 && data?.error === "Profile incomplete") {
+          setCurrentUser(null);
+          setProfileGate({
+            requiredCompletion: data.requiredCompletion,
+            profileCompletionPercentage: data.profileCompletionPercentage,
+          });
+        } else {
+          toast.error(data.error || "Failed to load profiles");
+        }
       }
     } catch (error) {
       toast.error("An error occurred");
@@ -117,7 +130,7 @@ export default function SwipePage() {
 
   if (status === "loading" || loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-black">
+      <div className="min-h-screen flex items-center justify-center app-shell">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-solana-purple mx-auto"></div>
           <p className="mt-4 text-gray-400">Loading...</p>
@@ -127,7 +140,7 @@ export default function SwipePage() {
   }
 
   return (
-    <div className="min-h-screen bg-background-primary pb-safe-bottom relative overflow-hidden">
+    <div className="min-h-screen app-shell pb-safe-bottom relative overflow-hidden">
       {/* Mobile-first header */}
       <div className="safe-top absolute top-0 left-0 right-0 z-10 px-4 pt-4 pb-2">
         <div className="flex items-center justify-between">
@@ -153,8 +166,32 @@ export default function SwipePage() {
       {/* Main swipe area - Mobile-first */}
       <div className="flex justify-center items-center min-h-screen pt-20 px-4 safe-top">
         <AnimatePresence mode="wait">
-          {currentUser ? (
-            <div className="w-full max-w-sm">
+          {profileGate ? (
+            <div className="text-center text-text-secondary max-w-sm px-4">
+              <div className="mb-6 text-7xl">🧭</div>
+              <h2 className="text-mobile-xl text-text-primary mb-3 font-semibold">
+                Complete your profile
+              </h2>
+              <p className="text-text-secondary mb-6 text-mobile-base">
+                You need at least {profileGate.requiredCompletion}% to start swiping.
+              </p>
+              <div className="w-full bg-background-tertiary rounded-full h-3 overflow-hidden mb-6">
+                <div
+                  className="h-full bg-gradient-to-r from-metamask-orange to-metamask-blue"
+                  style={{ width: `${profileGate.profileCompletionPercentage}%` }}
+                />
+              </div>
+              <Link
+                href="/profile"
+                className="inline-block px-6 py-3 bg-gradient-to-r from-metamask-orange to-metamask-blue text-white rounded-full font-semibold hover:shadow-lg transition-all btn-touch"
+              >
+                Finish Profile
+              </Link>
+            </div>
+          ) : currentUser ? (
+            <div className="w-full max-w-sm relative">
+              <div className="absolute inset-0 translate-x-2 translate-y-3 scale-[0.98] rounded-3xl bg-gradient-to-br from-metamask-blue/20 to-metamask-purple/10 border border-white/5 -z-10" />
+              <div className="absolute inset-0 translate-x-4 translate-y-6 scale-[0.95] rounded-3xl bg-gradient-to-br from-metamask-orange/10 to-metamask-green/10 border border-white/5 -z-20" />
               <SwipeCard
                 key={currentUser._id}
                 user={currentUser}
@@ -206,7 +243,3 @@ export default function SwipePage() {
     </div>
   );
 }
-
-
-
-

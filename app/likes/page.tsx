@@ -65,7 +65,7 @@ export default function LikesPage() {
 
   if (status === "loading" || loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-black">
+      <div className="min-h-screen flex items-center justify-center app-shell">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-solana-purple mx-auto"></div>
           <p className="mt-4 text-gray-400">Loading...</p>
@@ -75,7 +75,7 @@ export default function LikesPage() {
   }
 
   return (
-    <div className="min-h-screen bg-black pb-20">
+    <div className="min-h-screen app-shell pb-20">
       <div className="container mx-auto px-4 py-6">
         {/* Header */}
         <div className="mb-6">
@@ -151,6 +151,12 @@ export default function LikesPage() {
             <p className="text-gray-500 text-sm">
               Start swiping to get more likes!
             </p>
+            <Link
+              href="/swipe"
+              className="inline-block mt-6 px-6 py-3 bg-gradient-to-r from-metamask-orange to-metamask-blue text-white rounded-full font-semibold hover:shadow-lg transition-all"
+            >
+              Start Swiping
+            </Link>
           </div>
         ) : (
           <div className="grid grid-cols-2 gap-4">
@@ -212,4 +218,3 @@ export default function LikesPage() {
     </div>
   );
 }
-

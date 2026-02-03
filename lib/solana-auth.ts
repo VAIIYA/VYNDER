@@ -11,21 +11,68 @@ const connection = new Connection(
 
 export interface WalletAuthMessage {
   message: string;
-  timestamp: number;
+  issuedAt: number;
+  expiresAt: number;
   address: string;
+  nonce: string;
 }
 
 /**
  * Generate a message for wallet signature
  */
-export function generateAuthMessage(walletAddress: string): WalletAuthMessage {
-  const timestamp = Date.now();
-  const message = `VYNDER Authentication\n\nWallet: ${walletAddress}\nTimestamp: ${timestamp}\n\nSign this message to authenticate with VYNDER.`;
+export function generateAuthMessage(
+  walletAddress: string,
+  nonce: string,
+  issuedAt: number,
+  expiresAt: number
+): WalletAuthMessage {
+  const message = [
+    "VYNDER Authentication",
+    "",
+    `Wallet: ${walletAddress}`,
+    `Nonce: ${nonce}`,
+    `Issued At: ${issuedAt}`,
+    `Expires At: ${expiresAt}`,
+    "",
+    "Sign this message to authenticate with VYNDER.",
+  ].join("\n");
 
   return {
     message,
-    timestamp,
+    issuedAt,
+    expiresAt,
     address: walletAddress,
+    nonce,
+  };
+}
+
+export function parseAuthMessage(message: string): {
+  walletAddress: string;
+  nonce: string;
+  issuedAt: number;
+  expiresAt: number;
+} | null {
+  const walletMatch = message.match(/Wallet:\s*(.+)/);
+  const nonceMatch = message.match(/Nonce:\s*(.+)/);
+  const issuedAtMatch = message.match(/Issued At:\s*(\d+)/);
+  const expiresAtMatch = message.match(/Expires At:\s*(\d+)/);
+
+  if (!walletMatch || !nonceMatch || !issuedAtMatch || !expiresAtMatch) {
+    return null;
+  }
+
+  const issuedAt = Number(issuedAtMatch[1]);
+  const expiresAt = Number(expiresAtMatch[1]);
+
+  if (Number.isNaN(issuedAt) || Number.isNaN(expiresAt)) {
+    return null;
+  }
+
+  return {
+    walletAddress: walletMatch[1].trim(),
+    nonce: nonceMatch[1].trim(),
+    issuedAt,
+    expiresAt,
   };
 }
 
@@ -117,4 +164,3 @@ export function isValidSolanaAddress(address: string): boolean {
     return false;
   }
 }
-

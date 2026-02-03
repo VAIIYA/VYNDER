@@ -268,7 +268,7 @@ export default function ProfilePage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-black via-gray-900 to-black pb-20">
+    <div className="min-h-screen app-shell pb-20">
       <div className="container mx-auto px-4 py-8">
         {/* Header with gradient */}
         <div className="mb-8">
@@ -287,7 +287,7 @@ export default function ProfilePage() {
           </div>
 
           {/* Profile Completion Card */}
-          <div className="bg-gradient-to-r from-gray-800/80 to-gray-900/80 backdrop-blur-xl rounded-2xl p-6 border border-gray-700/50 mb-6">
+          <div className="panel rounded-2xl p-6 mb-6">
             <div className="flex justify-between items-center mb-3">
               <span className="text-sm font-medium text-gray-300">
                 Profile Completion
@@ -310,7 +310,7 @@ export default function ProfilePage() {
           {/* Left Column - Photos & Basic Info */}
           <div className="lg:col-span-2 space-y-6">
             {/* Photos Card */}
-            <div className="bg-gradient-to-br from-gray-800/90 to-gray-900/90 backdrop-blur-xl rounded-2xl p-6 border border-gray-700/50">
+            <div className="panel rounded-2xl p-6">
               <div className="flex items-center justify-between mb-4">
                 <label className="text-lg font-semibold text-white">
                   Photos
@@ -374,7 +374,7 @@ export default function ProfilePage() {
             </div>
 
             {/* Basic Info Card */}
-            <div className="bg-gradient-to-br from-gray-800/90 to-gray-900/90 backdrop-blur-xl rounded-2xl p-6 border border-gray-700/50">
+            <div className="panel rounded-2xl p-6">
               <h2 className="text-xl font-semibold text-white mb-6 flex items-center gap-2">
                 <span className="w-1 h-6 bg-gradient-to-b from-solana-purple to-solana-blue rounded-full"></span>
                 Basic Information
@@ -536,7 +536,7 @@ export default function ProfilePage() {
             {/* Right Column - Location & Tags */}
             <div className="space-y-6">
               {/* Location Card */}
-              <div className="bg-gradient-to-br from-gray-800/90 to-gray-900/90 backdrop-blur-xl rounded-2xl p-6 border border-gray-700/50">
+              <div className="panel rounded-2xl p-6">
                 <h2 className="text-xl font-semibold text-white mb-6 flex items-center gap-2">
                   <span className="w-1 h-6 bg-gradient-to-b from-solana-blue to-solana-green rounded-full"></span>
                   Location
@@ -606,7 +606,7 @@ export default function ProfilePage() {
               </div>
 
               {/* Tags Card */}
-              <div className="bg-gradient-to-br from-gray-800/90 to-gray-900/90 backdrop-blur-xl rounded-2xl p-6 border border-gray-700/50">
+              <div className="panel rounded-2xl p-6">
                 <h2 className="text-xl font-semibold text-white mb-6 flex items-center gap-2">
                   <span className="w-1 h-6 bg-gradient-to-b from-solana-purple to-solana-green rounded-full"></span>
                   Tags & Interests
@@ -703,7 +703,5 @@ export default function ProfilePage() {
     </div>
   );
 }
-
-
 
 

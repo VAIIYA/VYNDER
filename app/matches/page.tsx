@@ -32,6 +32,7 @@ export default function MatchesPage() {
   const router = useRouter();
   const [matches, setMatches] = useState<Match[]>([]);
   const [loading, setLoading] = useState(true);
+  const [sseConnected, setSseConnected] = useState(false);
 
   useEffect(() => {
     if (status === "unauthenticated") {
@@ -42,9 +43,42 @@ export default function MatchesPage() {
   useEffect(() => {
     if (status === "authenticated") {
       loadMatches();
-      // Poll for new matches every 5 seconds (more frequent for better UX)
-      const interval = setInterval(loadMatches, 5000);
-      return () => clearInterval(interval);
+      let eventSource: EventSource | null = null;
+      let fallbackInterval: NodeJS.Timeout | null = null;
+
+      const startFallbackPolling = () => {
+        if (fallbackInterval) return;
+        fallbackInterval = setInterval(loadMatches, 7000);
+      };
+
+      try {
+        eventSource = new EventSource("/api/matches/stream");
+        eventSource.onopen = () => {
+          setSseConnected(true);
+        };
+        eventSource.addEventListener("refresh", () => {
+          loadMatches();
+        });
+        eventSource.onerror = () => {
+          setSseConnected(false);
+          if (eventSource) {
+            eventSource.close();
+          }
+          startFallbackPolling();
+        };
+      } catch (error) {
+        console.error("SSE connection error:", error);
+        startFallbackPolling();
+      }
+
+      return () => {
+        if (eventSource) {
+          eventSource.close();
+        }
+        if (fallbackInterval) {
+          clearInterval(fallbackInterval);
+        }
+      };
     }
   }, [status]);
 
@@ -67,7 +101,7 @@ export default function MatchesPage() {
 
   if (status === "loading" || loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-black">
+      <div className="min-h-screen flex items-center justify-center app-shell">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-solana-purple mx-auto"></div>
           <p className="mt-4 text-gray-400">Loading...</p>
@@ -77,11 +111,21 @@ export default function MatchesPage() {
   }
 
   return (
-    <div className="min-h-screen bg-black pb-20">
+    <div className="min-h-screen app-shell pb-20">
       <div className="container mx-auto px-4 py-8">
-        <h1 className="text-3xl font-bold mb-8 bg-gradient-to-r from-solana-purple via-solana-blue to-solana-green bg-clip-text text-transparent">
-          Your Matches
-        </h1>
+        <div className="flex items-center justify-between mb-8">
+          <h1 className="text-3xl font-bold bg-gradient-to-r from-solana-purple via-solana-blue to-solana-green bg-clip-text text-transparent">
+            Your Matches
+          </h1>
+          <div className="flex items-center gap-2 text-xs uppercase tracking-widest text-gray-500">
+            <span
+              className={`h-2 w-2 rounded-full ${
+                sseConnected ? "bg-solana-green" : "bg-gray-600"
+              }`}
+            />
+            {sseConnected ? "Live" : "Connecting"}
+          </div>
+        </div>
 
         {matches.length === 0 ? (
           <div className="text-center py-12">
@@ -92,6 +136,12 @@ export default function MatchesPage() {
             <p className="text-gray-500 text-sm">
               Start swiping to find your match!
             </p>
+            <Link
+              href="/swipe"
+              className="inline-block mt-6 px-6 py-3 bg-gradient-to-r from-metamask-orange to-metamask-blue text-white rounded-full font-semibold hover:shadow-lg transition-all"
+            >
+              Start Swiping
+            </Link>
           </div>
         ) : (
           <div className="space-y-4">
@@ -105,7 +155,7 @@ export default function MatchesPage() {
                 <Link
                   key={match._id}
                   href={`/chat/${match._id}`}
-                  className="block bg-gradient-to-r from-gray-800/80 to-gray-900/80 backdrop-blur-xl rounded-2xl p-4 border border-gray-700/50 hover:border-solana-purple/50 transition-all hover:shadow-lg hover:shadow-solana-purple/20"
+                  className="block panel rounded-2xl p-4 hover:border-solana-purple/50 transition-all hover:shadow-lg hover:shadow-solana-purple/20"
                 >
                   <div className="flex items-center gap-4">
                     <div className="relative w-16 h-16 rounded-full overflow-hidden flex-shrink-0">
@@ -172,7 +222,3 @@ export default function MatchesPage() {
     </div>
   );
 }
-
-
-
-

@@ -15,7 +15,7 @@ export default async function LandingPage() {
   }
 
   return (
-    <div className="min-h-screen bg-background-primary text-text-primary font-sans">
+    <div className="min-h-screen app-shell text-text-primary font-sans">
       {/* Mobile-first floating navigation */}
       <div className="fixed top-4 w-full z-50 px-4 safe-top flex justify-center pointer-events-none">
         <nav className="glass px-4 py-3 rounded-2xl flex justify-between items-center w-full max-w-md pointer-events-auto">
