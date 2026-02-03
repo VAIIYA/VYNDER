@@ -6,7 +6,7 @@ import { useRouter, useParams } from "next/navigation";
 import Image from "next/image";
 import Navigation from "@/components/Navigation";
 import toast from "react-hot-toast";
-import { format, isToday, isYesterday, isSameDay } from "date-fns";
+import { format, isToday, isYesterday } from "date-fns";
 
 interface Message {
   _id: string;
@@ -20,15 +20,6 @@ interface Message {
   createdAt: string;
 }
 
-interface Match {
-  _id: string;
-  users: Array<{
-    _id: string;
-    username: string;
-    photos: string[];
-  }>;
-}
-
 interface GroupedMessage {
   date: string;
   messages: Message[];
@@ -40,12 +31,12 @@ export default function ChatPage() {
   const params = useParams();
   const matchId = params.matchId as string;
   const [messages, setMessages] = useState<Message[]>([]);
-  const [match, setMatch] = useState<Match | null>(null);
   const [messageText, setMessageText] = useState("");
   const [loading, setLoading] = useState(true);
   const [sending, setSending] = useState(false);
   const [isTyping, setIsTyping] = useState(false);
   const [otherUserTyping, setOtherUserTyping] = useState(false);
+  const [sseConnected, setSseConnected] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const messagesContainerRef = useRef<HTMLDivElement>(null);
   const typingTimeoutRef = useRef<NodeJS.Timeout | null>(null);
@@ -101,17 +92,77 @@ export default function ChatPage() {
   useEffect(() => {
     if (matchId) {
       loadMessages();
-      // Poll for new messages every 3 seconds (less frequent than before)
-      const messageInterval = setInterval(loadMessages, 3000);
       // Check typing every 1 second
       const typingInterval = setInterval(checkTyping, 1000);
       
       return () => {
-        clearInterval(messageInterval);
         clearInterval(typingInterval);
       };
     }
   }, [matchId, loadMessages, checkTyping]);
+
+  useEffect(() => {
+    if (!matchId) return;
+
+    let eventSource: EventSource | null = null;
+    let fallbackInterval: NodeJS.Timeout | null = null;
+
+    const startFallbackPolling = () => {
+      if (fallbackInterval) return;
+      fallbackInterval = setInterval(loadMessages, 4000);
+    };
+
+    try {
+      eventSource = new EventSource(`/api/messages/stream/${matchId}`);
+
+      eventSource.onopen = () => {
+        setSseConnected(true);
+      };
+
+      eventSource.addEventListener("messages", (event) => {
+        const payload = JSON.parse((event as MessageEvent).data);
+        if (!payload?.messages?.length) return;
+
+        setMessages((prev) => {
+          const combined = [...prev, ...payload.messages];
+          const unique = new Map<string, Message>();
+          combined.forEach((msg) => unique.set(msg._id, msg));
+          const sorted = Array.from(unique.values()).sort(
+            (a, b) =>
+              new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
+          );
+
+          if (sorted.length > 0) {
+            lastMessageIdRef.current = sorted[sorted.length - 1]._id;
+          }
+
+          return sorted;
+        });
+
+        setTimeout(loadMessages, 300);
+      });
+
+      eventSource.onerror = () => {
+        setSseConnected(false);
+        if (eventSource) {
+          eventSource.close();
+        }
+        startFallbackPolling();
+      };
+    } catch (error) {
+      console.error("SSE connection error:", error);
+      startFallbackPolling();
+    }
+
+    return () => {
+      if (eventSource) {
+        eventSource.close();
+      }
+      if (fallbackInterval) {
+        clearInterval(fallbackInterval);
+      }
+    };
+  }, [matchId, loadMessages]);
 
   useEffect(() => {
     scrollToBottom();
@@ -206,6 +257,51 @@ export default function ChatPage() {
     }
   };
 
+  const handleBlockUser = async () => {
+    if (!otherUser?._id) return;
+    const confirmed = window.confirm(`Block ${otherUser.username}? You won't see each other again.`);
+    if (!confirmed) return;
+
+    try {
+      const response = await fetch("/api/users/block", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ userId: otherUser._id }),
+      });
+      const data = await response.json();
+      if (response.ok) {
+        toast.success("User blocked");
+        router.push("/matches");
+      } else {
+        toast.error(data.error || "Failed to block user");
+      }
+    } catch (error) {
+      toast.error("Failed to block user");
+    }
+  };
+
+  const handleReportUser = async () => {
+    if (!otherUser?._id) return;
+    const reason = window.prompt("Tell us what happened (required):");
+    if (!reason) return;
+
+    try {
+      const response = await fetch("/api/users/report", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ userId: otherUser._id, reason }),
+      });
+      const data = await response.json();
+      if (response.ok) {
+        toast.success("Report submitted");
+      } else {
+        toast.error(data.error || "Failed to report user");
+      }
+    } catch (error) {
+      toast.error("Failed to report user");
+    }
+  };
+
   // Group messages by date
   const groupMessagesByDate = (messages: Message[]): GroupedMessage[] => {
     const groups: { [key: string]: Message[] } = {};
@@ -252,7 +348,7 @@ export default function ChatPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-black">
+      <div className="min-h-screen flex items-center justify-center app-shell">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-solana-purple mx-auto"></div>
           <p className="mt-4 text-gray-400">Loading...</p>
@@ -268,9 +364,9 @@ export default function ChatPage() {
   const groupedMessages = groupMessagesByDate(messages);
 
   return (
-    <div className="flex flex-col h-screen bg-black pb-20">
+    <div className="flex flex-col h-screen app-shell pb-20">
       {/* Header */}
-      <div className="bg-gradient-to-r from-gray-900/90 to-black/90 backdrop-blur-xl border-b border-gray-800 px-4 py-4">
+      <div className="panel-strong border-b border-gray-800 px-4 py-4">
         {otherUser && (
           <div className="flex items-center gap-3">
             <div className="relative w-10 h-10 rounded-full overflow-hidden border-2 border-solana-purple/50">
@@ -299,6 +395,30 @@ export default function ChatPage() {
                   typing...
                 </p>
               )}
+              {!otherUserTyping && (
+                <div className="flex items-center gap-2 text-[10px] uppercase tracking-widest text-gray-500 mt-1">
+                  <span
+                    className={`h-2 w-2 rounded-full ${
+                      sseConnected ? "bg-solana-green" : "bg-gray-600"
+                    }`}
+                  />
+                  {sseConnected ? "Live" : "Connecting"}
+                </div>
+              )}
+            </div>
+            <div className="flex items-center gap-2">
+              <button
+                onClick={handleReportUser}
+                className="text-xs uppercase tracking-wide px-3 py-1 rounded-full border border-gray-700 text-gray-300 hover:text-white hover:border-solana-purple/60 transition-all"
+              >
+                Report
+              </button>
+              <button
+                onClick={handleBlockUser}
+                className="text-xs uppercase tracking-wide px-3 py-1 rounded-full border border-gray-700 text-gray-300 hover:text-white hover:border-solana-purple/60 transition-all"
+              >
+                Block
+              </button>
             </div>
           </div>
         )}
@@ -307,15 +427,15 @@ export default function ChatPage() {
       {/* Messages */}
       <div
         ref={messagesContainerRef}
-        className="flex-1 overflow-y-auto px-4 py-4 space-y-4 hide-scrollbar bg-black"
+        className="flex-1 overflow-y-auto px-4 py-4 space-y-4 hide-scrollbar"
       >
         {groupedMessages.map((group) => (
           <div key={group.date}>
             {/* Date separator */}
             <div className="flex items-center justify-center my-4">
-              <div className="px-3 py-1 bg-gray-800/50 rounded-full text-xs text-gray-400">
-                {group.date}
-              </div>
+            <div className="px-3 py-1 panel-strong rounded-full text-xs text-gray-400">
+              {group.date}
+            </div>
             </div>
 
             {/* Messages in this group */}
@@ -340,7 +460,7 @@ export default function ChatPage() {
                     className={`max-w-xs lg:max-w-md px-4 py-2 rounded-2xl transition-all ${
                       isOwn
                         ? "bg-gradient-to-r from-solana-purple to-solana-blue text-white shadow-lg shadow-solana-purple/30"
-                        : "bg-gray-800/80 backdrop-blur-xl text-white border border-gray-700"
+                        : "panel text-white border border-gray-700/60"
                     } ${message._id.startsWith("temp-") ? "opacity-70" : ""}`}
                   >
                     <p className="text-sm break-words">{message.text}</p>
@@ -371,7 +491,7 @@ export default function ChatPage() {
         
         {otherUserTyping && (
           <div className="flex justify-start mt-2">
-            <div className="bg-gray-800/80 backdrop-blur-xl rounded-2xl px-4 py-2 border border-gray-700">
+            <div className="panel rounded-2xl px-4 py-2 border border-gray-700/60">
               <div className="flex gap-1">
                 <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: "0ms" }}></div>
                 <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: "150ms" }}></div>
@@ -387,7 +507,7 @@ export default function ChatPage() {
       {/* Input */}
       <form
         onSubmit={sendMessage}
-        className="bg-gradient-to-r from-gray-900/90 to-black/90 backdrop-blur-xl border-t border-gray-800 px-4 py-4"
+        className="panel-strong border-t border-gray-800 px-4 py-4"
       >
         <div className="flex gap-2">
           <input

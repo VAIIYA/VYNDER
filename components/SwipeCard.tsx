@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Image from "next/image";
 import { motion, useMotionValue, useTransform } from "framer-motion";
+import toast from "react-hot-toast";
 
 interface SwipeCardProps {
   user: {
@@ -57,6 +58,50 @@ export default function SwipeCard({ user, onSwipeLeft, onSwipeRight }: SwipeCard
   const prevPhoto = () => {
     if (user.photos.length > 0) {
       setCurrentPhotoIndex((prev) => (prev - 1 + user.photos.length) % user.photos.length);
+    }
+  };
+
+  const handleBlock = async () => {
+    const confirmed = window.confirm(`Block ${user.username}? You won't see each other again.`);
+    if (!confirmed) return;
+
+    try {
+      const response = await fetch("/api/users/block", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ userId: user._id }),
+      });
+      const data = await response.json();
+      if (response.ok) {
+        toast.success("User blocked");
+        onSwipeLeft();
+      } else {
+        toast.error(data.error || "Failed to block user");
+      }
+    } catch (error) {
+      toast.error("Failed to block user");
+    }
+  };
+
+  const handleReport = async () => {
+    const reason = window.prompt("Tell us what happened (required):");
+    if (!reason) return;
+
+    try {
+      const response = await fetch("/api/users/report", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ userId: user._id, reason }),
+      });
+      const data = await response.json();
+      if (response.ok) {
+        toast.success("Report submitted");
+        onSwipeLeft();
+      } else {
+        toast.error(data.error || "Failed to report user");
+      }
+    } catch (error) {
+      toast.error("Failed to report user");
     }
   };
 
@@ -127,6 +172,21 @@ export default function SwipeCard({ user, onSwipeLeft, onSwipeRight }: SwipeCard
 
         {/* Gradient overlay */}
         <div className="absolute bottom-0 left-0 right-0 h-1/3 bg-gradient-to-t from-black/80 via-black/40 to-transparent" />
+
+        <div className="absolute top-4 right-4 flex gap-2">
+          <button
+            onClick={handleReport}
+            className="glass text-white rounded-full px-3 py-1 text-xs font-semibold uppercase tracking-wide hover:bg-white/20 transition-all btn-touch"
+          >
+            Report
+          </button>
+          <button
+            onClick={handleBlock}
+            className="glass text-white rounded-full px-3 py-1 text-xs font-semibold uppercase tracking-wide hover:bg-white/20 transition-all btn-touch"
+          >
+            Block
+          </button>
+        </div>
 
         {/* User info */}
         <div className="absolute bottom-0 left-0 right-0 p-6 text-white">
@@ -200,4 +260,3 @@ export default function SwipeCard({ user, onSwipeLeft, onSwipeRight }: SwipeCard
     </motion.div>
   );
 }
-

@@ -13,7 +13,6 @@ interface InterestCategory {
   name: string;
   category: string;
   icon?: string;
-  userCount?: number;
   color?: string;
 }
 
@@ -55,13 +54,12 @@ export default function ExplorePage() {
       const goalsData = await goalsRes.json();
 
       if (interestsRes.ok && interestsData.interests) {
-        // Flatten and add user counts
+        // Flatten interests
         const allInterests: InterestCategory[] = [];
         Object.values(interestsData.interests).forEach((categoryInterests: any) => {
           categoryInterests.forEach((interest: any) => {
             allInterests.push({
               ...interest,
-              userCount: Math.floor(Math.random() * 500) + 50, // Mock count
             });
           });
         });
@@ -81,7 +79,7 @@ export default function ExplorePage() {
 
   if (status === "loading" || loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-black">
+      <div className="min-h-screen flex items-center justify-center app-shell">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-solana-purple mx-auto"></div>
           <p className="mt-4 text-gray-400">Loading...</p>
@@ -100,7 +98,7 @@ export default function ExplorePage() {
   ];
 
   return (
-    <div className="min-h-screen bg-black pb-20">
+    <div className="min-h-screen app-shell pb-20">
       <div className="container mx-auto px-4 py-6">
         {/* Header */}
         <div className="mb-6">
@@ -122,9 +120,8 @@ export default function ExplorePage() {
                   className="relative rounded-2xl p-6 text-white overflow-hidden group hover:scale-[1.02] transition-transform"
                   style={{ backgroundColor: goal.color }}
                 >
-                  <div className="absolute top-4 right-4 bg-black/30 backdrop-blur-sm rounded-lg px-3 py-1 flex items-center gap-1">
-                    <span className="text-xs">👤</span>
-                    <span className="text-sm font-semibold">{goal.userCount}</span>
+                  <div className="absolute top-4 right-4 bg-black/30 backdrop-blur-sm rounded-lg px-3 py-1 text-xs uppercase tracking-widest">
+                    Trending
                   </div>
                   <div className="text-6xl mb-4">{goal.icon}</div>
                   <h3 className="text-2xl font-bold">{goal.name}</h3>
@@ -148,9 +145,8 @@ export default function ExplorePage() {
                   href={`/explore/interest/${interest._id}`}
                   className={`relative ${colorClass} rounded-2xl aspect-square p-4 text-white overflow-hidden group hover:scale-[1.05] transition-transform`}
                 >
-                  <div className="absolute top-2 right-2 bg-black/30 backdrop-blur-sm rounded-lg px-2 py-1 flex items-center gap-1">
-                    <span className="text-xs">👤</span>
-                    <span className="text-xs font-semibold">{interest.userCount || 0}</span>
+                  <div className="absolute top-2 right-2 bg-black/30 backdrop-blur-sm rounded-lg px-2 py-1 text-[10px] uppercase tracking-widest">
+                    Hot
                   </div>
                   <div className="flex flex-col h-full justify-end">
                     {interest.icon && (
@@ -174,9 +170,8 @@ export default function ExplorePage() {
               href="/explore/lifestyle/wants-kids"
               className="relative bg-purple-600 rounded-2xl p-6 text-white overflow-hidden group hover:scale-[1.02] transition-transform"
             >
-              <div className="absolute top-4 right-4 bg-black/30 backdrop-blur-sm rounded-lg px-3 py-1 flex items-center gap-1">
-                <span className="text-xs">👤</span>
-                <span className="text-sm font-semibold">68</span>
+              <div className="absolute top-4 right-4 bg-black/30 backdrop-blur-sm rounded-lg px-3 py-1 text-xs uppercase tracking-widest">
+                Popular
               </div>
               <div className="text-6xl mb-4">👶</div>
               <h3 className="text-2xl font-bold mb-2">Wants Kids</h3>
@@ -191,5 +186,3 @@ export default function ExplorePage() {
     </div>
   );
 }
-
-

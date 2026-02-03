@@ -27,6 +27,18 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ error: "User not found" }, { status: 404 });
     }
 
+    const requiredCompletion = 60;
+    if ((currentUser.profileCompletionPercentage || 0) < requiredCompletion) {
+      return NextResponse.json(
+        {
+          error: "Profile incomplete",
+          profileCompletionPercentage: currentUser.profileCompletionPercentage || 0,
+          requiredCompletion,
+        },
+        { status: 403 }
+      );
+    }
+
     // Get all users that current user has liked or passed
     const likedUsers = await Like.find({
       fromUser: session.user.id,
@@ -224,4 +236,3 @@ export async function GET(request: NextRequest) {
     );
   }
 }
-
