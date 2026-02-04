@@ -37,7 +37,18 @@ const profileUpdateSchema = z.object({
   pets: z.array(z.string()).optional(),
   languages: z.array(z.string()).optional(),
   // Legacy photos (for backward compatibility)
-  photos: z.array(z.string().url()).max(6).optional(),
+  photos: z
+    .array(
+      z.string().refine(
+        (value) =>
+          value.startsWith("/") ||
+          value.startsWith("http://") ||
+          value.startsWith("https://"),
+        { message: "Photo URL must be a relative or absolute URL" }
+      )
+    )
+    .max(6)
+    .optional(),
 });
 
 export async function GET(request: NextRequest) {
@@ -242,5 +253,4 @@ export async function PUT(request: NextRequest) {
     );
   }
 }
-
 
