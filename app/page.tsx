@@ -114,7 +114,7 @@ export default async function LandingPage() {
               <div className="vaiiya-card p-8 border-none bg-white shadow-sm hover:shadow-md transition-shadow">
                 <div className="text-3xl mb-4">⚡</div>
                 <h4 className="font-bold text-vaiiya-purple mb-2">Fastest Swipes</h4>
-                <p className="text-sm text-vaiiya-gray/60">Powered by Solana's near-instant finality.</p>
+                <p className="text-sm text-vaiiya-gray/60">Powered by Solana&apos;s near-instant finality.</p>
               </div>
               <div className="vaiiya-card p-8 border-none bg-white shadow-sm hover:shadow-md transition-shadow">
                 <div className="text-3xl mb-4">🔐</div>

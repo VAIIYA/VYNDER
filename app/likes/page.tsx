@@ -83,7 +83,7 @@ export default function LikesPage() {
             <h1 className="text-5xl font-serif text-vaiiya-purple font-bold mb-3">
               {likes.length} {likes.length === 1 ? "Admirer" : "Admirers"}
             </h1>
-            <p className="text-vaiiya-gray/60 text-lg font-medium">Discover who's interested in you</p>
+            <p className="text-vaiiya-gray/60 text-lg font-medium">Discover who&apos;s interested in you</p>
           </div>
           <div className="text-right">
             <span className="text-sm font-bold text-vaiiya-orange uppercase tracking-widest">Premium Only</span>
@@ -120,7 +120,7 @@ export default function LikesPage() {
             <div className="relative z-10 flex flex-col md:flex-row items-center gap-8">
               <div className="flex-1">
                 <h3 className="text-3xl font-serif font-bold mb-3">Reveal your matches</h3>
-                <p className="text-white/70 font-medium text-lg">Don't leave them waiting. Upgrade to premium to instantly see everyone who swiped right on you.</p>
+                <p className="text-white/70 font-medium text-lg">Don&apos;t leave them waiting. Upgrade to premium to instantly see everyone who swiped right on you.</p>
               </div>
               <button className="btn-vaiiya-primary whitespace-nowrap px-10 py-4 shadow-xl shadow-vaiiya-orange/20">
                 Upgrade Now
