@@ -29,9 +29,11 @@ export default function ExplorePage() {
   const router = useRouter();
   const [tags, setTags] = useState<TagItem[]>([]);
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
+  const [suggestedTags, setSuggestedTags] = useState<string[]>([]);
   const [people, setPeople] = useState<PersonCard[]>([]);
   const [loadingTags, setLoadingTags] = useState(true);
   const [loadingPeople, setLoadingPeople] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
 
   useEffect(() => {
     if (status === "unauthenticated") {
@@ -42,6 +44,7 @@ export default function ExplorePage() {
   useEffect(() => {
     if (status === "authenticated") {
       loadTags();
+      loadSuggestions();
     }
   }, [status]);
 
@@ -69,6 +72,18 @@ export default function ExplorePage() {
       toast.error("Failed to load tags");
     } finally {
       setLoadingTags(false);
+    }
+  };
+
+  const loadSuggestions = async () => {
+    try {
+      const response = await fetch("/api/explore/suggestions");
+      const data = await response.json();
+      if (response.ok) {
+        setSuggestedTags(data.tags || []);
+      }
+    } catch (error) {
+      console.error("Suggestion load error:", error);
     }
   };
 
@@ -107,6 +122,12 @@ export default function ExplorePage() {
     setSelectedTags((prev) => [...prev, tag]);
   };
 
+  const filteredTags = useMemo(() => {
+    if (!searchQuery.trim()) return tags;
+    const query = searchQuery.trim().toLowerCase();
+    return tags.filter((tag) => tag.tag.toLowerCase().includes(query));
+  }, [tags, searchQuery]);
+
   if (status === "loading" || loadingTags) {
     return (
       <div className="min-h-screen flex items-center justify-center app-shell">
@@ -138,13 +159,47 @@ export default function ExplorePage() {
           <input
             className="bg-transparent text-white placeholder:text-gray-500 w-full outline-none"
             placeholder="Search tags or interests"
-            disabled
+            value={searchQuery}
+            onChange={(event) => setSearchQuery(event.target.value)}
           />
-          <span className="text-[10px] uppercase tracking-widest text-gray-500">Soon</span>
+          {searchQuery && (
+            <button
+              onClick={() => setSearchQuery("")}
+              className="text-[10px] uppercase tracking-widest text-gray-400"
+            >
+              Clear
+            </button>
+          )}
         </div>
       </div>
 
       <div className="px-6 space-y-6">
+        {suggestedTags.length > 0 && (
+          <div className="panel rounded-3xl p-5">
+            <div className="flex items-center justify-between mb-4">
+              <div>
+                <h2 className="text-lg font-semibold text-white">Suggested for you</h2>
+                <p className="text-xs text-gray-400">Based on your profile and interests.</p>
+              </div>
+            </div>
+            <div className="flex flex-wrap gap-2">
+              {suggestedTags.map((tag) => (
+                <button
+                  key={tag}
+                  onClick={() => toggleTag(tag)}
+                  className={`rounded-full px-3 py-2 text-sm font-semibold transition-all ${
+                    selectedTags.includes(tag)
+                      ? "bg-gradient-to-r from-metamask-orange to-metamask-blue text-white shadow-lg"
+                      : "bg-white/10 text-gray-200 hover:bg-white/20"
+                  }`}
+                >
+                  {tag}
+                </button>
+              ))}
+            </div>
+          </div>
+        )}
+
         <div className="panel rounded-3xl p-5">
           <div className="flex items-center justify-between mb-4">
             <div>
@@ -157,7 +212,7 @@ export default function ExplorePage() {
           </div>
 
           <div className="flex flex-wrap gap-2">
-            {tags.map((tag) => {
+            {filteredTags.map((tag) => {
               const weight = Math.max(0.6, tag.count / maxCount);
               const isSelected = selectedTags.includes(tag.tag);
               return (

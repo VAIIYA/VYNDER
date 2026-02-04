@@ -268,74 +268,81 @@ export default function ProfilePage() {
   }
 
   return (
-    <div className="h-full bg-white relative overflow-hidden flex flex-col">
-      {/* Header */}
-      <div className="px-8 py-8 flex justify-between items-center bg-white/80 backdrop-blur-md border-b border-[#E9EDF6] z-10 sticky top-0">
-        <div>
-          <h1 className="text-4xl font-serif text-vaiiya-purple font-bold">Your Profile</h1>
-          <p className="text-vaiiya-gray/60 font-medium">Manage your identity & connections</p>
-        </div>
-        {!editing ? (
-          <button
-            onClick={() => setEditing(true)}
-            className="btn-vaiiya-primary text-sm px-6 py-2.5 shadow-md"
-          >
-            Edit Profile
-          </button>
-        ) : (
-          <div className="flex gap-3">
-            <button
-              onClick={() => {
-                setEditing(false);
-                loadProfile();
-              }}
-              className="px-6 py-2.5 rounded-full text-vaiiya-gray font-bold text-sm hover:bg-[#F7F9FC] transition-colors"
-            >
-              Cancel
-            </button>
-            <button
-              onClick={handleSave}
-              className="btn-vaiiya-primary text-sm px-6 py-2.5 shadow-md"
-            >
-              Save Changes
-            </button>
+    <div className="min-h-screen app-shell pb-24">
+      <div className="safe-top px-6 pt-6 pb-4 border-b border-white/5 bg-black/30 backdrop-blur-xl sticky top-0 z-10">
+        <div className="flex items-center justify-between">
+          <div>
+            <h1 className="text-2xl font-bold text-white tracking-tight">Edit profile</h1>
+            <p className="text-xs text-gray-400 mt-1">Make it pop like Tinder, but Web3.</p>
           </div>
-        )}
+          {!editing ? (
+            <button
+              onClick={() => setEditing(true)}
+              className="px-5 py-2 rounded-full bg-white text-black text-sm font-bold"
+            >
+              Edit
+            </button>
+          ) : (
+            <div className="flex gap-2">
+              <button
+                onClick={() => {
+                  setEditing(false);
+                  loadProfile();
+                }}
+                className="px-4 py-2 rounded-full border border-white/20 text-white text-sm font-semibold"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleSave}
+                className="px-5 py-2 rounded-full bg-gradient-to-r from-metamask-orange to-metamask-blue text-white text-sm font-bold"
+              >
+                Save
+              </button>
+            </div>
+          )}
+        </div>
+
+        <div className="mt-4 flex items-center gap-6 text-sm text-gray-500">
+          <span className="text-white font-semibold border-b-2 border-metamask-orange pb-2">Edit</span>
+          <span className="opacity-50">Preview</span>
+        </div>
       </div>
 
-      <div className="flex-1 overflow-y-auto p-8 space-y-8 pb-32">
-        {/* Profile Completion */}
-        <div className="vaiiya-card p-8 bg-[#F7F9FC]/50">
-          <div className="flex justify-between items-end mb-4">
+      <div className="px-6 py-6 space-y-6">
+        <div className="panel rounded-3xl p-5">
+          <div className="flex items-center justify-between mb-3">
             <div>
-              <h3 className="text-vaiiya-purple font-serif text-xl font-bold">Profile Strength</h3>
-              <p className="text-vaiiya-gray/50 text-sm font-medium">Add more info to find better matches</p>
+              <p className="text-xs uppercase tracking-[0.2em] text-gray-500">Profile strength</p>
+              <p className="text-white font-semibold">Complete your profile to get seen.</p>
             </div>
-            <span className="text-2xl font-bold text-vaiiya-orange">{profile.profileCompletionPercentage}%</span>
+            <span className="text-sm font-bold text-metamask-orange">
+              {profile.profileCompletionPercentage}%
+            </span>
           </div>
-          <div className="w-full bg-[#E9EDF6] rounded-full h-3 overflow-hidden">
+          <div className="w-full h-3 rounded-full bg-white/10 overflow-hidden">
             <div
-              className="h-full rounded-full bg-vaiiya-orange transition-all duration-1000 ease-out shadow-[0_0_20px_rgba(255,92,22,0.2)]"
+              className="h-full bg-gradient-to-r from-metamask-orange to-metamask-blue"
               style={{ width: `${profile.profileCompletionPercentage}%` }}
             />
           </div>
         </div>
 
-        {/* Photos Section */}
         <section className="space-y-4">
-          <div className="flex justify-between items-center px-2">
-            <h3 className="text-vaiiya-purple font-serif text-2xl font-bold">Photos</h3>
-            <span className="text-xs font-bold text-vaiiya-gray/40 uppercase tracking-widest">{formData.photos.length} / 6 Photos</span>
+          <div className="flex items-center justify-between">
+            <h2 className="text-lg font-semibold text-white">Media</h2>
+            <span className="text-xs uppercase tracking-widest text-gray-500">
+              {formData.photos.length}/6
+            </span>
           </div>
-
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
+          <div className="grid grid-cols-3 gap-3">
             {formData.photos.map((photo, index) => (
-              <div key={index} className="relative aspect-[3/4] rounded-3xl overflow-hidden vaiiya-card border-none shadow-md group">
+              <div key={index} className="relative aspect-[3/4] rounded-2xl overflow-hidden panel-strong">
                 <Image
                   src={photo}
                   alt={`Photo ${index + 1}`}
                   fill
-                  className="object-cover transition-transform duration-500 group-hover:scale-105"
+                  className="object-cover"
                   unoptimized={photo.startsWith("/api/images/")}
                 />
                 {editing && (
@@ -346,183 +353,211 @@ export default function ProfilePage() {
                         photos: formData.photos.filter((_, i) => i !== index),
                       });
                     }}
-                    className="absolute top-3 right-3 w-8 h-8 flex items-center justify-center bg-white/90 backdrop-blur-md text-vaiiya-purple rounded-full shadow-lg hover:bg-white transition-colors"
+                    className="absolute top-2 right-2 w-7 h-7 rounded-full bg-black/70 text-white"
                   >
                     ×
                   </button>
                 )}
               </div>
             ))}
-            {editing && formData.photos.length < 6 && (
-              <label className="aspect-[3/4] rounded-3xl border-2 border-dashed border-[#E9EDF6] flex flex-col items-center justify-center cursor-pointer hover:bg-[#F7F9FC] hover:border-vaiiya-orange/50 transition-all group">
+            {editing &&
+              Array.from({ length: Math.max(0, 6 - formData.photos.length) }).map((_, idx) => (
+                <label
+                  key={`empty-${idx}`}
+                  className="aspect-[3/4] rounded-2xl border border-dashed border-white/20 flex items-center justify-center text-white/60 cursor-pointer hover:border-metamask-orange/60 transition-colors"
+                >
+                  <input
+                    type="file"
+                    accept="image/*"
+                    onChange={handlePhotoUpload}
+                    className="hidden"
+                  />
+                  +
+                </label>
+              ))}
+          </div>
+        </section>
+
+        <section className="panel rounded-3xl p-5 space-y-4">
+          <div className="flex items-center justify-between">
+            <h3 className="text-white font-semibold">About Me</h3>
+            <span className="text-xs text-metamask-orange font-semibold">Important</span>
+          </div>
+          {editing ? (
+            <textarea
+              value={formData.bio}
+              onChange={(e) => setFormData({ ...formData, bio: e.target.value })}
+              rows={4}
+              className="w-full bg-black/30 border border-white/10 rounded-2xl px-4 py-3 text-white placeholder:text-gray-500 focus:outline-none focus:border-metamask-orange"
+              placeholder="Tell people what you are into..."
+            />
+          ) : (
+            <p className="text-gray-300 text-sm leading-relaxed">
+              {profile.bio || "Add a bio to stand out."}
+            </p>
+          )}
+        </section>
+
+        <section className="space-y-4">
+          <h3 className="text-white font-semibold">Basics</h3>
+          <div className="grid grid-cols-2 gap-3">
+            <div className="panel rounded-2xl px-4 py-3">
+              <p className="text-xs text-gray-500 uppercase tracking-widest">Username</p>
+              {editing ? (
                 <input
-                  type="file"
-                  accept="image/*"
-                  onChange={handlePhotoUpload}
-                  className="hidden"
+                  type="text"
+                  value={formData.username}
+                  onChange={(e) => setFormData({ ...formData, username: e.target.value })}
+                  className="mt-2 w-full bg-transparent text-white font-semibold focus:outline-none"
                 />
-                <span className="text-4xl text-vaiiya-orange/40 group-hover:text-vaiiya-orange transition-colors">+</span>
-                <span className="text-xs font-bold text-vaiiya-gray/40 mt-2 uppercase tracking-widest">Add Photo</span>
-              </label>
+              ) : (
+                <p className="mt-2 text-white font-semibold">{profile.username}</p>
+              )}
+            </div>
+            <div className="panel rounded-2xl px-4 py-3">
+              <p className="text-xs text-gray-500 uppercase tracking-widest">Age</p>
+              {editing ? (
+                <input
+                  type="number"
+                  value={formData.age}
+                  onChange={(e) => setFormData({ ...formData, age: e.target.value })}
+                  className="mt-2 w-full bg-transparent text-white font-semibold focus:outline-none"
+                />
+              ) : (
+                <p className="mt-2 text-white font-semibold">{profile.age || "—"}</p>
+              )}
+            </div>
+            <div className="panel rounded-2xl px-4 py-3 col-span-2">
+              <p className="text-xs text-gray-500 uppercase tracking-widest">Gender</p>
+              {editing ? (
+                <select
+                  value={formData.gender}
+                  onChange={(e) => setFormData({ ...formData, gender: e.target.value })}
+                  className="mt-2 w-full bg-transparent text-white font-semibold focus:outline-none"
+                >
+                  <option value="">Select</option>
+                  <option value="male">Male</option>
+                  <option value="female">Female</option>
+                  <option value="non-binary">Non-binary</option>
+                  <option value="prefer-not-to-say">Prefer not to say</option>
+                </select>
+              ) : (
+                <p className="mt-2 text-white font-semibold capitalize">
+                  {profile.gender || "—"}
+                </p>
+              )}
+            </div>
+          </div>
+        </section>
+
+        <section className="panel rounded-3xl p-5 space-y-4">
+          <h3 className="text-white font-semibold">Looking for</h3>
+          {editing ? (
+            <div className="flex flex-wrap gap-2">
+              {["male", "female", "non-binary", "all"].map((option) => (
+                <button
+                  key={option}
+                  type="button"
+                  onClick={() => {
+                    if (formData.interestedIn.includes(option)) {
+                      setFormData({
+                        ...formData,
+                        interestedIn: formData.interestedIn.filter((item) => item !== option),
+                      });
+                    } else {
+                      setFormData({
+                        ...formData,
+                        interestedIn: [...formData.interestedIn, option],
+                      });
+                    }
+                  }}
+                  className={`px-3 py-2 rounded-full text-xs font-semibold transition-all ${
+                    formData.interestedIn.includes(option)
+                      ? "bg-gradient-to-r from-metamask-orange to-metamask-blue text-white"
+                      : "bg-white/10 text-white/70"
+                  }`}
+                >
+                  {option}
+                </button>
+              ))}
+            </div>
+          ) : (
+            <div className="flex flex-wrap gap-2">
+              {profile.interestedIn && profile.interestedIn.length > 0 ? (
+                profile.interestedIn.map((option, index) => (
+                  <span key={index} className="px-3 py-1 rounded-full text-xs font-semibold bg-white/10 text-white">
+                    {option}
+                  </span>
+                ))
+              ) : (
+                <p className="text-gray-500 text-sm">Not set</p>
+              )}
+            </div>
+          )}
+        </section>
+
+        <section className="panel rounded-3xl p-5 space-y-4">
+          <div className="flex items-center justify-between">
+            <h3 className="text-white font-semibold">Location</h3>
+            {editing && (
+              <button
+                onClick={handleGetLocation}
+                disabled={locationStatus === "getting"}
+                className="text-xs uppercase tracking-widest text-metamask-green"
+              >
+                {locationStatus === "getting" ? "Getting..." : "Use GPS"}
+              </button>
             )}
           </div>
+          {editing ? (
+            <input
+              type="text"
+              value={formData.location}
+              onChange={(e) => setFormData({ ...formData, location: e.target.value })}
+              className="w-full bg-black/30 border border-white/10 rounded-2xl px-4 py-3 text-white placeholder:text-gray-500 focus:outline-none focus:border-metamask-orange"
+              placeholder="City, Country"
+            />
+          ) : (
+            <p className="text-white font-semibold">{profile.location || "Not set"}</p>
+          )}
         </section>
 
-        {/* Info Grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-          {/* Basic Info */}
-          <section className="vaiiya-card p-10 space-y-8">
-            <h3 className="text-vaiiya-purple font-serif text-2xl font-bold border-b border-[#E9EDF6] pb-4">Basic Information</h3>
-
-            <div className="space-y-6">
-              <div className="group">
-                <label className="text-xs font-bold text-vaiiya-gray/40 uppercase tracking-widest mb-2 block">Username</label>
-                {editing ? (
-                  <input
-                    type="text"
-                    value={formData.username}
-                    onChange={(e) => setFormData({ ...formData, username: e.target.value })}
-                    className="w-full px-6 py-4 bg-[#F7F9FC] border border-[#E9EDF6] rounded-2xl focus:outline-none focus:border-vaiiya-orange transition-colors font-medium"
-                  />
-                ) : (
-                  <p className="text-xl font-bold text-vaiiya-purple">{profile.username}</p>
-                )}
-              </div>
-
-              <div className="group">
-                <label className="text-xs font-bold text-vaiiya-gray/40 uppercase tracking-widest mb-2 block">Bio</label>
-                {editing ? (
-                  <textarea
-                    value={formData.bio}
-                    onChange={(e) => setFormData({ ...formData, bio: e.target.value })}
-                    rows={4}
-                    className="w-full px-6 py-4 bg-[#F7F9FC] border border-[#E9EDF6] rounded-2xl focus:outline-none focus:border-vaiiya-orange transition-colors font-medium resize-none"
-                    placeholder="Describe yourself..."
-                  />
-                ) : (
-                  <p className="text-lg text-vaiiya-gray leading-relaxed font-medium">
-                    {profile.bio || <span className="opacity-40 italic">No bio yet</span>}
-                  </p>
-                )}
-              </div>
-
-              <div className="grid grid-cols-2 gap-6">
-                <div>
-                  <label className="text-xs font-bold text-vaiiya-gray/40 uppercase tracking-widest mb-2 block">Age</label>
-                  {editing ? (
-                    <input
-                      type="number"
-                      value={formData.age}
-                      onChange={(e) => setFormData({ ...formData, age: e.target.value })}
-                      className="w-full px-6 py-4 bg-[#F7F9FC] border border-[#E9EDF6] rounded-2xl focus:outline-none focus:border-vaiiya-orange transition-colors font-medium"
-                    />
-                  ) : (
-                    <p className="text-xl font-bold text-vaiiya-purple">{profile.age || "--"}</p>
-                  )}
-                </div>
-                <div>
-                  <label className="text-xs font-bold text-vaiiya-gray/40 uppercase tracking-widest mb-2 block">Gender</label>
-                  {editing ? (
-                    <select
-                      value={formData.gender}
-                      onChange={(e) => setFormData({ ...formData, gender: e.target.value })}
-                      className="w-full px-6 py-4 bg-[#F7F9FC] border border-[#E9EDF6] rounded-2xl focus:outline-none focus:border-vaiiya-orange transition-colors font-medium appearance-none"
-                    >
-                      <option value="">Select</option>
-                      <option value="male">Male</option>
-                      <option value="female">Female</option>
-                      <option value="other">Other</option>
-                    </select>
-                  ) : (
-                    <p className="text-xl font-bold text-vaiiya-purple capitalize">{profile.gender || "--"}</p>
-                  )}
-                </div>
-              </div>
+        <section className="panel rounded-3xl p-5 space-y-4">
+          <h3 className="text-white font-semibold">Interests</h3>
+          {editing ? (
+            <input
+              type="text"
+              value={formData.tags}
+              onChange={(e) => setFormData({ ...formData, tags: e.target.value })}
+              className="w-full bg-black/30 border border-white/10 rounded-2xl px-4 py-3 text-white placeholder:text-gray-500 focus:outline-none focus:border-metamask-orange"
+              placeholder="#travel, #fitness, #music"
+            />
+          ) : (
+            <div className="flex flex-wrap gap-2">
+              {profile.tags && profile.tags.length > 0 ? (
+                profile.tags.map((tag, index) => (
+                  <span key={index} className="px-3 py-1 rounded-full text-xs font-semibold bg-white/10 text-white">
+                    {tag}
+                  </span>
+                ))
+              ) : (
+                <p className="text-gray-500 text-sm">Add tags to show your vibe.</p>
+              )}
             </div>
-          </section>
+          )}
+        </section>
 
-          {/* Location & Tags */}
-          <div className="space-y-8">
-            <section className="vaiiya-card p-10 space-y-6">
-              <h3 className="text-vaiiya-purple font-serif text-2xl font-bold border-b border-[#E9EDF6] pb-4">Location</h3>
-              <div>
-                <label className="text-xs font-bold text-vaiiya-gray/40 uppercase tracking-widest mb-2 block">Primary Residence</label>
-                <div className="flex gap-3">
-                  <div className="flex-1">
-                    {editing ? (
-                      <input
-                        type="text"
-                        value={formData.location}
-                        onChange={(e) => setFormData({ ...formData, location: e.target.value })}
-                        className="w-full px-6 py-4 bg-[#F7F9FC] border border-[#E9EDF6] rounded-2xl focus:outline-none focus:border-vaiiya-orange transition-colors font-medium"
-                        placeholder="Amsterdam, NL"
-                      />
-                    ) : (
-                      <p className="text-xl font-bold text-vaiiya-purple flex items-center gap-2">
-                        <span>📍</span> {profile.location || "Not set"}
-                      </p>
-                    )}
-                  </div>
-                  {editing && (
-                    <button
-                      onClick={handleGetLocation}
-                      disabled={locationStatus === "getting"}
-                      className="p-4 bg-vaiiya-orange/10 text-vaiiya-orange rounded-2xl hover:bg-vaiiya-orange/20 transition-all shadow-sm"
-                    >
-                      {locationStatus === "getting" ? "..." : "📡"}
-                    </button>
-                  )}
-                </div>
-              </div>
-            </section>
-
-            <section className="vaiiya-card p-10 space-y-6">
-              <h3 className="text-vaiiya-purple font-serif text-2xl font-bold border-b border-[#E9EDF6] pb-4">Social Tags</h3>
-              <div>
-                <label className="text-xs font-bold text-vaiiya-gray/40 uppercase tracking-widest mb-4 block">Interests & Hobbies</label>
-                {editing ? (
-                  <div className="space-y-4">
-                    <input
-                      type="text"
-                      value={formData.tags}
-                      onChange={(e) => setFormData({ ...formData, tags: e.target.value })}
-                      className="w-full px-6 py-4 bg-[#F7F9FC] border border-[#E9EDF6] rounded-2xl focus:outline-none focus:border-vaiiya-orange transition-colors font-medium"
-                      placeholder="Enter tags separated by commas..."
-                    />
-                  </div>
-                ) : (
-                  <div className="flex flex-wrap gap-2">
-                    {profile.tags && profile.tags.length > 0 ? (
-                      profile.tags.map((tag, i) => (
-                        <span key={i} className="px-4 py-2 bg-[#F7F9FC] text-vaiiya-purple rounded-full text-sm font-bold border border-[#E9EDF6] shadow-sm">
-                          {tag}
-                        </span>
-                      ))
-                    ) : (
-                      <p className="opacity-40 italic font-medium">No tags added yet</p>
-                    )}
-                  </div>
-                )}
-              </div>
-            </section>
-          </div>
-        </div>
-
-        {/* Global Actions */}
-        <section className="pt-8 border-t border-[#E9EDF6] flex flex-col items-center">
+        <div className="pt-4">
           <button
             onClick={() => signOut({ callbackUrl: "/auth/wallet" })}
-            className="text-red-500 font-bold hover:text-red-600 transition-colors py-4 px-12 rounded-full border border-red-100 hover:bg-red-50 flex items-center gap-2"
+            className="w-full py-3 rounded-full border border-white/10 text-sm font-semibold text-gray-300 hover:text-white"
           >
-            <span>Logout Session</span>
-            <span className="opacity-50 text-xs">→</span>
+            Sign out
           </button>
-        </section>
+        </div>
       </div>
 
       <Navigation />
     </div>
   );
 }
-
-
