@@ -140,24 +140,24 @@ export default function ExplorePage() {
   }
 
   return (
-    <div className="min-h-screen app-shell pb-24">
-      <div className="safe-top px-6 pt-8 pb-6">
+    <div className="min-h-screen bg-[#F7F9FC] pb-24 text-vaiiya-gray">
+      <div className="safe-top px-6 pt-8 pb-6 bg-white/80 backdrop-blur-xl border-b border-[#E9EDF6] sticky top-0 z-10">
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-3xl font-bold text-white tracking-tight">Explore</h1>
-            <p className="text-gray-400 text-sm mt-1">
+            <h1 className="text-3xl font-serif font-bold text-vaiiya-purple tracking-tight">Explore</h1>
+            <p className="text-vaiiya-gray/60 text-sm mt-1">
               Choose up to {MAX_TAGS} hashtags to surface people.
             </p>
           </div>
-          <div className="h-10 w-10 rounded-full panel flex items-center justify-center text-white">
+          <div className="h-10 w-10 rounded-full vaiiya-card flex items-center justify-center text-vaiiya-purple">
             #
           </div>
         </div>
 
-        <div className="mt-6 panel-strong rounded-2xl px-4 py-3 flex items-center gap-3">
-          <span className="text-gray-400">🔍</span>
+        <div className="mt-6 vaiiya-card rounded-2xl px-4 py-3 flex items-center gap-3">
+          <span className="text-vaiiya-gray/40">🔍</span>
           <input
-            className="bg-transparent text-white placeholder:text-gray-500 w-full outline-none"
+            className="bg-transparent text-vaiiya-purple placeholder:text-vaiiya-gray/40 w-full outline-none font-medium"
             placeholder="Search tags or interests"
             value={searchQuery}
             onChange={(event) => setSearchQuery(event.target.value)}
@@ -165,7 +165,7 @@ export default function ExplorePage() {
           {searchQuery && (
             <button
               onClick={() => setSearchQuery("")}
-              className="text-[10px] uppercase tracking-widest text-gray-400"
+              className="text-[10px] uppercase tracking-widest text-vaiiya-gray/40"
             >
               Clear
             </button>
@@ -175,11 +175,11 @@ export default function ExplorePage() {
 
       <div className="px-6 space-y-6">
         {suggestedTags.length > 0 && (
-          <div className="panel rounded-3xl p-5">
+          <div className="vaiiya-card rounded-3xl p-5">
             <div className="flex items-center justify-between mb-4">
               <div>
-                <h2 className="text-lg font-semibold text-white">Suggested for you</h2>
-                <p className="text-xs text-gray-400">Based on your profile and interests.</p>
+                <h2 className="text-lg font-semibold text-vaiiya-purple">Suggested for you</h2>
+                <p className="text-xs text-vaiiya-gray/50">Based on your profile and interests.</p>
               </div>
             </div>
             <div className="flex flex-wrap gap-2">
@@ -189,8 +189,8 @@ export default function ExplorePage() {
                   onClick={() => toggleTag(tag)}
                   className={`rounded-full px-3 py-2 text-sm font-semibold transition-all ${
                     selectedTags.includes(tag)
-                      ? "bg-gradient-to-r from-metamask-orange to-metamask-blue text-white shadow-lg"
-                      : "bg-white/10 text-gray-200 hover:bg-white/20"
+                      ? "bg-vaiiya-orange text-white shadow-md"
+                      : "bg-white text-vaiiya-gray/70 border border-[#E9EDF6] hover:border-vaiiya-orange"
                   }`}
                 >
                   {tag}
@@ -200,13 +200,13 @@ export default function ExplorePage() {
           </div>
         )}
 
-        <div className="panel rounded-3xl p-5">
+        <div className="vaiiya-card rounded-3xl p-5">
           <div className="flex items-center justify-between mb-4">
             <div>
-              <h2 className="text-lg font-semibold text-white">Hashtag Cloud</h2>
-              <p className="text-xs text-gray-400">Tap to add, tap again to remove.</p>
+              <h2 className="text-lg font-semibold text-vaiiya-purple">Hashtag Cloud</h2>
+              <p className="text-xs text-vaiiya-gray/50">Tap to add, tap again to remove.</p>
             </div>
-            <div className="text-xs text-gray-500">
+            <div className="text-xs text-vaiiya-gray/50">
               {selectedTags.length}/{MAX_TAGS}
             </div>
           </div>
@@ -221,8 +221,8 @@ export default function ExplorePage() {
                   onClick={() => toggleTag(tag.tag)}
                   className={`rounded-full px-3 py-2 text-sm font-semibold transition-all ${
                     isSelected
-                      ? "bg-gradient-to-r from-metamask-orange to-metamask-blue text-white shadow-lg"
-                      : "bg-white/10 text-gray-200 hover:bg-white/20"
+                      ? "bg-vaiiya-orange text-white shadow-md"
+                      : "bg-white text-vaiiya-gray/70 border border-[#E9EDF6] hover:border-vaiiya-orange"
                   }`}
                   style={{ fontSize: `${0.75 + weight * 0.5}rem` }}
                 >
@@ -249,22 +249,22 @@ export default function ExplorePage() {
 
         <div className="space-y-4">
           <div className="flex items-center justify-between">
-            <h3 className="text-lg font-semibold text-white">People for your tags</h3>
-            {loadingPeople && <span className="text-xs text-gray-500">Loading…</span>}
+            <h3 className="text-lg font-semibold text-vaiiya-purple">People for your tags</h3>
+            {loadingPeople && <span className="text-xs text-vaiiya-gray/50">Loading…</span>}
           </div>
 
           {selectedTags.length === 0 ? (
-            <div className="panel rounded-3xl p-6 text-center text-gray-400">
+            <div className="vaiiya-card rounded-3xl p-6 text-center text-vaiiya-gray/60">
               Select tags to reveal people who share your vibe.
             </div>
           ) : people.length === 0 && !loadingPeople ? (
-            <div className="panel rounded-3xl p-6 text-center text-gray-400">
+            <div className="vaiiya-card rounded-3xl p-6 text-center text-vaiiya-gray/60">
               No matches yet for those tags. Try mixing in another.
             </div>
           ) : (
             <div className="grid grid-cols-2 gap-4">
               {people.map((person) => (
-                <div key={person._id} className="relative overflow-hidden rounded-3xl panel">
+                <div key={person._id} className="relative overflow-hidden rounded-3xl vaiiya-card">
                   <div className="relative aspect-[3/4]">
                     {person.photos?.[0] ? (
                       <Image
@@ -275,7 +275,7 @@ export default function ExplorePage() {
                         unoptimized={person.photos[0]?.startsWith("/api/images/")}
                       />
                     ) : (
-                      <div className="w-full h-full bg-gradient-to-br from-metamask-purple to-metamask-blue flex items-center justify-center text-2xl font-bold text-white">
+                      <div className="w-full h-full bg-[#F7F9FC] flex items-center justify-center text-2xl font-bold text-vaiiya-purple">
                         {person.username[0]?.toUpperCase()}
                       </div>
                     )}
@@ -288,7 +288,7 @@ export default function ExplorePage() {
                         {person.age ? `, ${person.age}` : ""}
                       </div>
                       {person.matchScore !== undefined && (
-                        <span className="text-xs text-metamask-green font-semibold">
+                        <span className="text-xs text-vaiiya-orange font-semibold">
                           {person.matchScore}% match
                         </span>
                       )}
