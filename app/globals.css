@@ -1,24 +1,22 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Poly:ital@0;1&display=swap');
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 :root {
-  --foreground-rgb: 255, 255, 255;
-  --background-start-rgb: 0, 0, 0;
-  --background-end-rgb: 18, 18, 18;
-  /* MetaMask brand colors */
-  --metamask-orange: #FF6B35;
-  --metamask-blue: #03E1FF;
-  --metamask-purple: #9945FF;
-  --metamask-green: #14F195;
-  --metamask-black: #000000;
-  --metamask-dark-gray: #121212;
+  --foreground-rgb: 75, 85, 99;
+  --background-start-rgb: 255, 255, 255;
+  --background-end-rgb: 247, 249, 252;
+  /* VAIIYA brand colors */
+  --vaiiya-orange: #FF5C16;
+  --vaiiya-purple: #3D065F;
+  --vaiiya-gray: #4B5563;
+  --vaiiya-border: #E9EDF6;
 }
 
 body {
   color: rgb(var(--foreground-rgb));
-  background: linear-gradient(135deg, #000000 0%, #121212 100%);
+  background: #FFFFFF;
   min-height: 100vh;
   font-family: 'Inter', sans-serif;
   -webkit-font-smoothing: antialiased;
@@ -36,6 +34,12 @@ body {
   -webkit-overflow-scrolling: touch;
   /* Prevent pull-to-refresh on mobile browsers */
   overscroll-behavior-y: none;
+}
+
+/* Base Headings */
+h1, h2, h3, h4, .font-serif {
+  font-family: 'Poly', Georgia, serif;
+  color: var(--vaiiya-purple);
 }
 
 /* Re-enable text selection for input fields */
@@ -62,54 +66,41 @@ input, textarea, [contenteditable] {
     padding-bottom: env(safe-area-inset-bottom);
   }
 
-  .safe-left {
-    padding-left: env(safe-area-inset-left);
-  }
-
-  .safe-right {
-    padding-right: env(safe-area-inset-right);
-  }
-
   /* Touch-friendly buttons */
   .btn-touch {
     min-height: 44px;
     min-width: 44px;
   }
 
-  /* Mobile-optimized text sizes */
-  .text-mobile-sm {
-    font-size: 0.875rem;
-    line-height: 1.25rem;
-  }
-
-  .text-mobile-base {
-    font-size: 1rem;
-    line-height: 1.5rem;
-  }
-
-  .text-mobile-lg {
-    font-size: 1.125rem;
-    line-height: 1.75rem;
-  }
-
-  .text-mobile-xl {
-    font-size: 1.25rem;
-    line-height: 1.75rem;
-  }
-
   /* Gradient text */
   .text-gradient {
-    background: linear-gradient(135deg, #FF6B35, #03E1FF);
+    background: linear-gradient(135deg, #FF5C16, #3D065F);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
   }
 
+  /* VAIIYA Pill Button */
+  .btn-vaiiya-primary {
+    @apply bg-[#FF5C16] text-white rounded-full font-bold transition-all active:scale-95;
+    padding: 12px 32px;
+  }
+
+  .btn-vaiiya-secondary {
+    @apply bg-[#3D065F] text-white rounded-full font-bold transition-all active:scale-95;
+    padding: 12px 32px;
+  }
+
   /* Glassmorphism effect */
   .glass {
-    background: rgba(255, 255, 255, 0.1);
-    backdrop-filter: blur(10px);
-    border: 1px solid rgba(255, 255, 255, 0.2);
+    background: rgba(255, 255, 255, 0.8);
+    backdrop-filter: blur(8px);
+    border: 1px solid rgba(229, 231, 235, 0.5);
+  }
+
+  /* VAIIYA Card */
+  .vaiiya-card {
+    @apply bg-white rounded-3xl border border-[#E9EDF6] shadow-sm;
   }
 }
 

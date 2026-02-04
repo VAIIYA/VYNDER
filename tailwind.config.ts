@@ -10,19 +10,14 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        // MetaMask-inspired colors
-        metamask: {
-          orange: "#FF6B35", // Primary orange
-          blue: "#03E1FF", // Secondary blue
-          purple: "#9945FF", // Accent purple
-          green: "#14F195", // Success green
-          black: "#000000",
-          "dark-gray": "#121212",
-          "medium-gray": "#2A2A2A",
-          "light-gray": "#404040",
-        },
-        twitter: {
-          blue: "#1DA1F2",
+        // VAIIYA-inspired colors
+        vaiiya: {
+          orange: "#FF5C16", // Primary orange
+          purple: "#3D065F", // Secondary purple
+          gray: "#4B5563", // Body text
+          light: "#F7F9FC", // Light background
+          white: "#FFFFFF",
+          border: "#E9EDF6", // Card border
         },
         primary: {
           50: "#fff7ed",
@@ -30,42 +25,42 @@ const config: Config = {
           200: "#fed7aa",
           300: "#fdba74",
           400: "#fb923c",
-          500: "#FF6B35", // MetaMask orange
+          500: "#FF5C16", // VAIIYA orange
           600: "#ea580c",
           700: "#c2410c",
           800: "#9a3412",
           900: "#7c2d12",
         },
         secondary: {
-          50: "#ecfeff",
-          100: "#cffafe",
-          200: "#a5f3fc",
-          300: "#67e8f9",
-          400: "#22d3ee",
-          500: "#03E1FF", // MetaMask blue
-          600: "#0891b2",
-          700: "#0e7490",
-          800: "#155e75",
-          900: "#164e63",
+          50: "#f5f3ff",
+          100: "#ede9fe",
+          200: "#ddd6fe",
+          300: "#c4b5fd",
+          400: "#a78bfa",
+          500: "#3D065F", // VAIIYA purple
+          600: "#4c1d95",
+          700: "#371b78", // darker
+          800: "#2e1065",
+          900: "#1e1b4b",
         },
-        accent: {
-          purple: "#9945FF", // MetaMask purple
-          green: "#14F195", // MetaMask green
-        },
-        // Dark theme colors
+        // Dark theme colors (keeping for compatibility but will default to light)
         background: {
-          primary: "#000000",
-          secondary: "#121212",
-          tertiary: "#2A2A2A",
+          primary: "#FFFFFF",
+          secondary: "#F7F9FC",
+          tertiary: "#E9EDF6",
         },
         text: {
-          primary: "#FFFFFF",
-          secondary: "#CCCCCC",
-          tertiary: "#888888",
+          primary: "#3D065F", // Purple for headings
+          secondary: "#4B5563", // Gray for body
+          tertiary: "#9CA3AF",
         },
       },
       fontFamily: {
-        serif: ["Beausite Classic", "Playfair Display", "serif"],
+        serif: ["Poly", "Georgia", "serif"],
+        sans: ["Inter", "sans-serif"],
+      },
+      borderRadius: {
+        "3xl": "32px",
       },
     },
   },

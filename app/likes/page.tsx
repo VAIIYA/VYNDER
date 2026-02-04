@@ -75,139 +75,117 @@ export default function LikesPage() {
   }
 
   return (
-    <div className="min-h-screen bg-black pb-20">
-      <div className="container mx-auto px-4 py-6">
-        {/* Header */}
-        <div className="mb-6">
-          <h1 className="text-3xl font-bold text-white mb-2">
-            {likes.length} {likes.length === 1 ? "Like" : "Likes"}
-          </h1>
-          <p className="text-gray-400 text-sm">
-            Upgrade to see who already likes you
-          </p>
+    <div className="h-full bg-white relative overflow-hidden flex flex-col">
+      {/* Header */}
+      <div className="px-8 py-12 bg-[#F7F9FC]">
+        <div className="flex justify-between items-end">
+          <div>
+            <h1 className="text-5xl font-serif text-vaiiya-purple font-bold mb-3">
+              {likes.length} {likes.length === 1 ? "Admirer" : "Admirers"}
+            </h1>
+            <p className="text-vaiiya-gray/60 text-lg font-medium">Discover who's interested in you</p>
+          </div>
+          <div className="text-right">
+            <span className="text-sm font-bold text-vaiiya-orange uppercase tracking-widest">Premium Only</span>
+          </div>
         </div>
+      </div>
 
+      <div className="flex-1 overflow-y-auto p-8 space-y-8 pb-32">
         {/* Filters */}
-        <div className="flex gap-2 mb-6 overflow-x-auto pb-2">
-          <button
-            onClick={() => setFilter("all")}
-            className={`px-4 py-2 rounded-full text-sm font-semibold whitespace-nowrap transition-colors ${
-              filter === "all"
-                ? "bg-solana-purple text-white"
-                : "bg-gray-800 text-gray-300 hover:bg-gray-700"
-            }`}
-          >
-            All
-          </button>
-          <button
-            onClick={() => setFilter("nearby")}
-            className={`px-4 py-2 rounded-full text-sm font-semibold whitespace-nowrap transition-colors ${
-              filter === "nearby"
-                ? "bg-solana-purple text-white"
-                : "bg-gray-800 text-gray-300 hover:bg-gray-700"
-            }`}
-          >
-            Nearby
-          </button>
-          <button
-            onClick={() => setFilter("hasBio")}
-            className={`px-4 py-2 rounded-full text-sm font-semibold whitespace-nowrap transition-colors ${
-              filter === "hasBio"
-                ? "bg-solana-purple text-white"
-                : "bg-gray-800 text-gray-300 hover:bg-gray-700"
-            }`}
-          >
-            Has Bio
-          </button>
-          <button
-            onClick={() => setFilter("verified")}
-            className={`px-4 py-2 rounded-full text-sm font-semibold whitespace-nowrap transition-colors ${
-              filter === "verified"
-                ? "bg-solana-purple text-white"
-                : "bg-gray-800 text-gray-300 hover:bg-gray-700"
-            }`}
-          >
-            Photo Verified
-          </button>
+        <div className="flex gap-3 overflow-x-auto pb-2 scrollbar-hide">
+          {[
+            { id: "all", label: "All Admirers" },
+            { id: "nearby", label: "Nearby" },
+            { id: "hasBio", label: "Detailed Bios" },
+            { id: "verified", label: "Verified" }
+          ].map((btn) => (
+            <button
+              key={btn.id}
+              onClick={() => setFilter(btn.id as any)}
+              className={`px-6 py-2.5 rounded-full text-sm font-bold transition-all whitespace-nowrap border ${filter === btn.id
+                ? "bg-vaiiya-purple text-white border-vaiiya-purple shadow-md"
+                : "bg-white text-vaiiya-gray/60 border-[#E9EDF6] hover:border-vaiiya-purple hover:text-vaiiya-purple"
+                }`}
+            >
+              {btn.label}
+            </button>
+          ))}
         </div>
 
-        {/* Premium Banner */}
+        {/* Premium Call-to-Action */}
         {likes.length > 0 && (
-          <div className="bg-gradient-to-r from-yellow-500/20 to-yellow-600/20 border border-yellow-500/30 rounded-2xl p-4 mb-6">
-            <p className="text-white text-sm mb-2">
-              Upgrade to see people who have already liked you.
-            </p>
-            <button className="w-full bg-gradient-to-r from-yellow-500 to-yellow-600 text-black font-bold py-3 rounded-xl hover:shadow-lg hover:shadow-yellow-500/50 transition-all">
-              See Who Likes You
-            </button>
+          <div className="vaiiya-card p-10 bg-vaiiya-purple text-white relative overflow-hidden">
+            <div className="absolute top-0 right-0 w-48 h-48 bg-vaiiya-orange/20 rounded-full blur-3xl -mr-24 -mt-24"></div>
+            <div className="relative z-10 flex flex-col md:flex-row items-center gap-8">
+              <div className="flex-1">
+                <h3 className="text-3xl font-serif font-bold mb-3">Reveal your matches</h3>
+                <p className="text-white/70 font-medium text-lg">Don't leave them waiting. Upgrade to premium to instantly see everyone who swiped right on you.</p>
+              </div>
+              <button className="btn-vaiiya-primary whitespace-nowrap px-10 py-4 shadow-xl shadow-vaiiya-orange/20">
+                Upgrade Now
+              </button>
+            </div>
           </div>
         )}
 
         {/* Likes Grid */}
         {likes.length === 0 ? (
-          <div className="text-center py-12">
-            <div className="mb-4 text-6xl">💔</div>
-            <p className="text-gray-300 text-lg mb-2">No likes yet</p>
-            <p className="text-gray-500 text-sm">
-              Start swiping to get more likes!
-            </p>
+          <div className="text-center py-20 vaiiya-card border-dashed">
+            <div className="mb-6 text-7xl opacity-20">🤍</div>
+            <h3 className="text-2xl font-serif text-vaiiya-purple font-bold mb-2">No admirers yet</h3>
+            <p className="text-vaiiya-gray/50 font-medium">Keep swiping and expanding your profile!</p>
           </div>
         ) : (
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
             {likes.map((like) => (
               <div
                 key={like._id}
-                className="relative aspect-[3/4] rounded-2xl overflow-hidden group"
+                className="vaiiya-card aspect-[3/4] overflow-hidden group relative cursor-pointer"
               >
                 {/* Blurred image for non-premium */}
-                <div className="absolute inset-0 blur-xl scale-110">
+                <div className="absolute inset-0 transition-transform duration-700 group-hover:scale-110">
                   {like.fromUser.photos && like.fromUser.photos.length > 0 ? (
                     <Image
                       src={like.fromUser.photos[0]}
-                      alt={like.fromUser.username}
+                      alt="Hidden Profile"
                       fill
-                      className="object-cover opacity-50"
+                      className="object-cover blur-2xl opacity-40 grayscale"
                       unoptimized={like.fromUser.photos[0]?.startsWith("/api/images/")}
                     />
                   ) : (
-                    <div className="w-full h-full bg-gradient-to-br from-solana-purple to-solana-blue" />
+                    <div className="w-full h-full bg-[#F7F9FC]" />
                   )}
                 </div>
 
                 {/* Content overlay */}
-                <div className="absolute inset-0 bg-black/40 backdrop-blur-sm flex flex-col justify-end p-4">
-                  <div className="bg-black/50 backdrop-blur-md rounded-lg px-3 py-2 mb-2">
-                    <div className="flex items-center gap-2">
-                      <span className="text-white font-semibold">
-                        {like.fromUser.age || "?"}
-                      </span>
-                      {like.fromUser.verified && (
-                        <span className="text-blue-400">✓</span>
-                      )}
-                    </div>
+                <div className="absolute inset-0 p-6 flex flex-col justify-end bg-gradient-to-t from-vaiiya-purple/40 to-transparent">
+                  <div className="flex items-center justify-between mb-2">
+                    <span className="text-white font-bold text-xl">{like.fromUser.age || "??"}</span>
+                    {like.fromUser.verified && (
+                      <span className="w-6 h-6 bg-blue-500 text-white flex items-center justify-center rounded-full text-[10px] shadow-sm">✓</span>
+                    )}
                   </div>
-                  {like.fromUser.distance && (
-                    <p className="text-white text-xs mb-1">
-                      {like.fromUser.distance.toFixed(1)} miles away
+                  {like.fromUser.distance !== undefined && (
+                    <p className="text-white/80 text-xs font-bold uppercase tracking-wider">
+                      {like.fromUser.distance.toFixed(1)} km away
                     </p>
-                  )}
-                  {like.fromUser.recentlyActive && (
-                    <p className="text-gray-300 text-xs">Recently Active</p>
                   )}
                 </div>
 
-                {/* Premium overlay */}
-                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
-                  <div className="text-center">
-                    <div className="text-4xl mb-2">🔒</div>
-                    <p className="text-white text-sm font-semibold">Upgrade to see</p>
+                {/* Lock icon overlay */}
+                <div className="absolute inset-0 flex flex-col items-center justify-center bg-white/20 backdrop-blur-sm opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                  <div className="w-16 h-16 bg-white rounded-full flex items-center justify-center shadow-2xl mb-4">
+                    <span className="text-3xl">🔒</span>
                   </div>
+                  <span className="text-vaiiya-purple font-bold text-sm uppercase tracking-widest">Unlock Profile</span>
                 </div>
               </div>
             ))}
           </div>
         )}
       </div>
+
       <Navigation />
     </div>
   );

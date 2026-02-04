@@ -72,47 +72,54 @@ export default function InstallPrompt() {
   if (isInstalled || !showPrompt) return null;
 
   return (
-    <div className="fixed bottom-24 left-4 right-4 z-50 md:left-auto md:right-4 md:w-96">
-      <div className="bg-background-secondary border border-metamask-dark-gray rounded-2xl p-4 shadow-2xl">
-        <div className="flex items-start gap-3">
-          <div className="w-12 h-12 bg-gradient-to-br from-metamask-orange to-metamask-blue rounded-xl flex items-center justify-center flex-shrink-0">
-            <ArrowDownTrayIcon className="w-6 h-6 text-white" />
+    <div className="fixed bottom-24 left-4 right-4 z-50 md:left-auto md:right-8 md:w-96 animate-in slide-in-from-right-10">
+      <div className="vaiiya-card p-6 shadow-2xl border-2 border-vaiiya-orange/10 relative overflow-hidden">
+        <div className="absolute top-0 right-0 w-32 h-32 bg-vaiiya-orange/5 rounded-full blur-3xl -mr-16 -mt-16"></div>
+
+        <div className="flex items-start gap-4 relative z-10">
+          <div className="w-14 h-14 bg-vaiiya-orange text-white rounded-2xl flex items-center justify-center flex-shrink-0 shadow-lg shadow-vaiiya-orange/20">
+            <ArrowDownTrayIcon className="w-7 h-7" />
           </div>
 
           <div className="flex-1 min-w-0">
-            <h3 className="text-text-primary font-bold text-lg mb-1">
-              Install VYNDER
+            <h3 className="text-xl font-serif font-bold text-vaiiya-purple mb-1">
+              Perfect your experience
             </h3>
-            <p className="text-text-secondary text-sm mb-3">
-              Get the full app experience with offline access, push notifications, and faster loading.
+            <p className="text-vaiiya-gray/60 font-medium text-sm mb-4 leading-relaxed">
+              Install the VYNDER app for instant access and a truly seamless matching journey.
             </p>
 
-            <div className="flex gap-2">
+            <div className="flex gap-3">
               <button
                 onClick={handleInstall}
-                className="flex-1 bg-gradient-to-r from-metamask-orange to-metamask-blue text-white font-bold py-2 px-4 rounded-xl hover:shadow-lg transition-all active:scale-95"
+                className="btn-vaiiya-primary flex-1 py-3 text-sm"
               >
-                Install Now
+                Add to Home
               </button>
               <button
                 onClick={handleDismiss}
-                className="px-3 py-2 text-text-tertiary hover:text-text-secondary transition-colors"
+                className="p-3 text-vaiiya-gray/30 hover:text-vaiiya-orange transition-colors"
+                aria-label="Dismiss"
               >
-                <XMarkIcon className="w-5 h-5" />
+                <XMarkIcon className="w-6 h-6" />
               </button>
             </div>
           </div>
         </div>
 
-        {/* Mobile-specific features */}
-        <div className="mt-3 pt-3 border-t border-metamask-dark-gray">
-          <div className="flex items-center gap-2 text-xs text-text-tertiary">
-            <span className="w-1 h-1 bg-metamask-green rounded-full"></span>
-            <span>No app store needed</span>
-            <span className="w-1 h-1 bg-metamask-green rounded-full"></span>
-            <span>Works offline</span>
-            <span className="w-1 h-1 bg-metamask-green rounded-full"></span>
-            <span>Push notifications</span>
+        {/* Benefits */}
+        <div className="mt-6 pt-4 border-t border-[#E9EDF6] flex justify-between">
+          <div className="flex items-center gap-1.5">
+            <div className="w-1.5 h-1.5 bg-green-500 rounded-full"></div>
+            <span className="text-[10px] font-bold text-vaiiya-gray/40 uppercase tracking-widest">Premium UI</span>
+          </div>
+          <div className="flex items-center gap-1.5">
+            <div className="w-1.5 h-1.5 bg-green-500 rounded-full"></div>
+            <span className="text-[10px] font-bold text-vaiiya-gray/40 uppercase tracking-widest">Realtime</span>
+          </div>
+          <div className="flex items-center gap-1.5">
+            <div className="w-1.5 h-1.5 bg-green-500 rounded-full"></div>
+            <span className="text-[10px] font-bold text-vaiiya-gray/40 uppercase tracking-widest">Secure</span>
           </div>
         </div>
       </div>

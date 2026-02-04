@@ -20,9 +20,14 @@ export default function NotificationPrompt() {
   if (permission === 'granted') return null;
 
   return (
-    <div className="fixed bottom-2 right-2 z-40 bg-white p-3 rounded shadow-md flex items-center gap-2">
-      <span className="text-sm">Enable notifications for updates</span>
-      <button className="px-3 py-1 rounded bg-gradient-to-r from-metamask-orange to-metamask-blue text-white text-xs" onClick={request}>Enable</button>
+    <div className="fixed bottom-24 right-4 z-40 vaiiya-card p-4 flex items-center gap-4 animate-in slide-in-from-bottom-5">
+      <span className="text-sm font-bold text-vaiiya-purple">Stay updated</span>
+      <button
+        className="btn-vaiiya-primary px-4 py-1.5 text-xs"
+        onClick={request}
+      >
+        Enable
+      </button>
     </div>
   );
 }

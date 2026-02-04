@@ -4,6 +4,7 @@ import { useEffect, useState, useRef, useCallback } from "react";
 import { useSession } from "next-auth/react";
 import { useRouter, useParams } from "next/navigation";
 import Image from "next/image";
+import Link from "next/link";
 import Navigation from "@/components/Navigation";
 import toast from "react-hot-toast";
 import { format, isToday, isYesterday, isSameDay } from "date-fns";
@@ -57,14 +58,14 @@ export default function ChatPage() {
 
   const loadMessages = useCallback(async () => {
     if (!matchId) return;
-    
+
     try {
       const response = await fetch(`/api/messages/${matchId}`);
       const data = await response.json();
 
       if (response.ok) {
         const newMessages = data.messages || [];
-        
+
         // Only update if we have new messages
         if (newMessages.length > 0) {
           const lastMessageId = newMessages[newMessages.length - 1]._id;
@@ -85,11 +86,11 @@ export default function ChatPage() {
 
   const checkTyping = useCallback(async () => {
     if (!matchId) return;
-    
+
     try {
       const response = await fetch(`/api/typing?matchId=${matchId}`);
       const data = await response.json();
-      
+
       if (response.ok) {
         setOtherUserTyping(data.typing && data.typing.length > 0);
       }
@@ -105,7 +106,7 @@ export default function ChatPage() {
       const messageInterval = setInterval(loadMessages, 3000);
       // Check typing every 1 second
       const typingInterval = setInterval(checkTyping, 1000);
-      
+
       return () => {
         clearInterval(messageInterval);
         clearInterval(typingInterval);
@@ -164,7 +165,7 @@ export default function ChatPage() {
     setMessages((prev) => [...prev, tempMessage]);
     setMessageText("");
     setIsTyping(false);
-    
+
     // Stop typing indicator
     if (typingTimeoutRef.current) {
       clearTimeout(typingTimeoutRef.current);
@@ -242,11 +243,11 @@ export default function ChatPage() {
   ): boolean => {
     if (!previous || index === 0) return false;
     if (current.sender._id !== previous.sender._id) return false;
-    
+
     const timeDiff =
       new Date(current.createdAt).getTime() -
       new Date(previous.createdAt).getTime();
-    
+
     return timeDiff < 5 * 60 * 1000; // 5 minutes
   };
 
@@ -261,19 +262,24 @@ export default function ChatPage() {
     );
   }
 
-  const otherUser = messages[0]?.sender?._id !== session?.user?.id 
-    ? messages[0]?.sender 
+  const otherUser = messages[0]?.sender?._id !== session?.user?.id
+    ? messages[0]?.sender
     : messages.find(m => m.sender._id !== session?.user?.id)?.sender;
 
   const groupedMessages = groupMessagesByDate(messages);
 
   return (
-    <div className="flex flex-col h-screen bg-black pb-20">
+    <div className="h-full bg-white relative overflow-hidden flex flex-col">
       {/* Header */}
-      <div className="bg-gradient-to-r from-gray-900/90 to-black/90 backdrop-blur-xl border-b border-gray-800 px-4 py-4">
+      <div className="bg-white/95 backdrop-blur-md border-b border-[#E9EDF6] px-6 py-4 z-20 sticky top-0">
         {otherUser && (
-          <div className="flex items-center gap-3">
-            <div className="relative w-10 h-10 rounded-full overflow-hidden border-2 border-solana-purple/50">
+          <div className="flex items-center gap-4">
+            <Link href="/matches" className="p-2 -ml-2 text-vaiiya-purple hover:text-vaiiya-orange transition-colors">
+              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M15 19l-7-7 7-7" />
+              </svg>
+            </Link>
+            <div className="relative w-12 h-12 rounded-full overflow-hidden border-2 border-[#E9EDF6]">
               {otherUser.photos && otherUser.photos.length > 0 ? (
                 <Image
                   src={otherUser.photos[0]}
@@ -283,21 +289,26 @@ export default function ChatPage() {
                   unoptimized={otherUser.photos[0]?.startsWith("/api/images/")}
                 />
               ) : (
-                <div className="w-full h-full bg-gradient-to-br from-solana-purple to-solana-blue flex items-center justify-center">
-                  <span className="text-white font-bold">
+                <div className="w-full h-full bg-[#F7F9FC] flex items-center justify-center">
+                  <span className="text-vaiiya-purple font-bold">
                     {otherUser.username[0]?.toUpperCase()}
                   </span>
                 </div>
               )}
             </div>
             <div className="flex-1">
-              <h2 className="font-semibold text-white">
+              <h2 className="text-xl font-serif font-bold text-vaiiya-purple tracking-tight">
                 {otherUser.username}
               </h2>
-              {otherUserTyping && (
-                <p className="text-xs text-solana-purple animate-pulse">
+              {otherUserTyping ? (
+                <p className="text-xs font-bold text-vaiiya-orange uppercase tracking-widest animate-pulse">
                   typing...
                 </p>
+              ) : (
+                <div className="flex items-center gap-1.5">
+                  <div className="w-1.5 h-1.5 bg-green-500 rounded-full"></div>
+                  <span className="text-[10px] font-bold text-vaiiya-gray/40 uppercase tracking-widest">Active Now</span>
+                </div>
               )}
             </div>
           </div>
@@ -307,13 +318,13 @@ export default function ChatPage() {
       {/* Messages */}
       <div
         ref={messagesContainerRef}
-        className="flex-1 overflow-y-auto px-4 py-4 space-y-4 hide-scrollbar bg-black"
+        className="flex-1 overflow-y-auto px-6 py-8 space-y-8 bg-white hide-scrollbar"
       >
         {groupedMessages.map((group) => (
           <div key={group.date}>
             {/* Date separator */}
-            <div className="flex items-center justify-center my-4">
-              <div className="px-3 py-1 bg-gray-800/50 rounded-full text-xs text-gray-400">
+            <div className="flex items-center justify-center my-10">
+              <div className="px-6 py-1.5 bg-[#F7F9FC] border border-[#E9EDF6] rounded-full text-[10px] font-bold text-vaiiya-gray/40 uppercase tracking-widest">
                 {group.date}
               </div>
             </div>
@@ -321,44 +332,31 @@ export default function ChatPage() {
             {/* Messages in this group */}
             {group.messages.map((message, index) => {
               const isOwn = message.sender._id === session?.user?.id;
-              const previousMessage =
-                index > 0 ? group.messages[index - 1] : null;
-              const shouldGroup = shouldGroupWithPrevious(
-                message,
-                previousMessage,
-                index
-              );
+              const previousMessage = index > 0 ? group.messages[index - 1] : null;
+              const shouldGroup = shouldGroupWithPrevious(message, previousMessage, index);
 
               return (
                 <div
                   key={message._id}
-                  className={`flex ${isOwn ? "justify-end" : "justify-start"} ${
-                    shouldGroup ? "mt-1" : "mt-4"
-                  }`}
+                  className={`flex ${isOwn ? "justify-end" : "justify-start"} ${shouldGroup ? "mt-1.5" : "mt-6"
+                    }`}
                 >
-                  <div
-                    className={`max-w-xs lg:max-w-md px-4 py-2 rounded-2xl transition-all ${
-                      isOwn
-                        ? "bg-gradient-to-r from-solana-purple to-solana-blue text-white shadow-lg shadow-solana-purple/30"
-                        : "bg-gray-800/80 backdrop-blur-xl text-white border border-gray-700"
-                    } ${message._id.startsWith("temp-") ? "opacity-70" : ""}`}
-                  >
-                    <p className="text-sm break-words">{message.text}</p>
-                    <div className="flex items-center justify-end gap-2 mt-1">
-                      <p
-                        className={`text-xs ${
-                          isOwn ? "text-white/70" : "text-gray-400"
-                        }`}
-                      >
+                  <div className="flex flex-col gap-1 max-w-[80%] lg:max-w-[70%]">
+                    <div
+                      className={`px-5 py-3 rounded-[24px] shadow-sm transition-all ${isOwn
+                        ? "bg-vaiiya-orange text-white rounded-tr-none"
+                        : "bg-[#F7F9FC] text-vaiiya-purple border border-[#E9EDF6] rounded-tl-none"
+                        } ${message._id.startsWith("temp-") ? "opacity-50" : ""}`}
+                    >
+                      <p className="text-base font-medium leading-relaxed break-words">{message.text}</p>
+                    </div>
+                    <div className={`flex items-center gap-2 px-1 ${isOwn ? "justify-end" : "justify-start"}`}>
+                      <p className="text-[10px] font-bold text-vaiiya-gray/30 uppercase tracking-widest">
                         {format(new Date(message.createdAt), "h:mm a")}
                       </p>
                       {isOwn && (
-                        <span className="text-xs">
-                          {message.read ? (
-                            <span className="text-blue-300">✓✓</span>
-                          ) : (
-                            <span className="text-gray-400">✓</span>
-                          )}
+                        <span className="text-[10px] font-bold text-vaiiya-orange uppercase">
+                          {message.read ? "Seen" : "Sent"}
                         </span>
                       )}
                     </div>
@@ -368,53 +366,59 @@ export default function ChatPage() {
             })}
           </div>
         ))}
-        
+
         {otherUserTyping && (
-          <div className="flex justify-start mt-2">
-            <div className="bg-gray-800/80 backdrop-blur-xl rounded-2xl px-4 py-2 border border-gray-700">
-              <div className="flex gap-1">
-                <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: "0ms" }}></div>
-                <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: "150ms" }}></div>
-                <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: "300ms" }}></div>
-              </div>
+          <div className="flex justify-start mt-4">
+            <div className="bg-[#F7F9FC] border border-[#E9EDF6] rounded-[24px] rounded-tl-none px-5 py-3 flex gap-1.5">
+              <div className="w-1.5 h-1.5 bg-vaiiya-orange rounded-full animate-bounce" style={{ animationDelay: "0ms" }}></div>
+              <div className="w-1.5 h-1.5 bg-vaiiya-orange rounded-full animate-bounce" style={{ animationDelay: "150ms" }}></div>
+              <div className="w-1.5 h-1.5 bg-vaiiya-orange rounded-full animate-bounce" style={{ animationDelay: "300ms" }}></div>
             </div>
           </div>
         )}
-        
-        <div ref={messagesEndRef} />
+
+        <div ref={messagesEndRef} className="h-4" />
       </div>
 
       {/* Input */}
-      <form
-        onSubmit={sendMessage}
-        className="bg-gradient-to-r from-gray-900/90 to-black/90 backdrop-blur-xl border-t border-gray-800 px-4 py-4"
-      >
-        <div className="flex gap-2">
-          <input
-            type="text"
-            value={messageText}
-            onChange={(e) => {
-              setMessageText(e.target.value);
-              handleTyping();
-            }}
-            onKeyDown={(e) => {
-              if (e.key === "Enter" && !e.shiftKey) {
-                e.preventDefault();
-                sendMessage(e);
-              }
-            }}
-            placeholder="Type a message..."
-            className="flex-1 px-4 py-2 rounded-full border border-gray-700 bg-gray-800/50 text-white placeholder-gray-500 focus:ring-2 focus:ring-solana-purple focus:border-solana-purple transition-all"
-          />
+      <div className="p-6 bg-white border-t border-[#E9EDF6] pb-32">
+        <form
+          onSubmit={sendMessage}
+          className="flex gap-4 items-end"
+        >
+          <div className="flex-1 relative group">
+            <textarea
+              value={messageText}
+              onChange={(e) => {
+                setMessageText(e.target.value);
+                handleTyping();
+              }}
+              onKeyDown={(e) => {
+                if (e.key === "Enter" && !e.shiftKey) {
+                  e.preventDefault();
+                  sendMessage(e);
+                }
+              }}
+              rows={1}
+              placeholder="Write a message..."
+              className="w-full px-6 py-4 bg-[#F7F9FC] border border-[#E9EDF6] rounded-[24px] focus:outline-none focus:border-vaiiya-orange transition-colors font-medium resize-none max-h-32"
+            />
+          </div>
           <button
             type="submit"
             disabled={!messageText.trim() || sending}
-            className="bg-gradient-to-r from-solana-purple to-solana-blue hover:from-solana-purple/90 hover:to-solana-blue/90 text-white rounded-full px-6 py-2 font-semibold disabled:opacity-50 disabled:cursor-not-allowed transition-all shadow-lg hover:shadow-solana-purple/50"
+            className="w-14 h-14 bg-vaiiya-orange flex items-center justify-center text-white rounded-full shadow-lg shadow-vaiiya-orange/20 hover:scale-110 active:scale-95 transition-all disabled:opacity-30 disabled:grayscale disabled:scale-100"
           >
-            {sending ? "..." : "Send"}
+            {sending ? (
+              <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
+            ) : (
+              <svg className="w-6 h-6 rotate-45 transform -translate-y-0.5 -translate-x-0.5" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z" />
+              </svg>
+            )}
           </button>
-        </div>
-      </form>
+        </form>
+      </div>
 
       <Navigation />
     </div>

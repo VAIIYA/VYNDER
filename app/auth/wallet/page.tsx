@@ -80,88 +80,91 @@ export default function WalletAuthPage() {
   }, [disconnect]);
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-brand-lavender px-4 relative overflow-hidden">
-      {/* Decorative elements */}
-      <div className="absolute top-0 right-0 w-64 h-64 bg-brand-red/10 rounded-full blur-3xl -mr-32 -mt-32" />
-      <div className="absolute bottom-0 left-0 w-64 h-64 bg-brand-red/10 rounded-full blur-3xl -ml-32 -mb-32" />
+    <div className="min-h-screen flex items-center justify-center bg-[#F7F9FC] px-4 relative overflow-hidden">
+      {/* Background Glows (VAIIYA style) */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none -z-10">
+        <div className="absolute -top-[10%] -left-[10%] w-[40%] h-[40%] bg-vaiiya-orange/5 rounded-full blur-[120px]" />
+        <div className="absolute top-[20%] -right-[10%] w-[50%] h-[50%] bg-vaiiya-purple/5 rounded-full blur-[150px]" />
+      </div>
 
-      <div className="w-full max-w-md z-10">
-        <div className="bg-white rounded-[40px] shadow-2xl p-10 border border-white/50 backdrop-blur-sm">
-          <div className="flex justify-center mb-8">
-            <Link href="/" className="flex items-center gap-2">
-              <Flame className="w-10 h-10 text-[#9945FF] transform rotate-3" />
-              <span className="text-2xl font-black tracking-tighter bg-gradient-to-r from-[#9945FF] to-[#14F195] bg-clip-text text-transparent">VYNDER</span>
+      <div className="w-full max-w-lg z-10">
+        <div className="bg-white rounded-[48px] shadow-[0_32px_80px_rgba(0,0,0,0.06)] p-12 md:p-16 border border-[#E9EDF6]">
+          <div className="flex justify-center mb-12">
+            <Link href="/" className="flex flex-col items-center gap-2">
+              <span className="text-4xl font-serif font-black tracking-tighter text-vaiiya-purple">VYNDER</span>
+              <div className="w-8 h-1 bg-vaiiya-orange rounded-full"></div>
             </Link>
           </div>
 
-          <h1 className="text-3xl font-serif font-bold text-center mb-2 text-brand-near-black">
-            Connect Your Wallet
+          <h1 className="text-4xl md:text-5xl font-serif font-bold text-center mb-4 text-vaiiya-purple leading-tight">
+            Connect your <span className="italic text-vaiiya-orange">identity</span>.
           </h1>
-          <p className="text-center text-gray-500 mb-10">
-            Sign in with your Solana wallet to continue
+          <p className="text-center text-vaiiya-gray/60 font-medium text-lg mb-12">
+            Securely sign in with your Solana digital wallet to join the community.
           </p>
 
           {!connected ? (
-            <div className="space-y-6">
+            <div className="space-y-8">
               <button
                 onClick={handleConnect}
                 disabled={loading}
-                className="w-full bg-gradient-to-r from-solana-purple to-solana-blue hover:from-solana-purple/90 hover:to-solana-blue/90 text-white font-bold py-4 rounded-2xl transition-all shadow-xl hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed active:scale-[0.98]"
+                className="btn-vaiiya-primary w-full py-6 text-xl shadow-xl shadow-vaiiya-orange/20"
               >
                 {loading ? "Connecting..." : "Connect Wallet"}
               </button>
 
-              <div className="text-center text-sm text-gray-500">
-                <p className="mb-2">Supported wallets:</p>
-                <div className="flex justify-center gap-4 text-xs">
-                  <span>Phantom</span>
-                  <span>Solflare</span>
-                  <span>Torus</span>
+              <div className="text-center">
+                <p className="text-xs font-bold text-vaiiya-gray/30 uppercase tracking-[0.2em] mb-6">Trusted Wallets</p>
+                <div className="flex justify-center gap-8 grayscale opacity-50">
+                  <span className="text-sm font-bold text-vaiiya-purple">PHANTOM</span>
+                  <span className="text-sm font-bold text-vaiiya-purple">SOLFLARE</span>
+                  <span className="text-sm font-bold text-vaiiya-purple">TORUS</span>
                 </div>
               </div>
             </div>
           ) : (
-            <div className="space-y-6">
-              <div className="bg-gradient-to-r from-solana-purple/10 to-solana-blue/10 rounded-2xl p-4 border border-solana-purple/20">
-                <p className="text-xs text-gray-500 mb-1">Connected Wallet</p>
-                <p className="text-sm font-mono text-brand-near-black break-all">
+            <div className="space-y-8">
+              <div className="bg-[#F7F9FC] rounded-3xl p-8 border border-[#E9EDF6] text-center">
+                <p className="text-xs font-bold text-vaiiya-gray/40 uppercase tracking-widest mb-3">Linked Address</p>
+                <p className="text-sm font-mono text-vaiiya-purple font-bold break-all bg-white py-3 px-4 rounded-xl shadow-sm border border-[#E9EDF6]">
                   {publicKey?.toString()}
                 </p>
               </div>
 
-              <button
-                onClick={handleConnect}
-                disabled={loading}
-                className="w-full bg-gradient-to-r from-solana-purple to-solana-blue hover:from-solana-purple/90 hover:to-solana-blue/90 text-white font-bold py-4 rounded-2xl transition-all shadow-xl hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed active:scale-[0.98]"
-              >
-                {loading ? "Signing in..." : "Sign In with Wallet"}
-              </button>
+              <div className="space-y-4">
+                <button
+                  onClick={handleConnect}
+                  disabled={loading}
+                  className="btn-vaiiya-primary w-full py-6 text-xl"
+                >
+                  {loading ? "Signing in..." : "Finalize Sign In"}
+                </button>
 
-              <button
-                onClick={handleDisconnect}
-                className="w-full bg-gray-100 hover:bg-gray-200 text-brand-near-black font-bold py-3 rounded-2xl transition-all"
-              >
-                Disconnect Wallet
-              </button>
+                <button
+                  onClick={handleDisconnect}
+                  className="w-full text-vaiiya-gray/40 hover:text-vaiiya-orange font-bold text-sm uppercase tracking-widest transition-colors py-4"
+                >
+                  Disconnect Wallet
+                </button>
+              </div>
             </div>
           )}
 
-          <div className="mt-8 text-center">
-            <p className="text-sm text-gray-500 font-medium">
-              New to Solana?{" "}
+          <div className="mt-12 text-center pt-8 border-t border-[#E9EDF6]">
+            <p className="text-base text-vaiiya-gray/60 font-medium">
+              New to Web3?{" "}
               <a
                 href="https://phantom.app/"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-brand-red hover:underline font-bold transition-colors"
+                className="text-vaiiya-orange hover:text-vaiiya-purple font-bold transition-all border-b-2 border-vaiiya-orange/20 hover:border-vaiiya-purple"
               >
-                Get a wallet
+                Create a wallet
               </a>
             </p>
-          </div>
-
-          <div className="mt-6 text-center text-gray-500 text-sm">
-            <Link href="/" className="hover:text-brand-red transition-colors">← Back to home</Link>
+            <Link href="/" className="mt-8 block text-sm font-bold text-vaiiya-purple/40 hover:text-vaiiya-purple uppercase tracking-widest transition-colors">
+              ← Return Home
+            </Link>
           </div>
         </div>
       </div>

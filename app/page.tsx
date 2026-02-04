@@ -15,235 +15,182 @@ export default async function LandingPage() {
   }
 
   return (
-    <div className="min-h-screen bg-background-primary text-text-primary font-sans">
-      {/* Mobile-first floating navigation */}
-      <div className="fixed top-4 w-full z-50 px-4 safe-top flex justify-center pointer-events-none">
-        <nav className="glass px-4 py-3 rounded-2xl flex justify-between items-center w-full max-w-md pointer-events-auto">
+    <div className="min-h-screen bg-white text-vaiiya-gray font-sans overflow-x-hidden">
+      {/* Navigation */}
+      <div className="fixed top-0 w-full z-50 px-4 py-6 flex justify-center pointer-events-none">
+        <nav className="glass px-6 py-4 rounded-full flex justify-between items-center w-full max-w-4xl pointer-events-auto border border-[#E9EDF6]">
           <div className="flex items-center gap-2">
-            <Flame className="w-8 h-8 text-metamask-orange" />
-            <span className="text-mobile-lg font-black tracking-tighter text-gradient">VYNDER</span>
+            <Flame className="w-8 h-8 text-vaiiya-orange" />
+            <span className="text-xl font-bold tracking-tight text-vaiiya-purple">VYNDER</span>
           </div>
 
-          <div className="flex items-center gap-2">
-            <Link href="/auth/wallet" className="font-bold text-mobile-sm hover:text-metamask-blue transition-colors px-3 py-2 rounded-xl hover:bg-white/10">
-              Connect
+          <div className="flex items-center gap-4">
+            <Link href="/auth/wallet" className="font-bold text-sm text-vaiiya-purple/70 hover:text-vaiiya-orange transition-colors">
+              Sign In
             </Link>
             <Link
               href="/auth/wallet"
-              className="bg-metamask-orange text-white px-4 py-2 rounded-xl font-bold hover:bg-metamask-orange/90 transition-all active:scale-95 text-mobile-sm btn-touch"
+              className="btn-vaiiya-primary text-sm shadow-md hover:shadow-lg"
             >
-              Join
+              Get Started
             </Link>
           </div>
         </nav>
       </div>
 
-      {/* Hero Section: Mobile-first Web3 Dating */}
-      <header className="relative pt-32 pb-16 px-4 overflow-hidden safe-top">
-        {/* Background gradients */}
-        <div className="absolute top-0 right-0 w-full h-full bg-gradient-to-br from-metamask-purple/10 via-background-primary to-metamask-green/10 -z-20" />
-        <div className="absolute -top-24 -right-24 w-64 h-64 bg-metamask-purple/20 rounded-full blur-[80px] -z-10" />
-        <div className="absolute -bottom-24 -left-24 w-64 h-64 bg-metamask-green/20 rounded-full blur-[80px] -z-10" />
-
-        <div className="max-w-4xl mx-auto">
-          <div className="z-10 text-center">
-            <div className="inline-flex items-center gap-2 glass px-4 py-2 rounded-full text-metamask-orange text-mobile-sm font-bold mb-6 animate-fade-in">
-              <span className="animate-pulse">⚡</span>
-              <span>Web3 Dating on Solana</span>
-            </div>
-            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-gradient mb-6 leading-tight">
-              Dating on the Blockchain
-            </h1>
-            <p className="text-mobile-lg lg:text-xl text-text-secondary mb-8 max-w-2xl mx-auto leading-relaxed">
-              The first PWA dating app. No app stores needed. Your wallet, your identity, your connections.
-            </p>
-
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Link
-                href="/auth/wallet"
-                className="bg-gradient-to-r from-metamask-orange to-metamask-blue text-white text-mobile-lg px-8 py-4 rounded-2xl font-bold hover:shadow-lg transition-all text-center active:scale-95 btn-touch group"
-              >
-                Connect Wallet <span className="inline-block transition-transform group-hover:translate-x-1">→</span>
-              </Link>
-            </div>
+      {/* Hero Section */}
+      <header className="relative pt-48 pb-24 px-6">
+        <div className="max-w-6xl mx-auto text-center relative z-10">
+          <div className="inline-flex items-center gap-2 bg-vaiiya-orange/10 px-4 py-2 rounded-full text-vaiiya-orange text-xs font-bold mb-8 tracking-widest uppercase">
+            <span>⚡ Next Gen Web3 Dating</span>
           </div>
 
-          <div className="relative mt-12">
-            {/* Mobile-first card design */}
-            <div className="relative w-full aspect-[4/5] max-w-sm mx-auto">
-              {/* Decorative back cards */}
-              <div className="absolute top-6 left-6 w-full h-full bg-metamask-orange/10 rounded-3xl rotate-6 -z-10 border-2 border-metamask-orange/5" />
-              <div className="absolute top-3 left-3 w-full h-full bg-metamask-blue/20 rounded-3xl -rotate-3 -z-5 border-2 border-metamask-blue/10" />
+          <h1 className="text-5xl md:text-7xl font-serif text-vaiiya-purple mb-8 leading-[1.1] max-w-4xl mx-auto">
+            Find your <span className="italic text-vaiiya-orange">perfect match</span> on the blockchain.
+          </h1>
 
-              <div className="relative w-full h-full rounded-3xl overflow-hidden shadow-2xl border-4 border-background-primary group">
-                <Image
-                  src="/images/meet_people_model.png"
-                  alt="Featured match"
-                  fill
-                  className="object-cover group-hover:scale-105 transition-transform duration-1000"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent" />
+          <p className="text-lg md:text-xl text-vaiiya-gray/80 mb-12 max-w-2xl mx-auto leading-relaxed">
+            The first decentralized dating platform built on Solana. Your wallet is your identity. Your connections are real.
+          </p>
 
-                {/* Profile info */}
-                <div className="absolute bottom-6 left-6 right-6 text-white">
-                  <div className="flex gap-2 mb-3 flex-wrap">
-                    <span className="glass px-3 py-1 rounded-full text-mobile-xs font-bold uppercase tracking-wider">Outdoors</span>
-                    <span className="glass px-3 py-1 rounded-full text-mobile-xs font-bold uppercase tracking-wider">Music</span>
-                  </div>
-                  <h3 className="text-mobile-xl font-bold">Emma, 26</h3>
-                  <p className="text-white/90 font-medium text-mobile-sm">Ready to find something real ✨</p>
-                </div>
+          <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
+            <Link
+              href="/auth/wallet"
+              className="btn-vaiiya-primary text-lg px-10 py-5 w-full sm:w-auto"
+            >
+              Connect Wallet
+            </Link>
+            <Link
+              href="#features"
+              className="btn-vaiiya-secondary text-lg px-10 py-5 w-full sm:w-auto"
+            >
+              Learn More
+            </Link>
+          </div>
+        </div>
+
+        {/* Featured Card Preview */}
+        <div className="mt-20 relative max-w-md mx-auto aspect-[3/4] group">
+          <div className="absolute inset-0 bg-vaiiya-orange/5 rounded-[40px] rotate-6 scale-105 blur-xl -z-10 transition-transform group-hover:rotate-12" />
+          <div className="vaiiya-card h-full overflow-hidden relative shadow-2xl border-4 border-white">
+            <Image
+              src="/images/meet_people_model.png"
+              alt="Discover People"
+              fill
+              className="object-cover transition-transform duration-700 group-hover:scale-105"
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-vaiiya-purple/80 via-transparent to-transparent" />
+            <div className="absolute bottom-8 left-8 right-8 text-white">
+              <div className="flex gap-2 mb-4">
+                <span className="glass px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider text-vaiiya-purple">Verified</span>
+                <span className="glass px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider text-vaiiya-purple">Creator</span>
               </div>
-
-              {/* Floating Web3 tag */}
-              <div className="absolute -top-4 -right-4 glass p-4 rounded-2xl text-text-primary transform rotate-12 hover:rotate-0 transition-all cursor-default">
-                <p className="font-black text-mobile-xs uppercase tracking-widest mb-1">Web3</p>
-                <p className="font-bold text-mobile-base">Blockchain First ⚡</p>
-              </div>
+              <h3 className="text-3xl font-serif mb-1">Emma, 24</h3>
+              <p className="opacity-90 font-medium">Digital artist & Solana native ✨</p>
             </div>
           </div>
         </div>
       </header>
 
-      {/* Solana-Powered Section */}
-      <section className="py-24 bg-gradient-to-br from-[#9945FF] via-[#9945FF]/80 to-[#14F195] px-6 text-white overflow-hidden relative">
-        <div className="absolute -left-20 top-0 text-[200px] font-black opacity-[0.05] select-none pointer-events-none">
-          SOLANA
-        </div>
-
-        <div className="max-w-7xl mx-auto grid lg:grid-cols-2 gap-16 items-center">
-          <div className="relative h-[400px] lg:h-[600px] flex items-center justify-center">
-            <div className="absolute inset-0 bg-white/10 rounded-[80px] rotate-3 blur-2xl" />
-            <div className="relative w-full h-full bg-white/10 backdrop-blur-md rounded-[60px] p-4 shadow-2xl overflow-hidden border-8 border-white/20">
-              <Image src="/images/hero_illustration.png" alt="Solana Community" fill className="object-cover opacity-90" />
-            </div>
-            {/* Dynamic Stats Bubbles */}
-            <div className="absolute top-10 -right-10 bg-white/20 backdrop-blur-md text-white px-6 py-4 rounded-3xl shadow-2xl transform -rotate-3 animate-bounce-slow border border-white/30">
-              <p className="font-black text-2xl">⚡</p>
-              <p className="text-xs font-bold uppercase">Web3 Native</p>
+      {/* Solana Section */}
+      <section className="py-32 bg-[#F7F9FC] relative overflow-hidden">
+        <div className="max-w-7xl mx-auto px-6 grid lg:grid-cols-2 gap-20 items-center">
+          <div className="relative">
+            <div className="absolute -top-20 -left-20 w-64 h-64 bg-vaiiya-orange/10 rounded-full blur-[100px]" />
+            <div className="relative vaiiya-card p-4 aspect-square max-w-lg mx-auto overflow-hidden">
+              <Image src="/images/hero_illustration.png" alt="Solana Tech" fill className="object-cover opacity-90" />
             </div>
           </div>
 
           <div>
-            <h2 className="text-5xl lg:text-7xl font-serif font-bold mb-8 leading-tight">
-              Built on <br /> Solana.
+            <h2 className="text-4xl md:text-6xl font-serif text-vaiiya-purple mb-8 leading-tight">
+              Built on the speed of <span className="text-vaiiya-orange italic">Solana.</span>
             </h2>
-            <p className="text-xl lg:text-2xl opacity-90 mb-10 leading-relaxed font-medium">
-              Experience the future of dating. No app stores. No middlemen. Just your Solana wallet connecting you to real people. Fast, secure, and truly decentralized.
+            <p className="text-xl text-vaiiya-gray/70 mb-12 leading-relaxed">
+              Experience lightning-fast interactions and minimal fees. No app stores, no censorship, just pure connection between real people on the blockchain.
             </p>
+
             <div className="grid grid-cols-2 gap-6 mb-12">
-              <div className="bg-white/20 backdrop-blur-md p-6 rounded-[32px] border border-white/30">
-                <span className="text-4xl block mb-4">⚡</span>
-                <p className="font-bold">Lightning Fast</p>
-                <p className="text-sm opacity-80 mt-2">Solana speed</p>
+              <div className="vaiiya-card p-8 border-none bg-white shadow-sm hover:shadow-md transition-shadow">
+                <div className="text-3xl mb-4">⚡</div>
+                <h4 className="font-bold text-vaiiya-purple mb-2">Fastest Swipes</h4>
+                <p className="text-sm text-vaiiya-gray/60">Powered by Solana's near-instant finality.</p>
               </div>
-              <div className="bg-white/20 backdrop-blur-md p-6 rounded-[32px] border border-white/30">
-                <span className="text-4xl block mb-4">🔐</span>
-                <p className="font-bold">Your Wallet</p>
-                <p className="text-sm opacity-80 mt-2">Your identity</p>
+              <div className="vaiiya-card p-8 border-none bg-white shadow-sm hover:shadow-md transition-shadow">
+                <div className="text-3xl mb-4">🔐</div>
+                <h4 className="font-bold text-vaiiya-purple mb-2">Wallet ID</h4>
+                <p className="text-sm text-vaiiya-gray/60">Your wallet is your identity. Full control.</p>
               </div>
             </div>
-            <Link
-              href="/auth/wallet"
-              className="inline-block bg-white text-[#9945FF] px-12 py-5 rounded-full font-bold hover:bg-white/90 transition-all shadow-xl active:scale-95"
-            >
-              Connect Your Wallet
+
+            <Link href="/auth/wallet" className="btn-vaiiya-primary inline-block">
+              Start Dating Now
             </Link>
           </div>
         </div>
       </section>
 
-      {/* Solana Features Section */}
-      <section className="py-32 bg-white relative">
+      {/* Features Grid */}
+      <section id="features" className="py-32 bg-white">
         <div className="max-w-7xl mx-auto px-6 text-center">
-          <h2 className="text-4xl lg:text-6xl font-serif font-bold mb-8 tracking-tight bg-gradient-to-r from-[#9945FF] to-[#14F195] bg-clip-text text-transparent">
-            Web3 Dating. No App Store Required.
+          <h2 className="text-4xl md:text-6xl font-serif text-vaiiya-purple mb-24 leading-tight max-w-3xl mx-auto">
+            Everything you love about dating apps, <span className="text-vaiiya-orange">reimagined</span> for Web3.
           </h2>
-          <p className="text-xl text-gray-500 mb-20 max-w-2xl mx-auto">
-            The first Progressive Web App dating platform built on Solana. Install directly from your browser. Your wallet, your data, your connections.
-          </p>
 
           <div className="grid md:grid-cols-3 gap-12">
             {[
-              { icon: "⚡", title: "Blockchain First", desc: "Built on Solana. Your wallet is your identity. No app stores needed." },
-              { icon: "🔒", title: "Private Mode", desc: "You control who sees your profile and when you are visible." },
-              { icon: "💬", title: "Solana Safety", desc: "Decentralized verification and smart filters powered by blockchain." }
-            ].map((feature, idx) => (
-              <div key={idx} className="group p-10 rounded-[48px] bg-gradient-to-br from-[#9945FF]/10 to-[#14F195]/10 hover:from-[#9945FF]/20 hover:to-[#14F195]/20 transition-all border border-transparent hover:border-[#9945FF]/30 cursor-default">
-                <div className="w-20 h-20 bg-gradient-to-br from-[#9945FF] to-[#14F195] rounded-3xl flex items-center justify-center text-4xl shadow-lg mb-8 mx-auto group-hover:scale-110 transition-transform duration-500">
-                  {feature.icon}
-                </div>
-                <h3 className="text-2xl font-bold mb-4 bg-gradient-to-r from-[#9945FF] to-[#14F195] bg-clip-text text-transparent">{feature.title}</h3>
-                <p className="text-gray-500 font-medium leading-relaxed">{feature.desc}</p>
+              { icon: "🎨", title: "NFT Profiles", desc: "Showcase your digital identity and collections directly on your dating profile." },
+              { icon: "🛡️", title: "Smart Verification", desc: "Automated wallet-based verification ensures you're meeting real community members." },
+              { icon: "💎", title: "Direct Rewards", desc: "Interact with the community and earn rewards for meaningful connections." }
+            ].map((f, i) => (
+              <div key={i} className="group p-10 rounded-[40px] border border-[#E9EDF6] hover:bg-[#F7F9FC] transition-colors text-left relative overflow-hidden">
+                <div className="absolute top-0 right-0 w-32 h-32 bg-vaiiya-orange/5 rounded-full blur-3xl translate-x-16 -translate-y-16" />
+                <div className="text-5xl mb-8 group-hover:scale-110 transition-transform">{f.icon}</div>
+                <h3 className="text-2xl font-serif text-vaiiya-purple mb-4">{f.title}</h3>
+                <p className="text-vaiiya-gray/60 leading-relaxed font-medium">{f.desc}</p>
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* Footer: Hybrid Professional */}
-      <footer className="bg-white pt-24 pb-12 border-t border-gray-100">
+      {/* Footer */}
+      <footer className="bg-[#F7F9FC] pt-32 pb-16 border-t border-[#E9EDF6]">
         <div className="max-w-7xl mx-auto px-6">
-          <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-12 mb-20">
-            <div className="col-span-2 md:col-span-4 lg:col-span-1">
-              <div className="flex items-center gap-2 mb-8">
-                <Flame className="w-10 h-10 text-[#9945FF]" />
-                <span className="text-2xl font-black tracking-tighter bg-gradient-to-r from-[#9945FF] to-[#14F195] bg-clip-text text-transparent">VYNDER</span>
+          <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-12 mb-20">
+            <div>
+              <div className="flex items-center gap-2 mb-6">
+                <Flame className="w-10 h-10 text-vaiiya-orange" />
+                <span className="text-2xl font-bold text-vaiiya-purple">VYNDER</span>
               </div>
-              <p className="text-gray-500 font-medium mb-8">
-                Bringing people closer since 2026.
+              <p className="text-vaiiya-gray/60 max-w-sm font-medium">
+                The future of human connection, built on the decentralized web.
               </p>
-
-              {/* Language Selector Pill */}
-              <button className="flex items-center justify-between w-full max-w-[220px] px-6 py-3 bg-gray-50 border border-gray-100 rounded-full hover:border-brand-yellow transition-all group font-bold text-xs uppercase tracking-widest">
-                <span>English (UK)</span>
-                <span className="group-hover:translate-x-1 transition-transform">→</span>
-              </button>
             </div>
 
-            <div>
-              <h4 className="font-bold text-sm lg:text-base uppercase tracking-widest mb-8 text-gray-400">Date</h4>
-              <ul className="space-y-4 font-bold text-[15px]">
-                <li><Link href="/" className="hover:text-brand-yellow transition-colors">Start Dating</Link></li>
-                <li><Link href="/" className="hover:text-brand-yellow transition-colors">Profile Tips</Link></li>
-                <li><Link href="/" className="hover:text-brand-yellow transition-colors">Safety Tips</Link></li>
-              </ul>
-            </div>
-
-            <div>
-              <h4 className="font-bold text-sm lg:text-base uppercase tracking-widest mb-8 text-gray-400">Legal</h4>
-              <ul className="space-y-4 font-bold text-[15px]">
-                <li><Link href="/" className="hover:text-brand-yellow transition-colors">Privacy</Link></li>
-                <li><Link href="/" className="hover:text-brand-yellow transition-colors">Terms</Link></li>
-                <li><Link href="/" className="hover:text-brand-yellow transition-colors">Cookies</Link></li>
-              </ul>
-            </div>
-
-            <div>
-              <h4 className="font-bold text-sm lg:text-base uppercase tracking-widest mb-8 text-gray-400">Connect</h4>
-              <ul className="space-y-4 font-bold text-[15px]">
-                <li><Link href="/" className="hover:text-brand-yellow transition-colors">Instagram</Link></li>
-                <li><Link href="/" className="hover:text-brand-yellow transition-colors">TikTok</Link></li>
-                <li><Link href="/" className="hover:text-brand-yellow transition-colors">Twitter</Link></li>
-              </ul>
-            </div>
-
-            <div className="col-span-2 lg:col-span-1">
-              <h4 className="font-bold text-sm lg:text-base uppercase tracking-widest mb-8 text-gray-400">Install PWA</h4>
-              <div className="space-y-3">
-                <div className="w-full h-12 bg-gradient-to-r from-[#9945FF] to-[#14F195] rounded-xl flex items-center justify-center text-white font-bold gap-2 cursor-pointer hover:from-[#9945FF]/90 hover:to-[#14F195]/90 transition-all shadow-lg">
-                  <span>⚡ Install Now</span>
-                </div>
-                <p className="text-xs text-gray-400 text-center mt-2">No app store needed</p>
+            <div className="flex flex-wrap gap-12 mt-4">
+              <div className="space-y-4">
+                <h5 className="font-bold text-xs uppercase tracking-widest text-vaiiya-purple/40">Product</h5>
+                <ul className="space-y-3 font-bold text-sm text-vaiiya-purple/70">
+                  <li><Link href="/" className="hover:text-vaiiya-orange transition-colors">Safety</Link></li>
+                  <li><Link href="/" className="hover:text-vaiiya-orange transition-colors">Privacy</Link></li>
+                </ul>
+              </div>
+              <div className="space-y-4">
+                <h5 className="font-bold text-xs uppercase tracking-widest text-vaiiya-purple/40">Social</h5>
+                <ul className="space-y-3 font-bold text-sm text-vaiiya-purple/70">
+                  <li><Link href="/" className="hover:text-vaiiya-orange transition-colors">Twitter</Link></li>
+                  <li><Link href="/" className="hover:text-vaiiya-orange transition-colors">Telegram</Link></li>
+                </ul>
               </div>
             </div>
           </div>
 
-          <div className="pt-12 border-t border-gray-100 flex flex-col md:flex-row justify-between items-center gap-6 text-gray-400 text-xs font-bold uppercase tracking-widest">
-            <p>© 2026 Vynder Inc. All rights reserved.</p>
-            <div className="flex gap-8">
-              <Link href="/" className="hover:text-brand-red transition-colors">Press</Link>
-              <Link href="/" className="hover:text-brand-red transition-colors">Careers</Link>
+          <div className="pt-12 border-t border-[#E9EDF6] flex flex-col md:flex-row justify-between items-center gap-8 text-xs font-bold uppercase tracking-widest text-vaiiya-purple/30">
+            <p>© 2026 VYNDER. ALL RIGHTS RESERVED.</p>
+            <div className="flex gap-10">
+              <Link href="/" className="hover:text-vaiiya-orange transition-colors">Terms of Service</Link>
+              <Link href="/" className="hover:text-vaiiya-orange transition-colors">Privacy Policy</Link>
             </div>
           </div>
         </div>

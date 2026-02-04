@@ -77,27 +77,25 @@ export default function MatchesPage() {
   }
 
   return (
-    <div className="min-h-screen bg-black pb-20">
-      <div className="container mx-auto px-4 py-8">
-        <h1 className="text-3xl font-bold mb-8 bg-gradient-to-r from-solana-purple via-solana-blue to-solana-green bg-clip-text text-transparent">
-          Your Matches
-        </h1>
+    <div className="h-full bg-white relative overflow-hidden flex flex-col">
+      {/* Header */}
+      <div className="px-8 py-12 bg-[#F7F9FC]">
+        <h1 className="text-5xl font-serif text-vaiiya-purple font-bold mb-3">Matches</h1>
+        <p className="text-vaiiya-gray/60 text-lg font-medium">Your potential connections & conversations</p>
+      </div>
 
+      <div className="flex-1 overflow-y-auto p-8 space-y-4 pb-32">
         {matches.length === 0 ? (
-          <div className="text-center py-12">
-            <div className="mb-4 text-6xl">💔</div>
-            <p className="text-gray-300 text-lg mb-2">
-              No matches yet
-            </p>
-            <p className="text-gray-500 text-sm">
-              Start swiping to find your match!
-            </p>
+          <div className="text-center py-20 vaiiya-card border-dashed">
+            <div className="mb-6 text-7xl opacity-20">💬</div>
+            <h3 className="text-2xl font-serif text-vaiiya-purple font-bold mb-2">No conversations yet</h3>
+            <p className="text-vaiiya-gray/50 font-medium">Start swiping to find your first match!</p>
           </div>
         ) : (
           <div className="space-y-4">
             {matches.map((match) => {
               const otherUser = match.users.find(
-                (u) => u._id !== session?.user?.id
+                (u) => u._id !== (session as any)?.user?.id
               );
               if (!otherUser) return null;
 
@@ -105,10 +103,10 @@ export default function MatchesPage() {
                 <Link
                   key={match._id}
                   href={`/chat/${match._id}`}
-                  className="block bg-gradient-to-r from-gray-800/80 to-gray-900/80 backdrop-blur-xl rounded-2xl p-4 border border-gray-700/50 hover:border-solana-purple/50 transition-all hover:shadow-lg hover:shadow-solana-purple/20"
+                  className="block vaiiya-card p-6 hover:bg-[#F7F9FC] transition-all hover:scale-[1.01] active:scale-[0.99]"
                 >
-                  <div className="flex items-center gap-4">
-                    <div className="relative w-16 h-16 rounded-full overflow-hidden flex-shrink-0">
+                  <div className="flex items-center gap-6">
+                    <div className="relative w-20 h-20 rounded-full overflow-hidden flex-shrink-0 border-2 border-[#E9EDF6]">
                       {otherUser.photos && otherUser.photos.length > 0 ? (
                         <Image
                           src={otherUser.photos[0]}
@@ -118,48 +116,47 @@ export default function MatchesPage() {
                           unoptimized={otherUser.photos[0]?.startsWith("/api/images/")}
                         />
                       ) : (
-                        <div className="w-full h-full bg-gradient-to-br from-solana-purple to-solana-blue flex items-center justify-center">
-                          <span className="text-white text-xl font-bold">
+                        <div className="w-full h-full bg-[#F7F9FC] flex items-center justify-center">
+                          <span className="text-vaiiya-purple text-2xl font-bold">
                             {otherUser.username[0]?.toUpperCase()}
                           </span>
                         </div>
                       )}
                       {match.unreadCount && match.unreadCount > 0 && (
-                        <div className="absolute top-0 right-0 bg-gradient-to-r from-solana-green to-solana-blue text-black text-xs rounded-full w-5 h-5 flex items-center justify-center font-bold shadow-lg">
+                        <div className="absolute top-0 right-0 bg-vaiiya-orange text-white text-[10px] rounded-full w-6 h-6 flex items-center justify-center font-bold shadow-md border-2 border-white">
                           {match.unreadCount}
                         </div>
                       )}
                     </div>
                     <div className="flex-1 min-w-0">
-                      <div className="flex items-center justify-between">
-                        <h3 className="font-semibold text-white truncate">
+                      <div className="flex items-center justify-between mb-1">
+                        <h3 className="text-xl font-serif font-bold text-vaiiya-purple truncate">
                           {otherUser.username}
                           {otherUser.age && (
-                            <span className="text-gray-400 font-normal ml-1">
+                            <span className="text-vaiiya-gray/40 font-normal ml-2 text-sm">
                               {otherUser.age}
                             </span>
                           )}
                         </h3>
                         {match.lastMessageAt && (
-                          <span className="text-xs text-gray-500">
+                          <span className="text-xs font-bold text-vaiiya-gray/40 uppercase tracking-widest">
                             {(() => {
                               const date = new Date(match.lastMessageAt);
-                              if (isToday(date)) {
-                                return format(date, "h:mm a");
-                              } else if (isYesterday(date)) {
-                                return "Yesterday";
-                              } else {
-                                return format(date, "MMM d");
-                              }
+                              if (isToday(date)) return format(date, "h:mm a");
+                              if (isYesterday(date)) return "Yesterday";
+                              return format(date, "MMM d");
                             })()}
                           </span>
                         )}
                       </div>
-                      {match.lastMessage && (
-                        <p className="text-sm text-gray-400 truncate mt-1">
-                          {match.lastMessage.text}
+                      <div className="flex items-center justify-between">
+                        <p className={`text-base truncate ${match.unreadCount && match.unreadCount > 0 ? 'text-vaiiya-purple font-bold' : 'text-vaiiya-gray/60 font-medium'}`}>
+                          {match.lastMessage ? match.lastMessage.text : "No messages yet"}
                         </p>
-                      )}
+                        {match.unreadCount && match.unreadCount > 0 && (
+                          <div className="w-2 h-2 bg-vaiiya-orange rounded-full"></div>
+                        )}
+                      </div>
                     </div>
                   </div>
                 </Link>
@@ -168,6 +165,7 @@ export default function MatchesPage() {
           </div>
         )}
       </div>
+
       <Navigation />
     </div>
   );

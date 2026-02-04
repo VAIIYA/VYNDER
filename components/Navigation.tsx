@@ -17,8 +17,8 @@ export default function Navigation() {
   const pathname = usePathname();
 
   return (
-    <nav className="fixed bottom-0 left-0 right-0 bg-background-primary/90 backdrop-blur-xl border-t border-metamask-dark-gray z-50 safe-area-bottom">
-      <div className="flex justify-around items-center h-16 px-2">
+    <nav className="fixed lg:absolute bottom-0 left-0 right-0 bg-white/80 backdrop-blur-xl border-t border-[#E9EDF6] z-50 safe-area-bottom">
+      <div className="flex justify-around items-center h-20 lg:h-24 px-2 max-w-lg mx-auto lg:max-w-none lg:px-12">
         {navItems.map((item) => {
           const isActive = pathname === item.href || pathname?.startsWith(item.href + "/");
           const Icon = isActive ? item.iconSolid : item.icon;
@@ -27,17 +27,19 @@ export default function Navigation() {
             <Link
               key={item.href}
               href={item.href}
-              className={`flex flex-col items-center justify-center flex-1 h-full transition-all relative ${
-                isActive
-                  ? "text-metamask-orange"
-                  : "text-text-tertiary"
-              }`}
+              className={`flex flex-col items-center justify-center flex-1 h-full transition-all relative group ${isActive
+                  ? "text-vaiiya-orange"
+                  : "text-vaiiya-gray/60 hover:text-vaiiya-purple"
+                }`}
             >
+              <div className="flex flex-col items-center transition-transform group-active:scale-90">
+                <Icon className={`w-6 h-6 lg:w-7 lg:h-7 transition-all ${isActive ? "scale-110" : ""}`} />
+                <span className="text-[10px] lg:text-xs mt-1.5 font-bold uppercase tracking-widest">{item.label}</span>
+              </div>
+
               {isActive && (
-                <div className="absolute top-0 left-1/2 -translate-x-1/2 w-12 h-1 bg-gradient-to-r from-metamask-orange to-metamask-blue rounded-b-full"></div>
+                <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-8 h-1 bg-vaiiya-orange rounded-t-full"></div>
               )}
-              <Icon className={`w-6 h-6 transition-transform ${isActive ? "scale-110" : ""}`} />
-              <span className="text-xs mt-1 hidden sm:block font-medium">{item.label}</span>
             </Link>
           );
         })}

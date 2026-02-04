@@ -62,7 +62,7 @@ export default function SwipeCard({ user, onSwipeLeft, onSwipeRight }: SwipeCard
 
   return (
     <motion.div
-      className="swipe-card relative w-full max-w-sm mx-auto h-[70vh] max-h-[600px] rounded-3xl overflow-hidden shadow-2xl bg-background-primary"
+      className="vaiiya-card relative w-full h-[65vh] max-h-[550px] overflow-hidden group"
       style={{ x, rotate, opacity }}
       drag="x"
       dragConstraints={{ left: 0, right: 0 }}
@@ -75,7 +75,7 @@ export default function SwipeCard({ user, onSwipeLeft, onSwipeRight }: SwipeCard
       exit={{ x: exitX, opacity: 0, transition: { duration: 0.3 } }}
     >
       {/* Photo */}
-      <div className="relative w-full h-full">
+      <div className="relative w-full h-full overflow-hidden">
         {user.photos && user.photos.length > 0 ? (
           <>
             {user.photos[currentPhotoIndex] ? (
@@ -83,119 +83,92 @@ export default function SwipeCard({ user, onSwipeLeft, onSwipeRight }: SwipeCard
                 src={user.photos[currentPhotoIndex]}
                 alt={user.username}
                 fill
-                className="object-cover"
+                className="object-cover transition-transform duration-700 group-hover:scale-105"
                 priority
                 unoptimized
               />
             ) : (
-              <div className="w-full h-full bg-gradient-to-br from-metamask-orange to-metamask-blue flex items-center justify-center">
-                <span className="text-white text-4xl font-bold">{user.username[0]?.toUpperCase()}</span>
+              <div className="w-full h-full bg-[#F7F9FC] flex items-center justify-center">
+                <span className="text-vaiiya-purple text-4xl font-serif">{user.username[0]?.toUpperCase()}</span>
               </div>
             )}
+
+            {/* Photo Navigation Overlay */}
             {user.photos.length > 1 && (
-              <>
-                <button
-                  onClick={prevPhoto}
-                  className="absolute left-3 top-1/2 -translate-y-1/2 glass text-white rounded-full p-3 hover:bg-white/20 transition-all btn-touch"
-                >
-                  ←
-                </button>
-                <button
-                  onClick={nextPhoto}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 glass text-white rounded-full p-3 hover:bg-white/20 transition-all btn-touch"
-                >
-                  →
-                </button>
-                <div className="absolute top-4 right-4 flex gap-1">
-                  {user.photos.map((_, index) => (
+              <div className="absolute inset-x-0 top-0 h-20 flex px-4 pt-4 gap-1.5 z-10">
+                {user.photos.map((_, index) => (
+                  <div
+                    key={index}
+                    className="flex-1 h-1 rounded-full overflow-hidden bg-white/30"
+                  >
                     <div
-                      key={index}
-                      className={`h-1 rounded-full ${
-                        index === currentPhotoIndex ? "bg-white w-4" : "bg-white/50 w-1"
-                      }`}
+                      className={`h-full bg-white transition-all duration-300 ${index === currentPhotoIndex ? 'w-full' : 'w-0'}`}
                     />
-                  ))}
-                </div>
-              </>
+                  </div>
+                ))}
+              </div>
             )}
+
+            {/* Tap controllers */}
+            <div className="absolute inset-0 flex">
+              <div className="flex-1 cursor-w-resize" onClick={(e) => { e.stopPropagation(); prevPhoto(); }} />
+              <div className="flex-1 cursor-e-resize" onClick={(e) => { e.stopPropagation(); nextPhoto(); }} />
+            </div>
           </>
         ) : (
-          <div className="w-full h-full bg-gradient-to-br from-metamask-orange to-metamask-blue flex items-center justify-center">
-            <span className="text-white text-4xl font-bold">{user.username[0]?.toUpperCase()}</span>
+          <div className="w-full h-full bg-[#F7F9FC] flex items-center justify-center">
+            <span className="text-vaiiya-purple text-6xl font-serif">{user.username[0]?.toUpperCase()}</span>
           </div>
         )}
 
         {/* Gradient overlay */}
-        <div className="absolute bottom-0 left-0 right-0 h-1/3 bg-gradient-to-t from-black/80 via-black/40 to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-t from-vaiiya-purple/90 via-vaiiya-purple/20 to-transparent pointer-events-none" />
 
         {/* User info */}
-        <div className="absolute bottom-0 left-0 right-0 p-6 text-white">
-          <div className="flex items-center gap-2 mb-2">
-            <h2 className="text-3xl font-bold">{user.username}</h2>
-            {user.age && <span className="text-xl">{user.age}</span>}
+        <div className="absolute bottom-0 left-0 right-0 p-8 text-white pointer-events-none">
+          <div className="flex items-end gap-3 mb-2">
+            <h2 className="text-3xl md:text-4xl font-serif font-bold tracking-tight">
+              {user.username}{user.age && <span className="ml-2 opacity-80 font-normal">, {user.age}</span>}
+            </h2>
           </div>
-          <div className="flex items-center gap-3 mb-2 flex-wrap">
+
+          <div className="flex flex-wrap items-center gap-3 mb-4 opacity-90 text-sm font-medium">
             {user.location && (
-              <p className="text-sm text-gray-200">📍 {user.location}</p>
+              <span className="flex items-center gap-1 bg-white/10 backdrop-blur-md px-2 py-1 rounded-lg">
+                📍 {user.location}
+              </span>
             )}
             {user.distanceFormatted && (
-              <p className="text-sm text-gray-200">📏 {user.distanceFormatted}</p>
+              <span className="flex items-center gap-1 bg-white/10 backdrop-blur-md px-2 py-1 rounded-lg">
+                📏 {user.distanceFormatted}
+              </span>
             )}
             {user.tagMatchScore && user.tagMatchScore > 0 && (
-              <p className="text-sm bg-gradient-to-r from-solana-green to-solana-blue bg-clip-text text-transparent font-bold">
-                🎯 {user.tagMatchScore}% match
-              </p>
+              <span className="flex items-center gap-1 bg-vaiiya-orange/80 backdrop-blur-md px-2 py-1 rounded-lg font-bold">
+                🎯 {user.tagMatchScore}% Match
+              </span>
             )}
           </div>
-          {user.commonTags && user.commonTags.length > 0 && (
-            <div className="flex flex-wrap gap-1 mb-2">
-              {user.commonTags.slice(0, 3).map((tag, index) => (
-                <span
-                  key={index}
-                  className="px-2 py-0.5 bg-gradient-to-r from-solana-purple/30 to-solana-blue/30 backdrop-blur-sm rounded-full text-xs font-medium border border-solana-purple/50"
-                >
-                  {tag}
-                </span>
-              ))}
-            </div>
-          )}
+
           {user.bio && (
-            <p className="text-sm line-clamp-2 mb-2 text-gray-200">{user.bio}</p>
+            <p className="text-base line-clamp-2 mb-4 opacity-80 leading-relaxed max-w-[90%] font-medium">
+              {user.bio}
+            </p>
           )}
+
           {user.tags && user.tags.length > 0 && (
-            <div className="flex flex-wrap gap-1 mt-2">
-              {user.tags.slice(0, 5).map((tag, index) => (
+            <div className="flex flex-wrap gap-1.5 opacity-90">
+              {user.tags.slice(0, 4).map((tag, index) => (
                 <span
                   key={index}
-                  className="px-2 py-0.5 bg-white/10 backdrop-blur-sm rounded-full text-xs border border-white/20"
+                  className="px-3 py-1 bg-white/10 backdrop-blur-md rounded-full text-[10px] font-bold uppercase tracking-widest border border-white/10"
                 >
                   {tag}
                 </span>
               ))}
-              {user.tags.length > 5 && (
-                <span className="px-2 py-0.5 bg-white/10 backdrop-blur-sm rounded-full text-xs border border-white/20">
-                  +{user.tags.length - 5}
-                </span>
-              )}
             </div>
           )}
         </div>
-      </div>
-
-      {/* Action buttons for desktop */}
-      <div className="absolute bottom-20 left-1/2 -translate-x-1/2 flex gap-4 sm:hidden">
-        <button
-          onClick={() => handleSwipe("left")}
-          className="bg-gray-900/90 backdrop-blur-xl text-red-400 rounded-full p-4 shadow-lg hover:scale-110 transition-transform border border-gray-700 hover:border-red-500"
-        >
-          ✕
-        </button>
-        <button
-          onClick={() => handleSwipe("right")}
-          className="bg-gradient-to-r from-solana-green to-solana-blue text-black rounded-full p-4 shadow-lg hover:scale-110 transition-transform hover:shadow-solana-green/50"
-        >
-          ♥
-        </button>
       </div>
     </motion.div>
   );
