@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import { Inter, Space_Grotesk, Fraunces } from "next/font/google";
 import "./globals.css";
 import { Providers } from "@/components/Providers";
 import { Toaster } from "react-hot-toast";
@@ -8,6 +8,8 @@ import InstallPrompt from "@/components/InstallPrompt";
 import NotificationPrompt from "@/components/NotificationPrompt";
 
 const inter = Inter({ subsets: ["latin"] });
+const spaceGrotesk = Space_Grotesk({ subsets: ["latin"], variable: "--font-sans" });
+const fraunces = Fraunces({ subsets: ["latin"], variable: "--font-serif" });
 
 export const metadata: Metadata = {
   title: "VYNDER - Web3 Dating",
@@ -48,7 +50,6 @@ export default function RootLayout({
           <div className="absolute top-[20%] -right-[10%] w-[50%] h-[50%] bg-vaiiya-purple/5 rounded-full blur-[150px]" />
           <div className="absolute -bottom-[10%] left-[20%] w-[40%] h-[40%] bg-vaiiya-orange/5 rounded-full blur-[120px]" />
         </div>
-
         <Providers>
           {/* Boxed Model Container for Desktop */}
           <div className="min-h-screen lg:flex lg:items-center lg:justify-center p-0 lg:p-8">

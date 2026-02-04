@@ -18,7 +18,7 @@ body {
   color: rgb(var(--foreground-rgb));
   background: #FFFFFF;
   min-height: 100vh;
-  font-family: 'Inter', sans-serif;
+  font-family: var(--font-sans), system-ui, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   /* Mobile optimizations */
@@ -37,13 +37,19 @@ body {
 }
 
 /* Base Headings */
-h1, h2, h3, h4, .font-serif {
+h1,
+h2,
+h3,
+h4,
+.font-serif {
   font-family: 'Poly', Georgia, serif;
   color: var(--vaiiya-purple);
 }
 
 /* Re-enable text selection for input fields */
-input, textarea, [contenteditable] {
+input,
+textarea,
+[contenteditable] {
   -webkit-user-select: text;
   -khtml-user-select: text;
   -moz-user-select: text;
@@ -101,6 +107,29 @@ input, textarea, [contenteditable] {
   /* VAIIYA Card */
   .vaiiya-card {
     @apply bg-white rounded-3xl border border-[#E9EDF6] shadow-sm;
+  }
+}
+
+@layer components {
+  .app-shell {
+    background: radial-gradient(circle at top, rgba(3, 225, 255, 0.08), transparent 50%),
+      linear-gradient(135deg, #050505 0%, #101010 60%, #151515 100%);
+    min-height: 100vh;
+  }
+
+  .panel {
+    background: var(--surface-soft);
+    border: 1px solid var(--surface-border);
+    backdrop-filter: blur(16px);
+  }
+
+  .panel-strong {
+    background: var(--surface-strong);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+  }
+
+  .brand-gradient {
+    background: linear-gradient(135deg, #FF6B35, #03E1FF, #9945FF);
   }
 }
 
@@ -172,5 +201,5 @@ input, textarea, [contenteditable] {
 }
 
 .font-serif {
-  font-family: 'Playfair Display', serif;
+  font-family: var(--font-serif), serif;
 }

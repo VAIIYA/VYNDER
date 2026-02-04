@@ -8,7 +8,6 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import Flame from "@/components/Flame";
 import toast from "react-hot-toast";
-import { generateAuthMessage } from "@/lib/solana-auth";
 import bs58 from "bs58";
 
 export default function WalletAuthPage() {
@@ -31,9 +30,19 @@ export default function WalletAuthPage() {
     setLoading(true);
 
     try {
-      // Generate authentication message
-      const authMessage = generateAuthMessage(publicKey.toString());
-      const messageBytes = new TextEncoder().encode(authMessage.message);
+      const nonceResponse = await fetch("/api/auth/nonce", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ walletAddress: publicKey.toString() }),
+      });
+
+      const nonceData = await nonceResponse.json();
+
+      if (!nonceResponse.ok || !nonceData.message) {
+        throw new Error(nonceData.error || "Failed to issue auth nonce");
+      }
+
+      const messageBytes = new TextEncoder().encode(nonceData.message);
 
       // Request signature from wallet
       const signature = await signMessage(messageBytes);
@@ -42,7 +51,7 @@ export default function WalletAuthPage() {
       // Encode it to base58 for transmission
       const signatureBase58 = bs58.encode(signature);
 
-      console.log("Signing message:", authMessage.message);
+      console.log("Signing message:", nonceData.message);
       console.log("Signature length:", signature.length);
       console.log("Public key:", publicKey.toString());
 
@@ -50,7 +59,7 @@ export default function WalletAuthPage() {
       const result = await signIn("credentials", {
         walletAddress: publicKey.toString(),
         signature: signatureBase58,
-        message: authMessage.message,
+        message: nonceData.message,
         redirect: false,
       });
 
@@ -171,4 +180,3 @@ export default function WalletAuthPage() {
     </div>
   );
 }
-

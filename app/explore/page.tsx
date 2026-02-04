@@ -13,8 +13,8 @@ interface InterestCategory {
   name: string;
   category: string;
   icon?: string;
-  userCount?: number;
   color?: string;
+  userCount?: number;
 }
 
 interface GoalCategory {
@@ -55,13 +55,12 @@ export default function ExplorePage() {
       const goalsData = await goalsRes.json();
 
       if (interestsRes.ok && interestsData.interests) {
-        // Flatten and add user counts
+        // Flatten interests
         const allInterests: InterestCategory[] = [];
         Object.values(interestsData.interests).forEach((categoryInterests: any) => {
           categoryInterests.forEach((interest: any) => {
             allInterests.push({
               ...interest,
-              userCount: Math.floor(Math.random() * 500) + 50, // Mock count
             });
           });
         });
@@ -81,7 +80,7 @@ export default function ExplorePage() {
 
   if (status === "loading" || loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-black">
+      <div className="min-h-screen flex items-center justify-center app-shell">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-solana-purple mx-auto"></div>
           <p className="mt-4 text-gray-400">Loading...</p>
@@ -189,5 +188,3 @@ export default function ExplorePage() {
     </div>
   );
 }
-
-

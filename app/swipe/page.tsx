@@ -25,6 +25,10 @@ export default function SwipePage() {
   const [currentUser, setCurrentUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
   const [swiping, setSwiping] = useState(false);
+  const [profileGate, setProfileGate] = useState<{
+    requiredCompletion: number;
+    profileCompletionPercentage: number;
+  } | null>(null);
 
   useEffect(() => {
     if (status === "unauthenticated") {
@@ -47,12 +51,21 @@ export default function SwipePage() {
       if (response.ok) {
         if (data.user) {
           setCurrentUser(data.user);
+          setProfileGate(null);
         } else {
           setCurrentUser(null);
           toast.error("No more profiles to show");
         }
       } else {
-        toast.error(data.error || "Failed to load profiles");
+        if (response.status === 403 && data?.error === "Profile incomplete") {
+          setCurrentUser(null);
+          setProfileGate({
+            requiredCompletion: data.requiredCompletion,
+            profileCompletionPercentage: data.profileCompletionPercentage,
+          });
+        } else {
+          toast.error(data.error || "Failed to load profiles");
+        }
       }
     } catch (error) {
       toast.error("An error occurred");
@@ -117,7 +130,7 @@ export default function SwipePage() {
 
   if (status === "loading" || loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-black">
+      <div className="min-h-screen flex items-center justify-center app-shell">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-solana-purple mx-auto"></div>
           <p className="mt-4 text-gray-400">Loading...</p>
@@ -153,7 +166,29 @@ export default function SwipePage() {
       {/* Main swipe area */}
       <div className="flex-1 flex justify-center items-center p-4 pt-24 pb-48">
         <AnimatePresence mode="wait">
-          {currentUser ? (
+          {profileGate ? (
+            <div className="text-center p-12 vaiiya-card max-w-sm">
+              <div className="mb-6 text-7xl">🧭</div>
+              <h2 className="text-3xl font-serif text-vaiiya-purple mb-4 font-semibold">
+                Complete your profile
+              </h2>
+              <p className="text-vaiiya-gray/60 mb-6 text-base font-medium">
+                You need at least {profileGate.requiredCompletion}% to start swiping.
+              </p>
+              <div className="w-full bg-[#F7F9FC] rounded-full h-3 overflow-hidden mb-8 border border-[#E9EDF6]">
+                <div
+                  className="h-full bg-[#FF5C16]"
+                  style={{ width: `${profileGate.profileCompletionPercentage}%` }}
+                />
+              </div>
+              <Link
+                href="/profile"
+                className="btn-vaiiya-primary inline-block"
+              >
+                Finish Profile
+              </Link>
+            </div>
+          ) : currentUser ? (
             <div className="w-full max-w-sm lg:max-w-md">
               <SwipeCard
                 key={currentUser._id}
@@ -206,7 +241,3 @@ export default function SwipePage() {
     </div>
   );
 }
-
-
-
-

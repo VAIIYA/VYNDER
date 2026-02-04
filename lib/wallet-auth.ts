@@ -2,7 +2,8 @@ import { NextAuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import connectDB from "./mongodb";
 import User from "@/models/User";
-import { verifyWalletSignature, isValidSolanaAddress } from "./solana-auth";
+import { verifyWalletSignature, isValidSolanaAddress, parseAuthMessage } from "./solana-auth";
+import AuthNonce from "@/models/AuthNonce";
 
 export const walletAuthOptions: NextAuthOptions = {
   providers: [
@@ -41,6 +42,34 @@ export const walletAuthOptions: NextAuthOptions = {
 
           await connectDB();
 
+          const parsedMessage = parseAuthMessage(credentials.message);
+          if (!parsedMessage) {
+            throw new Error("Invalid authentication message");
+          }
+
+          if (parsedMessage.walletAddress !== credentials.walletAddress) {
+            throw new Error("Wallet address mismatch");
+          }
+
+          const now = Date.now();
+          if (parsedMessage.expiresAt < now || parsedMessage.issuedAt > now + 30_000) {
+            throw new Error("Authentication message expired");
+          }
+
+          const nonceRecord = await AuthNonce.findOne({ walletAddress: credentials.walletAddress });
+          if (!nonceRecord) {
+            throw new Error("Authentication nonce not found");
+          }
+
+          if (nonceRecord.nonce !== parsedMessage.nonce) {
+            throw new Error("Authentication nonce mismatch");
+          }
+
+          if (nonceRecord.expiresAt.getTime() < now) {
+            await AuthNonce.deleteOne({ walletAddress: credentials.walletAddress });
+            throw new Error("Authentication nonce expired");
+          }
+
           // Find or create user by wallet address (walletAddress is the primary identifier)
           let user = await User.findOne({ walletAddress: credentials.walletAddress });
 
@@ -63,6 +92,8 @@ export const walletAuthOptions: NextAuthOptions = {
             user.lastActive = new Date();
             await user.save();
           }
+
+          await AuthNonce.deleteOne({ walletAddress: credentials.walletAddress });
 
           return {
             id: user._id.toString(),
@@ -102,4 +133,3 @@ export const walletAuthOptions: NextAuthOptions = {
   secret: process.env.NEXTAUTH_SECRET || "fallback-secret-for-development",
   debug: process.env.NODE_ENV === "development",
 };
-

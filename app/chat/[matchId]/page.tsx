@@ -7,7 +7,7 @@ import Image from "next/image";
 import Link from "next/link";
 import Navigation from "@/components/Navigation";
 import toast from "react-hot-toast";
-import { format, isToday, isYesterday, isSameDay } from "date-fns";
+import { format, isToday, isYesterday } from "date-fns";
 
 interface Message {
   _id: string;
@@ -21,15 +21,6 @@ interface Message {
   createdAt: string;
 }
 
-interface Match {
-  _id: string;
-  users: Array<{
-    _id: string;
-    username: string;
-    photos: string[];
-  }>;
-}
-
 interface GroupedMessage {
   date: string;
   messages: Message[];
@@ -41,12 +32,12 @@ export default function ChatPage() {
   const params = useParams();
   const matchId = params.matchId as string;
   const [messages, setMessages] = useState<Message[]>([]);
-  const [match, setMatch] = useState<Match | null>(null);
   const [messageText, setMessageText] = useState("");
   const [loading, setLoading] = useState(true);
   const [sending, setSending] = useState(false);
   const [isTyping, setIsTyping] = useState(false);
   const [otherUserTyping, setOtherUserTyping] = useState(false);
+  const [sseConnected, setSseConnected] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const messagesContainerRef = useRef<HTMLDivElement>(null);
   const typingTimeoutRef = useRef<NodeJS.Timeout | null>(null);
@@ -102,17 +93,77 @@ export default function ChatPage() {
   useEffect(() => {
     if (matchId) {
       loadMessages();
-      // Poll for new messages every 3 seconds (less frequent than before)
-      const messageInterval = setInterval(loadMessages, 3000);
       // Check typing every 1 second
       const typingInterval = setInterval(checkTyping, 1000);
 
       return () => {
-        clearInterval(messageInterval);
         clearInterval(typingInterval);
       };
     }
   }, [matchId, loadMessages, checkTyping]);
+
+  useEffect(() => {
+    if (!matchId) return;
+
+    let eventSource: EventSource | null = null;
+    let fallbackInterval: NodeJS.Timeout | null = null;
+
+    const startFallbackPolling = () => {
+      if (fallbackInterval) return;
+      fallbackInterval = setInterval(loadMessages, 4000);
+    };
+
+    try {
+      eventSource = new EventSource(`/api/messages/stream/${matchId}`);
+
+      eventSource.onopen = () => {
+        setSseConnected(true);
+      };
+
+      eventSource.addEventListener("messages", (event) => {
+        const payload = JSON.parse((event as MessageEvent).data);
+        if (!payload?.messages?.length) return;
+
+        setMessages((prev) => {
+          const combined = [...prev, ...payload.messages];
+          const unique = new Map<string, Message>();
+          combined.forEach((msg) => unique.set(msg._id, msg));
+          const sorted = Array.from(unique.values()).sort(
+            (a, b) =>
+              new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
+          );
+
+          if (sorted.length > 0) {
+            lastMessageIdRef.current = sorted[sorted.length - 1]._id;
+          }
+
+          return sorted;
+        });
+
+        setTimeout(loadMessages, 300);
+      });
+
+      eventSource.onerror = () => {
+        setSseConnected(false);
+        if (eventSource) {
+          eventSource.close();
+        }
+        startFallbackPolling();
+      };
+    } catch (error) {
+      console.error("SSE connection error:", error);
+      startFallbackPolling();
+    }
+
+    return () => {
+      if (eventSource) {
+        eventSource.close();
+      }
+      if (fallbackInterval) {
+        clearInterval(fallbackInterval);
+      }
+    };
+  }, [matchId, loadMessages]);
 
   useEffect(() => {
     scrollToBottom();
@@ -207,6 +258,51 @@ export default function ChatPage() {
     }
   };
 
+  const handleBlockUser = async () => {
+    if (!otherUser?._id) return;
+    const confirmed = window.confirm(`Block ${otherUser.username}? You won't see each other again.`);
+    if (!confirmed) return;
+
+    try {
+      const response = await fetch("/api/users/block", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ userId: otherUser._id }),
+      });
+      const data = await response.json();
+      if (response.ok) {
+        toast.success("User blocked");
+        router.push("/matches");
+      } else {
+        toast.error(data.error || "Failed to block user");
+      }
+    } catch (error) {
+      toast.error("Failed to block user");
+    }
+  };
+
+  const handleReportUser = async () => {
+    if (!otherUser?._id) return;
+    const reason = window.prompt("Tell us what happened (required):");
+    if (!reason) return;
+
+    try {
+      const response = await fetch("/api/users/report", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ userId: otherUser._id, reason }),
+      });
+      const data = await response.json();
+      if (response.ok) {
+        toast.success("Report submitted");
+      } else {
+        toast.error(data.error || "Failed to report user");
+      }
+    } catch (error) {
+      toast.error("Failed to report user");
+    }
+  };
+
   // Group messages by date
   const groupMessagesByDate = (messages: Message[]): GroupedMessage[] => {
     const groups: { [key: string]: Message[] } = {};
@@ -253,7 +349,7 @@ export default function ChatPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-black">
+      <div className="min-h-screen flex items-center justify-center app-shell">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-solana-purple mx-auto"></div>
           <p className="mt-4 text-gray-400">Loading...</p>
@@ -310,12 +406,34 @@ export default function ChatPage() {
                   <span className="text-[10px] font-bold text-vaiiya-gray/40 uppercase tracking-widest">Active Now</span>
                 </div>
               )}
+              {!otherUserTyping && (
+                <div className="flex items-center gap-2 text-[10px] uppercase tracking-widest text-gray-500 mt-1">
+                  <span
+                    className={`h-2 w-2 rounded-full ${sseConnected ? "bg-solana-green" : "bg-gray-600"
+                      }`}
+                  />
+                  {sseConnected ? "Live" : "Connecting"}
+                </div>
+              )}
+            </div>
+            <div className="flex items-center gap-2">
+              <button
+                onClick={handleReportUser}
+                className="text-xs uppercase tracking-wide px-3 py-1 rounded-full border border-gray-700 text-gray-300 hover:text-white hover:border-solana-purple/60 transition-all"
+              >
+                Report
+              </button>
+              <button
+                onClick={handleBlockUser}
+                className="text-xs uppercase tracking-wide px-3 py-1 rounded-full border border-gray-700 text-gray-300 hover:text-white hover:border-solana-purple/60 transition-all"
+              >
+                Block
+              </button>
             </div>
           </div>
         )}
       </div>
 
-      {/* Messages */}
       <div
         ref={messagesContainerRef}
         className="flex-1 overflow-y-auto px-6 py-8 space-y-8 bg-white hide-scrollbar"

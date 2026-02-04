@@ -32,6 +32,7 @@ export default function MatchesPage() {
   const router = useRouter();
   const [matches, setMatches] = useState<Match[]>([]);
   const [loading, setLoading] = useState(true);
+  const [sseConnected, setSseConnected] = useState(false);
 
   useEffect(() => {
     if (status === "unauthenticated") {
@@ -42,9 +43,42 @@ export default function MatchesPage() {
   useEffect(() => {
     if (status === "authenticated") {
       loadMatches();
-      // Poll for new matches every 5 seconds (more frequent for better UX)
-      const interval = setInterval(loadMatches, 5000);
-      return () => clearInterval(interval);
+      let eventSource: EventSource | null = null;
+      let fallbackInterval: NodeJS.Timeout | null = null;
+
+      const startFallbackPolling = () => {
+        if (fallbackInterval) return;
+        fallbackInterval = setInterval(loadMatches, 7000);
+      };
+
+      try {
+        eventSource = new EventSource("/api/matches/stream");
+        eventSource.onopen = () => {
+          setSseConnected(true);
+        };
+        eventSource.addEventListener("refresh", () => {
+          loadMatches();
+        });
+        eventSource.onerror = () => {
+          setSseConnected(false);
+          if (eventSource) {
+            eventSource.close();
+          }
+          startFallbackPolling();
+        };
+      } catch (error) {
+        console.error("SSE connection error:", error);
+        startFallbackPolling();
+      }
+
+      return () => {
+        if (eventSource) {
+          eventSource.close();
+        }
+        if (fallbackInterval) {
+          clearInterval(fallbackInterval);
+        }
+      };
     }
   }, [status]);
 
@@ -67,7 +101,7 @@ export default function MatchesPage() {
 
   if (status === "loading" || loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-black">
+      <div className="min-h-screen flex items-center justify-center app-shell">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-solana-purple mx-auto"></div>
           <p className="mt-4 text-gray-400">Loading...</p>
@@ -80,7 +114,13 @@ export default function MatchesPage() {
     <div className="h-full bg-white relative overflow-hidden flex flex-col">
       {/* Header */}
       <div className="px-8 py-12 bg-[#F7F9FC]">
-        <h1 className="text-5xl font-serif text-vaiiya-purple font-bold mb-3">Matches</h1>
+        <div className="flex justify-between items-end mb-3">
+          <h1 className="text-5xl font-serif text-vaiiya-purple font-bold">Matches</h1>
+          <div className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-[0.2em] text-vaiiya-gray/40">
+            <span className={`h-2 w-2 rounded-full ${sseConnected ? "bg-green-500 animate-pulse" : "bg-gray-300"}`} />
+            {sseConnected ? "Live Connection" : "Connecting..."}
+          </div>
+        </div>
         <p className="text-vaiiya-gray/60 text-lg font-medium">Your potential connections & conversations</p>
       </div>
 
@@ -170,7 +210,3 @@ export default function MatchesPage() {
     </div>
   );
 }
-
-
-
-

@@ -28,8 +28,8 @@ export default function Navigation() {
               key={item.href}
               href={item.href}
               className={`flex flex-col items-center justify-center flex-1 h-full transition-all relative group ${isActive
-                  ? "text-vaiiya-orange"
-                  : "text-vaiiya-gray/60 hover:text-vaiiya-purple"
+                ? "text-vaiiya-orange"
+                : "text-vaiiya-gray/60 hover:text-vaiiya-purple"
                 }`}
             >
               <div className="flex flex-col items-center transition-transform group-active:scale-90">
@@ -40,14 +40,14 @@ export default function Navigation() {
               {isActive && (
                 <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-8 h-1 bg-vaiiya-orange rounded-t-full"></div>
               )}
-            </Link>
+
+            </Link >
           );
         })}
-      </div>
-    </nav>
+      </div >
+    </nav >
   );
 }
-
 
 
 
